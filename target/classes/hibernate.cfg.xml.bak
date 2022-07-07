@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.driver_class">oracle.jdbc.xa.client.OracleXADataSource</property>
+        <property name="connection.url">jdbc:oracle:thin:@10.248.225.38:1521:PROD1</property>
+        <property name="connection.username">fcipayroll</property>
+        <property name="connection.password">prod#payroll987</property>
+        <property name="dialect">org.hibernate.dialect.Oracle10gDialect</property>
+        <property name="default_schema">FCIPAYROLL</property>
+        <property name="show_sql">true</property>
+		
+    	<mapping class="com.techm.fci.cpf.model.User"/>
+        <mapping class="com.techm.fci.cpf.model.RegisteredUser"/>
+        <mapping class="com.techm.fci.cpf.model.EmpMaster"/>
+        <mapping class="com.techm.fci.cpf.model.CpfClaimRequest"/>
+        <mapping class="com.techm.fci.cpf.model.CpfClaimRequestStatus"/>
+    	<mapping class="com.techm.fci.cpf.model.AuditCpfClaimRequestStatus"/>
+    	<mapping class="com.techm.fci.cpf.model.RoleMappingRequest"/>
+		<mapping class="com.techm.fci.cpf.model.CpfOtpMaster"/>
+		<mapping class="com.techm.fci.cpf.model.DocumentsUpload"/>
+    </session-factory>
+</hibernate-configuration>
