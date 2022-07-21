@@ -611,8 +611,12 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					cpfClaimRequestStatusDto.setRequestId(map.get("REQUEST_ID").toString());
 					cpfClaimRequestStatusDto.setClaimSubmittedDate(myFormat.format(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString().trim())));
 					cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString());
-					if(map.get("ADMIN_ACTION_DATE")!=null)
-					cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
+					
+					/*if(map.get("ADMIN_ACTION_DATE")!=null)
+					cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));*/
+					
+					cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString().trim())));
+					
 					cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
 					//cpfClaimRequestStatusDto.setRemarks(map.get("admin_remarks").toString());
 					cpfClaimRequestStatusDto.setStatus("Pending at admin");
@@ -725,7 +729,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						+ "and st.cpfsec_action_taken_by=:empNum";*/
 				
 				String query = "SELECT st.request_id,reg.emp_num as \"claimSubmitEmpNum\",reg.emp_name as \"claim_submitted_by\",st.claim_submitted_date, "
-						+ "st.cpfsec_action_date,st.status, st.cpfsec_remarks,"
+						+ "st.cpfsec_action_date, st.status, st.cpfsec_remarks, st.ADMIN_ACTION_DATE, "
 						+ "(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.cpfsec_action_taken_by) cpfsec_action_taken_by, dsm.dsgn_desc as \"desig\" "
 						+ "FROM cpf_claim_form_status st,cpf_claim_form_details cfd,cpf_registered_users reg,pay_dsgn_mst dsm "
 						+ "WHERE reg.emp_num=st.claim_submitted_by "
@@ -749,8 +753,13 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					cpfClaimRequestStatusDto.setClaimSubmittedDate(myFormat.format(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString().trim())));
 					cpfClaimRequestStatusDto.setClaimSubmittedEmpId(map.get("claimSubmitEmpNum").toString());
 					cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString());
-					if(map.get("CPFSEC_ACTION_DATE")!=null)
-					cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("CPFSEC_ACTION_DATE").toString().trim())));
+					
+					/*if(map.get("CPFSEC_ACTION_DATE")!=null)
+					cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("CPFSEC_ACTION_DATE").toString().trim())));*/
+					
+					if(map.get("ADMIN_ACTION_DATE")!=null)
+					cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
+					
 					cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("CPFSEC_ACTION_TAKEN_BY").toString());
 					//cpfClaimRequestStatusDto.setRemarks(map.get("admin_remarks").toString());
 					cpfClaimRequestStatusDto.setStatus("Pending At CPF Admin");
