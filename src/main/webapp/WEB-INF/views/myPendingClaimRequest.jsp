@@ -41,7 +41,7 @@
       <th class="th-sm">Claim Arrived</th>
       <th class="th-sm">Action Taken By</th>
       <th class="th-sm">Remarks</th>
-      <th class="th-sm">Invoice No</th>
+      <th class="th-sm">Invoice No</th> 
       <th class="th-sm">Sanction Amount</th>
       <th class="th-sm">Status</th>
       <th class="th-sm">Action</th>
