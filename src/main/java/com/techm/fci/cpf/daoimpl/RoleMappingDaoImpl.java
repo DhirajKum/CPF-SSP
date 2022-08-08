@@ -86,9 +86,7 @@ public class RoleMappingDaoImpl implements RoleMappingDao {
 
 				httpSession.setAttribute("locCode", map.get("locCode").toString());
 				httpSession.setAttribute("desigId", map.get("desigId").toString());
-
 			}
-			// session.getTransaction().commit();
 		} catch (RuntimeException re) {
 			logger.info("Find by example failed :::", re);
 			throw re;
