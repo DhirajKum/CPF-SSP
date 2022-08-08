@@ -276,7 +276,6 @@ public class RoleMappingDaoImpl implements RoleMappingDao {
 			if(list0.size()>0){
 			for (Map<String, Object> map : list0) {
 				if(map.get("locType").toString().trim().equals("DP") || map.get("locType").toString().trim().equals("PO")){
-					//finalLocCode= finalLocCode+','+map.get("locId").toString().trim();
 					finalLocCode.add(map.get("locId").toString().trim());
 				}else{
 					finalLocCode.add(presentLoc);
