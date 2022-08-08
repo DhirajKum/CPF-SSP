@@ -284,6 +284,7 @@ public class RoleMappingDaoImpl implements RoleMappingDao {
 			}
 			finalLocCode.add(presentLoc);
 			}
+			logger.info("finalLocCode ::: "+ finalLocCode.toString());
 			String query =null;
 			Query hQuery =null;
 			if(null!=roleName && roleName.equalsIgnoreCase("ADMIN")){
