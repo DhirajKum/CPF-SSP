@@ -265,7 +265,7 @@ public class RoleMappingDaoImpl implements RoleMappingDao {
 		Session session = sessionFactory.getCurrentSession();
 		try {
 			
-			List<String> finalLocCode = new ArrayList<>();
+			Set<String> finalLocCode = new HashSet<>();
 			String query0="Select loc_desc as \"locDesc\", loc_type_gbl as \"locType\", loc_id as \"locId\" from com_loc_mst where parent_loc_id=:locCode";
 			
 			Query hQuery0 = session.createSQLQuery(query0).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
@@ -284,6 +284,7 @@ public class RoleMappingDaoImpl implements RoleMappingDao {
 			}
 			finalLocCode.add(presentLoc.trim());
 			}
+			
 			String query =null;
 			Query hQuery =null;
 			if(null!=roleName && roleName.equalsIgnoreCase("ADMIN")){
