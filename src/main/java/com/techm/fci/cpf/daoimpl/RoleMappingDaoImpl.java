@@ -285,7 +285,7 @@ public class RoleMappingDaoImpl implements RoleMappingDao {
 			finalLocCode.add(presentLoc.trim());
 			}
 
-			//logger.info("finalLocCode ::: "+ finalLocCode.toString());
+			logger.info("finalLocCode ::: "+ finalLocCode.toString());
 
 			String query =null;
 			Query hQuery =null;
