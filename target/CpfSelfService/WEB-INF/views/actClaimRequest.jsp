@@ -29,8 +29,11 @@
 			</svg> 
 			Claim Request
 		</h5>
+		<div class="row col-sm-12">
+				<small class="form-text text-muted paddingL40 main-heading"><b>Claim Request Id : ${actClaimDto.REQUEST_ID}</b></small>
 		</div>
-		<div class="row marginT20">
+		</div>
+		<div class="row marginT20" style="margin-left:-5px">
 			<div class="col-md-12">
 			  <sf:form action='${pageContext.request.contextPath}/claim/updateClaimRequest?reqType=${reqType}&claimReq=approve&reqId=${reqId}' method='POST' modelAttribute="actClaimDto" id="actClaimForm">
 				<div class="row">
@@ -493,7 +496,7 @@ $(document).ready(function() {
 function isNumber(evt) {
     evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+    if (charCode > 31 && ((charCode < 48) || (charCode > 57))) {
         return false;
     }
     return true;

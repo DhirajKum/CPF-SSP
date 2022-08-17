@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.techm.fci.cpf.dto.ClaimRequestGenerateReportDto;
@@ -223,7 +224,7 @@ public class ReportController {
 	}
 
 	
-	@RequestMapping(value={"/generateClaimRequestReport"})
+/*	@RequestMapping(value={"/generateClaimRequestReport"})
 	public ModelAndView generateClaimRequestReport(@ModelAttribute("claimRequestReportDto") ClaimRequestReportDto claimRequestReportDto){
 		String empNum = claimRequestReportDto.getEmpNum();
 		String fromDate = claimRequestReportDto.getFromDate();
@@ -251,7 +252,25 @@ public class ReportController {
 			mv.addObject("message","Session Expired, Kindly Go For Login !!!");
 		}
 		return mv;
-	}
+	}*/
 
+	
+	@RequestMapping(value={"/generateClaimRequestReport"})
+	public @ResponseBody List<ClaimRequestGenerateReportDto> generateClaimRequestReport(@ModelAttribute("claimRequestReportDto") ClaimRequestReportDto claimRequestReportDto){
+		String empNum = claimRequestReportDto.getEmpNum();
+		String fromDate = claimRequestReportDto.getFromDate();
+		String toDate = claimRequestReportDto.getToDate();
+		String claimType=claimRequestReportDto.getClaimType();
+		
+		List<ClaimRequestGenerateReportDto> claimReportList = new ArrayList<ClaimRequestGenerateReportDto>();
+		UserModel uModel=getUserModel();
+		if(uModel!=null){
+			claimReportList =  reportService.getClaimReqReport(empNum, fromDate,toDate,claimType);
+		}
+		return claimReportList;
+	}
+	
+	
+	
 	
 }

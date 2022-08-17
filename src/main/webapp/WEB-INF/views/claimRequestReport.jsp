@@ -25,7 +25,7 @@
 </c:if>
 <div class="col-md-12" style="padding-left: 10px;">
 
-<sf:form action='${pageContext.request.contextPath}/report/generateClaimRequestReport' method='POST' modelAttribute="claimRequestReportDto">
+<sf:form action='' id="generateReportForm" modelAttribute="claimRequestReportDto">
 <div class="row" style="text-align: center;">	
 	<div class="col-md-5">
 		<div class="form-group row">
@@ -53,7 +53,7 @@
 		<div class="form-group row">
 			<label class="col-sm-4 col-form-label"><b>Emp Num </b></label>
 			<div class="col-sm-8">
-						 <sf:input path="empNum" id="empNum" cssClass="form-control numbers" />
+				<sf:input path="empNum" id="empNum" cssClass="form-control numbers" />
 			</div>
 		</div>
 	</div>
@@ -68,9 +68,9 @@
 				<sf:select cssclass="form-control" id="claimType" path="claimType">
 					<option value="" label="---Select---"/>
 					<option value="CpfFinalSettlement"> CPF Final Settlement </option>
-									<option value="CpfPartFinalWithdrawal"> CPF Part final Withdrawal </option>
-									<option value="90%Withdrawal"> 90% Withdrawal </option>
-									<option value="TempAdv"> Temp. Adv. </option>
+						<option value="CpfPartFinalWithdrawal"> CPF Part final Withdrawal </option>
+						<option value="90%Withdrawal"> 90% Withdrawal </option>
+						<option value="TempAdv"> Temp. Adv. </option>
 				</sf:select>
 			</div>
 		</div>
@@ -96,11 +96,7 @@
 			<!-- <a href="#" id="generateReport" class="btn btn-primary btn-sm reset-form">Generate Report</a> -->
 		</div>
 	</div>
-	 
 </div>
-
-
-
 </sf:form>
 
 <div class="epfo-container displayDiv">
@@ -147,7 +143,7 @@
     </tr>
   </thead>
   <tbody>
-  <c:forEach var="ClaimRequestReportDto" items="${claimReportList}">
+  <%-- <c:forEach var="ClaimRequestReportDto" items="${claimReportList}">
 			<tr>
 				<td>${ClaimRequestReportDto.empNum}</td>
 				<td>${ClaimRequestReportDto.empName}</td>
@@ -159,7 +155,7 @@
 				<td>${ClaimRequestReportDto.parentZone}</td>
 				
 			</tr>
-			</c:forEach>
+			</c:forEach> --%>
 			
     </tbody>
 </table>							
@@ -182,8 +178,53 @@ $(document).ready(function() {
     
   $('.numbers').keyup(function () { 
     this.value = this.value.replace(/[^0-9\.]/g,'');
+	});
 });
-    });
+
+$('#generateReportForm').submit(function (){
+
+var urlVar = '${pageContext.request.contextPath}/report/generateClaimRequestReport';
+var $table = $('#claimReqReportdatatable');
+if($table.length){
+	$table.dataTable({
+		lengthMenu:[[5,10,15,-1],['5','10','15','ALL']],
+		pageLength:5,
+		ajax:{
+			url:urlVar,
+			dataSrc:''
+		},
+		columns:[
+			{
+				data:'empNum'
+			},
+			{
+				data:'empName'
+			},
+			{
+				data:'claimId'
+			},
+			{
+				data:'claimType'
+			},
+			{
+				data:'claimDate'
+			},
+			{
+				data:'claimStatus'
+			},
+			{
+				data:'presLocation'
+			},
+			{
+				data:'parentZone'
+			},
+			{
+				data:'sancAmount'
+			}
+		]
+	});
+}
+});
 
 function clearData(){
 
@@ -191,5 +232,4 @@ $("#datepicker1").val('');
 $("#datepicker2").val('');
 $("#empNum").val('');
 }
-
 </script>

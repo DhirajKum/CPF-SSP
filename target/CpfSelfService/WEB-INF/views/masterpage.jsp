@@ -18,35 +18,20 @@
 
 <title>CPF Self Service - ${title}</title>
 
-<link
-	href="${pageContext.request.contextPath}/resources/static/images/fci.jpg"
-	rel="shortcut icon">
-<link
-	href="${pageContext.request.contextPath}/resources/static/css/epfo-style.css"
-	rel="stylesheet" />
-<link
-	href="${pageContext.request.contextPath}/resources/static/css/bootstrap.min.css"
-	rel="stylesheet" />
-<link
-	href="${pageContext.request.contextPath}/resources/static/css/datepicker.min.css"
-	rel="stylesheet" />
-<link
-	href="${pageContext.request.contextPath}/resources/static/css/font-awesome.min.css"
-	rel="stylesheet" />
-<link
-	href="${pageContext.request.contextPath}/resources/static/css/jquery.dataTables.css"
-	rel="stylesheet" />
+<link href="${pageContext.request.contextPath}/resources/static/images/fci.jpg"	rel="shortcut icon">
+<link href="${pageContext.request.contextPath}/resources/static/css/epfo-style.css"	rel="stylesheet" />
+<link href="${pageContext.request.contextPath}/resources/static/css/bootstrap.min.css" rel="stylesheet" />
+<link href="${pageContext.request.contextPath}/resources/static/css/datepicker.min.css"	rel="stylesheet" />
+<link href="${pageContext.request.contextPath}/resources/static/css/font-awesome.min.css" rel="stylesheet" />
+<link href="${pageContext.request.contextPath}/resources/static/css/jquery.dataTables.css" rel="stylesheet" />
 
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/resources/static/js/jquery.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/resources/static/js/bootstrap.min.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/resources/static/js/jquery.dataTables.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/resources/static/js/jquery.form-validator.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/jquery.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/jquery.form-validator.min.js"></script>
 
 <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script> -->
+
 <script type="text/javascript">
 	window.menu = '${title}';
 </script>
@@ -126,11 +111,8 @@
 
 	<%@include file="./shared/footer.jsp"%>
 
-	<script
-		href="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"
-		rel="stylesheet"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/static/js/cpf/app.js"></script>
+	<script	href="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js" rel="stylesheet"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/cpf/app.js"></script>
 
 </body>
 </html>

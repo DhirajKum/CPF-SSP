@@ -32,14 +32,6 @@ private static final long serialVersionUID = 1L;
 		this.parentZone = parentZone;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-
 	public String getEmpNum() {
 		return empNum;
 	}

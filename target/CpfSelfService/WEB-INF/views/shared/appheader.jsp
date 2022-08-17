@@ -7,18 +7,10 @@
 <meta http-equiv="expires" content="-1">
 <meta http-equiv="pragma" content="no-cache">
 <title>CPF Self Service</title>
-<link
-	href="${pageContext.request.contextPath}/resources/static/images/fci.jpg"
-	rel="shortcut icon">
-<link
-	href="${pageContext.request.contextPath}/resources/static/css/bootstrap4_5_4.min.css"
-	rel="stylesheet" />
-<link
-	href="${pageContext.request.contextPath}/resources/static/css/jquery-ui.min.css"
-	rel="stylesheet" />
-<link
-	href="${pageContext.request.contextPath}/resources/static/css/epfo-style.css"
-	rel="stylesheet" />
+<link href="${pageContext.request.contextPath}/resources/static/images/fci.jpg"	rel="shortcut icon">
+<link href="${pageContext.request.contextPath}/resources/static/css/bootstrap4_5_4.min.css"	rel="stylesheet" />
+<link href="${pageContext.request.contextPath}/resources/static/css/jquery-ui.min.css" rel="stylesheet" />
+<link href="${pageContext.request.contextPath}/resources/static/css/epfo-style.css"	rel="stylesheet" />
 <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
 
 <script type="text/javascript">
@@ -29,7 +21,7 @@
 </head>
 <body class="epfo-body session-disp">
 
-	<style>
+<style>
 .header-sub-text {
 	font-size: 12px;
 	font-weight: normal;
