@@ -191,7 +191,9 @@ if($table.length){
 		pageLength:5,
 		ajax:{
 			url:urlVar,
-			dataSrc:''
+			method: "GET",
+    		contentType: 'application/json',
+			dataSrc:""
 		},
 		columns:[
 			{
@@ -219,7 +221,8 @@ if($table.length){
 				data:'parentZone'
 			},
 			{
-				data:'sancAmount'
+				data:'sancAmount',
+				mRender: function(data, type, row){}
 			}
 		]
 	});
