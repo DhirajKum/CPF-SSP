@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -9,8 +8,7 @@
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="cache-control"
-	content="max-age=0, must-revalidate, no-cache, no-store, private">
+<meta http-equiv="cache-control" content="max-age=0, must-revalidate, no-cache, no-store, private">
 <meta http-equiv="expires" content="-1">
 <meta http-equiv="pragma" content="no-cache">
 <meta name="_csrf" content="${_csrf.token}">
@@ -24,10 +22,19 @@
 <link href="${pageContext.request.contextPath}/resources/static/css/datepicker.min.css"	rel="stylesheet" />
 <link href="${pageContext.request.contextPath}/resources/static/css/font-awesome.min.css" rel="stylesheet" />
 <link href="${pageContext.request.contextPath}/resources/static/css/jquery.dataTables.css" rel="stylesheet" />
+<link href="${pageContext.request.contextPath}/resources/static/css/buttons.dataTables.min.css" rel="stylesheet" />
 
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/jquery.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/popper.min.js"></script>
+<%-- <script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/jquery.dataTables.js"></script> --%>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/jquery.dataTables.min-1.12.1.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/jszip.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/pdfmake.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/vfs_fonts.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/buttons.print.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/jquery.form-validator.min.js"></script>
 
 <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script> -->
