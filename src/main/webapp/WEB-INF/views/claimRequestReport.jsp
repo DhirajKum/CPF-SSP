@@ -141,23 +141,7 @@
     
     </tr>
   </thead>
-  <tbody>
-  <%-- <c:forEach var="ClaimRequestReportDto" items="${claimReportList}">
-			<tr>
-				<td>${ClaimRequestReportDto.empNum}</td>
-				<td>${ClaimRequestReportDto.empName}</td>
-				<td>${ClaimRequestReportDto.claimId}</td>
-				<td>${ClaimRequestReportDto.claimType}</td>
-				<td>${ClaimRequestReportDto.claimDate}</td>
-				<td>${ClaimRequestReportDto.claimStatus}</td>
-				<td>${ClaimRequestReportDto.presLocation}</td>
-				<td>${ClaimRequestReportDto.parentZone}</td>
-				
-			</tr>
-			</c:forEach> --%>
-			
-    </tbody>
-</table>							
+ </table>							
 </div>
 </div>
 </div>
