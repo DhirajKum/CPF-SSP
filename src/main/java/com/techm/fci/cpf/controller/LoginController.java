@@ -1,8 +1,6 @@
 package com.techm.fci.cpf.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -10,8 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +27,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.techm.fci.cpf.dto.ForgotPassword;
 import com.techm.fci.cpf.dto.HomeDto;
 import com.techm.fci.cpf.dto.LoginForm;
-import com.techm.fci.cpf.dto.Menu;
 import com.techm.fci.cpf.model.EmpMaster;
 import com.techm.fci.cpf.model.RegisteredUser;
 import com.techm.fci.cpf.model.UserModel;
@@ -345,9 +340,6 @@ public class LoginController {
 		}
 		return result;
 	}
-	
-
-	
 
 	@RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
 	public String forgotPassword(ModelMap model, HttpSession session, @ModelAttribute("forgotPassword") ForgotPassword forgotPass) {
@@ -359,49 +351,4 @@ public class LoginController {
 			return "login";
 		}
 	}
-
-	@RequestMapping(value = "/changeRole", method = RequestMethod.POST)
-	public void loadAdmin(@RequestParam String role, HttpSession session, HttpServletResponse httpServletResponse)
-			throws IOException {
-		session.setAttribute("role", "ROLE_" + role);
-		session.setAttribute("userrole", role);
-		session.setAttribute("menus", getMenuForRole(role));
-		httpServletResponse.sendRedirect("loadAdmin");
-		// httpServletResponse.sendRedirect("applicationDashboard");
-		// return "applicationDashboard";
-	}
-
-	private List<Menu> getMenuForRole(String roleString) {
-		List<Menu> menus = new ArrayList<Menu>();
-		// String roleString = StringUtils.join(roles, ',');
-		roleString = roleString.replaceAll("ROLE_", "");
-		String restUrl = env.getProperty("mciservice.base.url") + "getUserMenu?roles=" + roleString;
-		System.out.println("URL = " + restUrl);
-
-		//String menuDetails = httpGetHandler.getRequest(restUrl);
-		String menuDetails =null;
-		JSONArray arr = new JSONArray(menuDetails);
-		for (int i = 0; i < arr.length(); i++) {
-			JSONObject obj = arr.getJSONObject(i);
-			String label = obj.getString("label");
-			String text = obj.getString("text");
-			String url = obj.getString("url");
-			Menu menu = new Menu(label, text, url);
-			JSONArray subArr = obj.getJSONArray("subMenus");
-			List<Menu> subMenus = new ArrayList<Menu>();
-			for (int j = 0; j < subArr.length(); j++) {
-				JSONObject subObj = subArr.getJSONObject(j);
-				String subLabel = subObj.getString("label");
-				String subText = subObj.getString("text");
-				String subUrl = subObj.getString("url");
-				Menu subMenu = new Menu(subLabel, subText, subUrl);
-				subMenus.add(subMenu);
-			}
-			menu.setSubMenus(subMenus);
-			menus.add(menu);
-		}
-
-		return menus;
-	}
-	
 }

@@ -6,9 +6,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link href="${pageContext.request.contextPath}/resources/COMMON/images/fci.jpg" rel="shortcut icon">
-<link href="${pageContext.request.contextPath}/resources/COMMON/JS/jquery-3.5.1.min.js" rel="STYLESHEET" type="text/css" >
-<link href="${pageContext.request.contextPath}/resources/COMMON/JS/bootstrap.min.js" rel="STYLESHEET" type="text/css">
+<link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/COMMON/images/fci.jpg">
+<link rel="STYLESHEET" type="text/css" href="${pageContext.request.contextPath}/resources/COMMON/JS/jquery-3.5.1.min.js">
+<link rel="STYLESHEET" type="text/css" href="${pageContext.request.contextPath}/resources/COMMON/JS/bootstrap.min.js">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/css/jquery-ui.min.css"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/css/jquery-ui.css"/>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/jquery-ui.min.js"></script>
@@ -25,14 +25,13 @@
 </c:if>
 <div class="col-md-12" style="padding-left: 10px;">
 
-<sf:form action='${pageContext.request.contextPath}/report/generateClaimRequestReport' method='POST' modelAttribute="claimRequestReportDto">
+<%-- <sf:form action='' id="generateReportForm" modelAttribute="claimRequestReportDto"> --%>
 <div class="row" style="text-align: center;">	
 	<div class="col-md-5">
 		<div class="form-group row">
 			<label class="col-sm-4 col-form-label"><b>From Date</b></label>
 			<div class="col-sm-8">
-				<sf:input path="fromDate" id="datepicker1" cssClass="form-control" />
-				
+				<input id="datepicker1" cssClass="form-control" />
 			</div>
 		</div>
 	</div>
@@ -40,8 +39,7 @@
 		<div class="form-group row">
 			<label class="col-sm-4 col-form-label"><b>To Date</b></label>
 			<div class="col-sm-8">
-			<sf:input path="toDate" id="datepicker2" cssClass="form-control" />
-			
+				<input id="datepicker2" cssClass="form-control" />
 			</div>
 		</div>
 	</div>
@@ -53,7 +51,7 @@
 		<div class="form-group row">
 			<label class="col-sm-4 col-form-label"><b>Emp Num </b></label>
 			<div class="col-sm-8">
-						 <sf:input path="empNum" id="empNum" cssClass="form-control numbers" />
+				<input id="empNum" cssClass="form-control numbers" />
 			</div>
 		</div>
 	</div>
@@ -65,13 +63,13 @@
 		<div class="form-group row">
 			<label class="col-sm-4 col-form-label"><b>Claim Type </b></label>
 			<div class="col-sm-8">
-				<sf:select cssclass="form-control" id="claimType" path="claimType">
+				<select cssclass="form-control" id="claimType">
 					<option value="" label="---Select---"/>
 					<option value="CpfFinalSettlement"> CPF Final Settlement </option>
-									<option value="CpfPartFinalWithdrawal"> CPF Part final Withdrawal </option>
-									<option value="90%Withdrawal"> 90% Withdrawal </option>
-									<option value="TempAdv"> Temp. Adv. </option>
-				</sf:select>
+						<option value="CpfPartFinalWithdrawal"> CPF Part final Withdrawal </option>
+						<option value="90%Withdrawal"> 90% Withdrawal </option>
+						<option value="TempAdv"> Temp. Adv. </option>
+				</select>
 			</div>
 		</div>
 	</div>
@@ -90,18 +88,14 @@
 	</div>
 	<div class="col-md-5">
 		<div class="form-group row">
-			<button type="submit" class="btn btn-primary btn-sm">Generate Report</button>&nbsp;&nbsp;&nbsp;
+			<button type="button" class="btn btn-primary btn-sm" id ="generateRep">Generate Report</button>&nbsp;&nbsp;&nbsp;
 			<button type="button" class="btn btn-primary btn-sm" onclick="clearData()">Clear</button>
 		
 			<!-- <a href="#" id="generateReport" class="btn btn-primary btn-sm reset-form">Generate Report</a> -->
 		</div>
 	</div>
-	 
 </div>
-
-
-
-</sf:form>
+<%-- </sf:form> --%>
 
 <div class="epfo-container displayDiv">
 <div class="row displayDiv">
@@ -135,6 +129,7 @@
 <table id="claimReqReportdatatable" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
   <thead>
     <tr>
+      <th class="th-sm">S.No.</th>
       <th class="th-sm">Employee Number</th>
       <th class="th-sm">Employee Name</th>
       <th class="th-sm">Claim Id</th>
@@ -146,23 +141,7 @@
     
     </tr>
   </thead>
-  <tbody>
-  <c:forEach var="ClaimRequestReportDto" items="${claimReportList}">
-			<tr>
-				<td>${ClaimRequestReportDto.empNum}</td>
-				<td>${ClaimRequestReportDto.empName}</td>
-				<td>${ClaimRequestReportDto.claimId}</td>
-				<td>${ClaimRequestReportDto.claimType}</td>
-				<td>${ClaimRequestReportDto.claimDate}</td>
-				<td>${ClaimRequestReportDto.claimStatus}</td>
-				<td>${ClaimRequestReportDto.presLocation}</td>
-				<td>${ClaimRequestReportDto.parentZone}</td>
-				
-			</tr>
-			</c:forEach>
-			
-    </tbody>
-</table>							
+ </table>							
 </div>
 </div>
 </div>
@@ -182,8 +161,66 @@ $(document).ready(function() {
     
   $('.numbers').keyup(function () { 
     this.value = this.value.replace(/[^0-9\.]/g,'');
+	});
 });
-    });
+
+$("#generateRep").on('click',function(event) {
+
+var fromDate = $('#datepicker1').val();
+var toDate = $('#datepicker2').val();
+var empNum = $('#empNum').val();
+var claimType = $('#claimType').val();
+
+var urlVar = '${pageContext.request.contextPath}/report/generateClaimRequestReport?toDate='+toDate+'&fromDate='+fromDate+'&empNum='+empNum+'&claimType='+claimType;
+var $table = $('#claimReqReportdatatable');
+if($table.length){
+	$table.dataTable({
+		//lengthMenu:[[5,10,15,-1],['5','10','15','ALL']],
+		pageLength:10,
+		dom: 'Bfrtip',
+		buttons: [
+            'copy', 'excel', 'pdf', 'print'
+        ],
+		ajax:{
+			url:urlVar,
+			dataSrc:''
+		},
+		columns:[
+			{
+ 			   "data": "id",
+    			render: function (data, type, row, meta) {
+        			return meta.row + meta.settings._iDisplayStart + 1;
+    			}
+			},
+			{
+				data:'empNum'
+			},
+			{
+				data:'empName'
+			},
+			{
+				data:'claimId'
+			},
+			{
+				data:'claimType'
+			},
+			{
+				data:'claimDate'
+			},
+			{
+				data:'claimStatus'
+			},
+			{
+				data:'presLocation'
+			},
+			{
+				data:'parentZone'
+			}
+		],
+		"bDestroy": true
+	});
+}
+});
 
 function clearData(){
 
@@ -191,5 +228,4 @@ $("#datepicker1").val('');
 $("#datepicker2").val('');
 $("#empNum").val('');
 }
-
 </script>

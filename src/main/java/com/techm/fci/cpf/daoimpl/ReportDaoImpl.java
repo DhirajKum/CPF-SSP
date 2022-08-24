@@ -25,7 +25,6 @@ import com.techm.fci.cpf.dto.CpfSlipAdjustmentDataDto;
 import com.techm.fci.cpf.dto.CpfSlipHeaderDto;
 import com.techm.fci.cpf.dto.CpfSlipIntOBCreditAsOnDataDto;
 import com.techm.fci.cpf.dto.CpfSlipMonthWiseDto;
-import com.techm.fci.cpf.dto.RevokeRoleStatusDto;
 
 @Repository("reportDao")
 public class ReportDaoImpl implements ReportDao {
