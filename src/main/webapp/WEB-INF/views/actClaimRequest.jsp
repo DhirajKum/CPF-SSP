@@ -319,7 +319,7 @@
 					<div class="col-md-6">
 						<div class="form-group row">
 							<label for="" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Uploaded KYC Document</b></label>
-							<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?path=${actClaimDto.kycFilePath}" class="col-sm-7" target="_blank">${actClaimDto.kycFileName}</a>
+							<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${actClaimDto.kycFilePath}&fileType=1" class="col-sm-7" target="_blank">${actClaimDto.kycFileName}</a>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -327,7 +327,7 @@
 							<label for="" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Uploaded Other Documents</b></label>
 							<div class="col-sm-7">
 							<c:forEach var="otherFile" items="${actClaimDto.otherFiles}">
-								<a class="col-sm-12" href="${pageContext.request.contextPath}/claim/downloadCpfDoc?path=${otherFile.value}" target="_blank">${otherFile.key}</a></br>
+								<a class="col-sm-12" href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${otherFile.value}&fileType=2" target="_blank">${otherFile.key}</a></br>
 							</c:forEach>
 							</div>
 						</div>

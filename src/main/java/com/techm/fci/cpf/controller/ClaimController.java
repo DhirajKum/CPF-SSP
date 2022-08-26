@@ -606,12 +606,13 @@ public class ClaimController {
 	
 	
 	@RequestMapping(value={"/downloadCpfDoc"}, method = {RequestMethod.GET})
-	public void download(HttpServletRequest request, HttpServletResponse response, @RequestParam(name="path") String filePath){  
+	public void download(HttpServletRequest request, HttpServletResponse response, @RequestParam(name="pathId") String pathId, @RequestParam(name="fileType") String fileType){  
 
+	String filePath = userService.getUploadedPath(pathId, "1");
+		
 	File file = new File(filePath); 
 	String filename=file.getName().trim();
 	int lastIndex= filename.lastIndexOf(".");
-	
 	   
     try {
         UserModel uModel = getUserModel();

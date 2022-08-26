@@ -32,4 +32,6 @@ public interface EmployeeDao {
 	
 	Boolean saveOtherDoc(UserModel uModel, String claimSubEmpID, String reqId, String path);
 	public void insertOtpToSmsTable(String empNum,String mobile);
+	
+	public String getUploadedPath(String pathId, String fileType);
 }

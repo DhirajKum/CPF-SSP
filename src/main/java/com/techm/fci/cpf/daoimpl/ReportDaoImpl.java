@@ -282,7 +282,7 @@ public static final Logger logger = LoggerFactory.getLogger(ReportDaoImpl.class)
 			cpfSlipAdjustmentDataDto.setMonth(map.get("month").toString().trim());
 			cpfSlipAdjustmentDataDto.setAdjustAmt(map.get("adjAmt").toString().trim());
 			cpfSlipAdjustmentDataDto.setAdjustType(map.get("adjType").toString().trim());
-			cpfSlipAdjustmentDataDto.setRemarks(map.get("remark").toString().trim());
+			cpfSlipAdjustmentDataDto.setRemarks(map.get("remark")!=null?map.get("remark").toString().trim():"");
 			cpfSlipAdjustmentDataDtoList.add(cpfSlipAdjustmentDataDto);
 		}
 		session.getTransaction().commit();

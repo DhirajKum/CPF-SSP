@@ -138,7 +138,7 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 				homeDto.setCpfFreezeYear(list1.get(0).get("toYear")!=null?list1.get(0).get("toYear").toString():"");
 				}
 				
-				String query2 = "select du.file_path as \"filePath\" "
+				String query2 = "select du.file_path as \"filePath\", du.doc_id as \"docId\" "
 						+ "from cpf_doc_uploads du "
 						+ "where du.emp_num=:empNum and du.file_type=1";
 				Query hQuery2 = session.createSQLQuery(query2).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
@@ -149,7 +149,8 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 					for (Map<String, Object> map2 : list2) {
 						File file = new File(map2.get("filePath").toString().trim());
 						homeDto.setFileName(file.getName());
-						homeDto.setFilePath(map2.get("filePath")!=null?map2.get("filePath").toString().trim():"");
+						//homeDto.setFilePath(map2.get("filePath")!=null?map2.get("filePath").toString().trim():"");
+						homeDto.setFilePath(map2.get("docId")!=null?map2.get("docId").toString().trim():"");
 					}
 				}
 				
@@ -435,10 +436,38 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 		catch (RuntimeException re) {
 			logger.info("Insertion failed :::", re);
 			throw re;
-	
+		}
 }
+
+	@Override
+	public String getUploadedPath(String pathId, String fileType) {
+
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		try {
+			String query2 = "select du.file_path as \"filePath\" "
+					+ "from cpf_doc_uploads du "
+					+ "where du.doc_id=:docId and du.file_type=:fileType";
+
+			Query hQuery2 = session.createSQLQuery(query2).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+			hQuery2.setParameter("docId", pathId);
+			hQuery2.setParameter("fileType", fileType);
+
+			List<Map<String, Object>> list2 = hQuery2.list();
+			String filePath = "";
+			if (list2 != null && list2.size() > 0) {
+				for (Map<String, Object> map2 : list2) {
+					File file = new File(map2.get("filePath").toString().trim());
+					filePath = file.getPath();
+				}
+			}
+			return filePath;
+		} catch (RuntimeException re) {
+			logger.info("File path exception :::", re);
+			throw re;
+		}
 	}
 
-		
+}	
 	
-}
+

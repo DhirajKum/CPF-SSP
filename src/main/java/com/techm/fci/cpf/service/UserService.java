@@ -77,4 +77,6 @@ public interface UserService {
 	public List<ClaimRequestStatusDto> getClaimReqStatus(String requestId);
 	public Boolean saveCpfClaimHistoryTrail(ClaimHistoryTrailDto claimHistoryTrailData, String empNum, String roleName);
 	public String getMaxPermAmount(String empId, String sancType);
+	
+	public String getUploadedPath(String pathId, String fileType);
 }

@@ -64,7 +64,7 @@
 							<td class="w-25"><b>AADHAAR</b></td>
 							<td class="w-25">${homePageData.empAadhar}</td>
 							<td class="w-25"><b>Uploaded KYC Document</b></td>
-							<td class="w-25"><a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?path=${homePageData.filePath}" target="_blank">${homePageData.fileName}</a></td>
+							<td class="w-25"><a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${homePageData.filePath}&fileType=1" target="_blank">${homePageData.fileName}</a></td>
 						</tr>
 						<tr>
 							<td class="w-25"><b>PAN</b></td>

@@ -29,6 +29,8 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 		<intercept-url pattern="/claim/claimHistoryTrail" access="hasAnyRole('USER','ADMIN','CPF_ADMIN')" />
 		<intercept-url pattern="/claim/viewClaimReq" access="hasAnyRole('USER','ADMIN','CPF_ADMIN')" />
 		
+		<intercept-url pattern="/claim/downloadCpfDoc" access="hasAnyRole('SUPER_USER','USER','ADMIN','CPF_ADMIN')" />
+		
 		<intercept-url pattern="/report/claimReport" access="hasAnyRole('SUPER_USER','ADMIN','CPF_ADMIN')" />		
 		
 		<intercept-url pattern="/report/cpfSlip" access="permitAll" />

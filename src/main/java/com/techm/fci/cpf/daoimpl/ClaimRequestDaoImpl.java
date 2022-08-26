@@ -869,7 +869,9 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 			claimDataForForm.setParentZone(map.get("PARENT_ZONE")!=null?map.get("PARENT_ZONE").toString().trim():"0");
 			claimDataForForm.setAMOUNT_SANCTION(map.get("AMOUNT_SANCTION")!=null?map.get("AMOUNT_SANCTION").toString().trim():"0");
 			
-			String query2 = "select du.file_path as \"filePath\" from cpf_doc_uploads du where du.emp_num=:empNum and du.file_type=1";
+			String query2 = "select du.file_path as \"filePath\", du.doc_id as \"docId\" "
+					+ "from cpf_doc_uploads du "
+					+ "where du.emp_num=:empNum and du.file_type=1";
 			Query hQuery2 = session.createSQLQuery(query2).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 			hQuery2.setParameter("empNum", map.get("CLAIM_SUBMITTED_BY").toString().trim());
 			
@@ -878,11 +880,14 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				for (Map<String, Object> map2 : list2) {
 					File file = new File(map2.get("filePath").toString().trim());
 					claimDataForForm.setKycFileName(file.getName());
-					claimDataForForm.setKycFilePath(map2.get("filePath")!=null?map2.get("filePath").toString().trim():"");
+					//claimDataForForm.setKycFilePath(map2.get("filePath")!=null?map2.get("filePath").toString().trim():"");
+					claimDataForForm.setKycFilePath(map2.get("docId")!=null?map2.get("docId").toString().trim():"");
 				}
 			}
 			
-			String query3 = "select du.file_path as \"filePath\" from cpf_doc_uploads du where du.emp_num=:empNum and du.request_id=:reqId and du.file_type=2";
+			String query3 = "select du.file_path as \"filePath\", du.doc_id as \"docId\" "
+					+ "from cpf_doc_uploads du "
+					+ "where du.emp_num=:empNum and du.request_id=:reqId and du.file_type=2";
 			Query hQuery3 = session.createSQLQuery(query3).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 			if(reqId!=null){
 				hQuery3.setParameter("empNum", map.get("CLAIM_SUBMITTED_BY").toString().trim());
@@ -893,7 +898,8 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				Map<String,String> fileMap = new HashMap();
 				for (Map<String, Object> map3 : list3) {
 					File file = new File(map3.get("filePath").toString().trim());
-					fileMap.put(file.getName(), map3.get("filePath")!=null?map3.get("filePath").toString().trim():"");
+					//fileMap.put(file.getName(), map3.get("filePath")!=null?map3.get("filePath").toString().trim():"");
+					fileMap.put(file.getName(), map3.get("docId")!=null?map3.get("docId").toString().trim():"");
 					claimDataForForm.setOtherFiles(fileMap);
 				}
 			}

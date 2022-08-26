@@ -201,4 +201,9 @@ public class UserServiceImpl implements UserService{
 		return claimReqDao.getMaxPermAmount(empId, sancType);
 	}
 
+	@Override
+	public String getUploadedPath(String pathId, String fileType) {
+		return empDao.getUploadedPath(pathId, fileType);
+	}
+
 }
