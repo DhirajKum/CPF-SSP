@@ -12,11 +12,7 @@
 		<property name="locations" value="classpath:jdbc.properties" />
 	</bean> -->
 	<bean id="JDBC Data Source-0" class="org.springframework.jndi.JndiObjectFactoryBean" p:jndiName="jdbc/FCIPAYDS"/>
-		<!-- <property name="driverClassName" value="oracle.jdbc.xa.client.OracleXADataSource" />
-		<property name="url" value="jdbc:oracle:thin:@10.248.225.74:1521:TEST1" />
-		<property name="username" value="fcipayroll" />
-		<property name="password" value="orclnov16" />
-	</bean> -->
+		
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="dataSource" ref="JDBC Data Source-0" />
 		<property name="hibernateProperties">
@@ -33,21 +29,7 @@
 		<property name="configLocation">
 			<value>classpath:hibernate.cfg.xml</value>
 		</property>
-		
-		<!-- <property name="eventListeners"> <map> <entry key="post-update" value-ref="searchListener" 
-			/> <entry key="post-insert" value-ref="searchListener" /> <entry key="post-delete" 
-			value-ref="searchListener" /> </map> </property> -->
 	</bean>
-	
-	<!-- Jedis ConnectionFactory -->
-    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
-            p:hostName="127.0.0.1"
-            p:port="6379"
-            p:timeout="5000"
-            p:usePool="true"/>
-    
-    <!-- redis template definition -->
-    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" p:connectionFactory-ref="jedisConnectionFactory"/>
 	
 	<tx:annotation-driven />
 	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">

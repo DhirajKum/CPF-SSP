@@ -1,5 +1,9 @@
 package com.techm.fci.cpf.util;
-
+/**
+ * @author DHIRAJ
+ * @version 1.0
+ * @since 01/03/2021
+ */
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -31,7 +35,7 @@ public class AesUtil {
     private final Cipher cipher;
     public static final String IV = "F27D5C9927726BCEFE7510B1BDD3D137";
     public static final String SALT = "3FF2EC019C627B945225DEBAD71A01B6985FE84C95A70EB132882F88C0A59A55";
-    public static final String phase="MCIPORTAL";
+    public static final String phase="CPFPORTAL";
     public static Map<String,String> authSaltMap=new HashMap<String,String>();
     
     public String encryptString(String text){
@@ -164,7 +168,7 @@ public class AesUtil {
     }
     public static void main(String[] args) {
     	AesUtil aesUtil = new AesUtil();
-    	String encToken = aesUtil.encryptString("SINGLESIGNONTOKEN|rajesh@htss.com|htss@123");
+    	String encToken = aesUtil.encryptString("SINGLESIGNONTOKEN|dhiraj@gmail.com|gmail@123");
     	System.out.println(encToken);
     	String decToken = aesUtil.decryptString(encToken);
     	System.out.println(decToken);
@@ -174,7 +178,7 @@ public class AesUtil {
     	/*String s="784574545455";
     	System.out.println(Base64.encodeBase64URLSafeString(s.getBytes()));*/
     	/*AesUtil aesUtil = new AesUtil();
-		String text="htss@123+1828718278";
+		String text="gmail@123+1828718278";
 		
 		String salt = random(32);
 		System.out.println(salt);

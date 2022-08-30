@@ -1,8 +1,9 @@
-/**
- * 
- */
 package com.techm.fci.cpf.util;
-
+/**
+ * @author DHIRAJ
+ * @version 1.0
+ * @since 01/03/2021
+ */
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,10 +12,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
- * This utility is for date formating  
- * @author Dhiraj
- */
 public class DateUtils {
 
 	/**

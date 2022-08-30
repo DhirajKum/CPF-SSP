@@ -1,13 +1,14 @@
 package com.techm.fci.cpf.dto;
-
+/**
+ * @author DHIRAJ
+ * @version 1.0
+ * @since 01/03/2021
+ */
 import java.io.Serializable;
 import java.util.Date;
 
 public class ClaimStatusAssignToNewAdminDto  implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4515958585217255635L;
 
 	private String requestId;

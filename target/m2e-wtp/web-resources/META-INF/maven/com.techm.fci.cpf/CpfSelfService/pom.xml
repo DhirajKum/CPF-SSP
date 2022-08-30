@@ -279,27 +279,6 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-						<!-- <plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-war-plugin</artifactId>
-					<version>2.6</version>
-					<configuration>
-						<warSourceDirectory>src/main/webapp</warSourceDirectory>
-						<warName>CpfSelfService</warName>
-						<failOnMissingWebXml>false</failOnMissingWebXml>
-					</configuration>
-				</plugin> -->
-				
-				<!-- <plugin>
-					<groupId>com.oracle.weblogic</groupId>
-					<artifactId>weblogic-maven-plugin</artifactId>
-					<version>10.3.5.0</version>
-					<configuration>
-						<adminurl>t3://localhost:7001</adminurl>
-						<user>weblogic</user>
-						<password>cpf12345</password>
-					</configuration>
-				</plugin> -->
 			</plugins>
 		</pluginManagement>
 		<finalName>CpfSelfService</finalName>

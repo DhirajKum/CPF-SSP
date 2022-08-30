@@ -1,5 +1,9 @@
 package com.techm.fci.cpf.model;
-
+/**
+ * @author DHIRAJ
+ * @version 1.0
+ * @since 01/03/2021
+ */
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -9,15 +13,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-
-
 @Entity
 @Table(name="PAY_TEST_DBUSER")
 public class User implements java.io.Serializable {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	
 	private int userId;

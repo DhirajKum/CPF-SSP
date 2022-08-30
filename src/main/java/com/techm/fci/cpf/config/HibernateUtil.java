@@ -1,5 +1,9 @@
 package com.techm.fci.cpf.config;
-
+/**
+ * @author DHIRAJ
+ * @version 1.0
+ * @since 01/03/2021
+ */
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 

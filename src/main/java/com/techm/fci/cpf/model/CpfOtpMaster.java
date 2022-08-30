@@ -1,5 +1,9 @@
 package com.techm.fci.cpf.model;
-
+/**
+ * @author DHIRAJ
+ * @version 1.0
+ * @since 01/03/2021
+ */
 import java.util.Date;
 
 import javax.persistence.Column;

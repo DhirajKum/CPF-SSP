@@ -1,12 +1,14 @@
 package com.techm.fci.cpf.model;
+/**
+ * @author DHIRAJ
+ * @version 1.0
+ * @since 01/03/2021
+ */
 
 import java.io.Serializable;
 
 public class UserModel implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private String uan;
