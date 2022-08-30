@@ -14,7 +14,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 	<beans:bean id="passwordEncoder" class ="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 	<http>
 		
-		
 		<!-- <intercept-url pattern="/getEmpDetailsByEmpNum" access="denyAll" /> -->
 		
 		<intercept-url pattern="/role/roleMapping" access="hasRole('SUPER_USER')" />
@@ -28,6 +27,8 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 		
 		<intercept-url pattern="/claim/claimHistoryTrail" access="hasAnyRole('USER','ADMIN','CPF_ADMIN')" />
 		<intercept-url pattern="/claim/viewClaimReq" access="hasAnyRole('USER','ADMIN','CPF_ADMIN')" />
+		
+		<intercept-url pattern="/claim/downloadCpfDoc" access="hasAnyRole('SUPER_USER','USER','ADMIN','CPF_ADMIN')" />
 		
 		<intercept-url pattern="/report/claimReport" access="hasAnyRole('SUPER_USER','ADMIN','CPF_ADMIN')" />		
 		
@@ -56,17 +57,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 
 	<beans:bean id="cpfUserDetailsService" class="com.techm.fci.cpf.service.CPFUserDetailsService"/>
 	<authentication-manager>
-		<!-- <authentication-provider>
-			<jdbc-user-service data-source-ref="dataSource"
-					users-by-username-query="select username, password, enabled from pay_test_dbuser where username = ?"
-					authorities-by-username-query="select username, role_name from pay_test_dbuser where username = ?"
-			/>
-		</authentication-provider> -->
-		
 		<authentication-provider user-service-ref="cpfUserDetailsService" >
 			<password-encoder ref="passwordEncoder" />
 		</authentication-provider>
 	</authentication-manager>
-	
 	
 </beans:beans>

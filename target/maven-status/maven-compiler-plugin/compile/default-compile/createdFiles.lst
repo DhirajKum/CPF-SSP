@@ -31,6 +31,7 @@ com\techm\fci\cpf\dto\ClaimRequestReportDto.class
 com\techm\fci\cpf\util\AesUtil.class
 com\techm\fci\cpf\daoimpl\ReportDaoImpl.class
 com\techm\fci\cpf\controller\ReportController.class
+com\techm\fci\cpf\model\User.class
 com\techm\fci\cpf\dto\RevokeRoleStatusDto.class
 com\techm\fci\cpf\util\StringUtils.class
 com\techm\fci\cpf\serviceimpl\ReportServiceImpl.class
