@@ -178,9 +178,17 @@ if($table.length){
 		//lengthMenu:[[5,10,15,-1],['5','10','15','ALL']],
 		pageLength:10,
 		dom: 'Bfrtip',
-		buttons: [
-            'copy', 'excel', 'pdf', 'print'
-        ],
+		buttons: ['copy','excel',{
+	      extend: 'pdf',
+	      text: '<i class="fa fa-file-pdf-o"></i> PDF',
+	      title: $('h1').text(),
+	      exportOptions: {
+	        columns: ':not(.no-print)'
+	      },
+          orientation : 'landscape',
+          pageSize : 'A3',
+	      footer: true
+	    },'print'],
 		ajax:{
 			url:urlVar,
 			dataSrc:''
