@@ -169,7 +169,6 @@ public class LoginController {
 	@RequestMapping(value = "/saveRegistrationData", method = RequestMethod.POST)
 	public String saveRegistrationData(@ModelAttribute("registeredUser") RegisteredUser regUser, @RequestParam String js_enabled, HttpSession session) {
 		RegisteredUser rUser;
-		
 		logger.info("::: In side save registration method :::");
 		rUser = userService.checkEmpInRegisteredUserByEmpNum(regUser.getEmpNum());
 
