@@ -167,17 +167,20 @@ public class LoginController {
 	 */
 
 	@RequestMapping(value = "/saveRegistrationData", method = RequestMethod.POST)
-	public String saveRegistrationData(@ModelAttribute("registeredUser") RegisteredUser regUser, HttpSession session) {
+	public String saveRegistrationData(@ModelAttribute("registeredUser") RegisteredUser regUser, @RequestParam String js_enabled, HttpSession session) {
 		RegisteredUser rUser;
 		logger.info("::: In side save registration method :::");
 		rUser = userService.checkEmpInRegisteredUserByEmpNum(regUser.getEmpNum());
 
-		if (rUser == null) {
+		if (rUser == null && js_enabled.equals("1")) {
 			if (userService.saveRegData(regUser)) {
 				return "redirect:/login";
 			} else {
 				return "redirect:/userRegistration?operation=registrationfailed";
 			}
+		} else if(js_enabled.equals("0")){
+			session.setAttribute("regInfo", "You don't have javascript enabled. Kindly enable it before going through the registration process.");
+			return "redirect:/userRegistration";
 		} else {
 			logger.info("rUser :::: INFO" + rUser.toString());
 			session.setAttribute("regInfo", "You Have Already Registered ...!!! Kindaly Go For Login...");

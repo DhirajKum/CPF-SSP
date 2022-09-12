@@ -84,24 +84,23 @@ label {
 </div>
 </div>
 	<c:if test="${not empty regInfo}">
-		<div class="col-md-12" style= "float:none">
+		<div class="col-md-12" style= "float:none" id="regInfo">
 			<div class="alert alert-danger alert-dismissible" style="text-align: center;">
-				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<!-- <button type="button" class="close" data-dismiss="alert">&times;</button> -->
 				<h4><b>${regInfo}</b></h4>
 			</div>
 		</div>
 	</c:if>
 	<c:if test="${not empty message}">
-		<div class="col-md-12" style= "float:none">
+		<div class="col-md-12" style= "float:none" id="message">
 			<div class="alert alert-danger alert-dismissible" style="text-align: center;">
-				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<!-- <button type="button" class="close" data-dismiss="alert">&times;</button> -->
 				<h4><b>${message}</b></h4>
 			</div>
 		</div>
 	</c:if>
 	
 	<h4><b><div id='msg' style="text-align:center; font-weight:bold; color:green"></div></h4>
-	
 	<%-- <c:if test="${not empty empIdStatus}">
 		<div class="col-md-12">
 			<div class="alert alert-danger alert-dismissible" style="text-align: center;">
@@ -115,7 +114,10 @@ label {
 		<div class="card card-4">
 			<div class="card-body">
 				<h2 class="title">Registration Form</h2>
-				<sf:form id="registrationForm" action='${pageContext.request.contextPath}/saveRegistrationData' method='POST' modelAttribute="registeredUser">
+				<sf:form id="registrationForm" action='${pageContext.request.contextPath}/saveRegistrationData' method='POST' modelAttribute="registeredUser" onsubmit="this.js_enabled.value=1;return true;">
+					<noscript>
+						<div id="noJS" class="alert alert-danger" style="padding-left: 20px; padding-right: 0px; margin-left: 0px;">Please enable JavaScript in your browser</div>
+					</noscript>
 
 					<div class="form-group input-group">
 						<div class="input-group-prepend">
@@ -195,6 +197,7 @@ label {
 					<p class="text-center">
 						Have an account? <a href="${pageContext.request.contextPath}/login">Log In</a>
 					</p>
+					<input type="hidden" name="js_enabled" value="0">
 				</sf:form>
 			</div>
 			<!-- card.// -->
@@ -238,7 +241,9 @@ label {
 <script type="text/javascript">
 
 $(document).ready(function() {
-    
+    $("#noJS").hide();
+    $("#regInfo").hide();
+    $("#message").hide();
 	$("#empName").prop('readonly', true);
 	$("#uan").prop('readonly', true);
 	$('#sendOtp').addClass('disabled');
