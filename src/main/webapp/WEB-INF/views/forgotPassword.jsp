@@ -64,7 +64,7 @@
 								<span class="input-group-text"> <i class="fa fa-list-ol"></i>
 								</span>
 							</div>
-						<label class="labelwidth">New Password</label>
+							<label class="labelwidth">New Password</label>
 							<sf:input path="newPassword" id="newPass" cssclass="form-control" />
 						</div>
 

@@ -55,7 +55,7 @@ public class ReportController {
 	public ModelAndView cpfSlip(@RequestParam(name = "operation", required = false) String operation,
 			@ModelAttribute("cpfSlipReportDto") CpfSlipReportDto cpfSlipReportDto) {
 
-		DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+		//DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 		ModelAndView mv = new ModelAndView("masterpage");
 		mv.addObject("title", "CPF Slip Report");
 		mv.addObject("clickCpfSlip", true);

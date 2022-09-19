@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -80,7 +81,6 @@ public class ClaimController {
 		//CpfClaimRequest cpfClaimReq = new CpfClaimRequest();
 		ActClaimDto cpfClaimReq = new ActClaimDto();
 		ModelAndView mv = new ModelAndView("masterpage");  
-		
 		UserModel uModel = getUserModel();
 		mv.addObject("userModel",uModel);
 		if(uModel!=null){
@@ -144,7 +144,6 @@ public class ClaimController {
 				mv.addObject("message","Claim submission failed. As of now, admin/s not found for this location to approve your request ...!!!");
 			}
 		}
-		
 		return mv;
 	}
 	

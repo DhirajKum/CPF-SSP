@@ -172,8 +172,7 @@ label {
 			
 					<div class="form-group input-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text"> <i class="fa fa-lock"></i>
-							</span>
+							<span class="input-group-text"> <i class="fa fa-lock"></i></span>
 						</div>
 						<label>Create password</label>		
 						    <sf:input path="password" id="pass" cssClass="form-control" />
@@ -181,22 +180,22 @@ label {
 					<!-- form-group// -->
 					<div class="form-group input-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text"> <i class="fa fa-lock"></i>
-							</span>
+							<span class="input-group-text"> <i class="fa fa-lock"></i></span>
 						</div>
 						<label>Repeat password</label>	
 							<input type="password" id="repass" class="form-control" >
-						<h5><b><span id='message'></span></b></h5>
+							<h6><b><span id='passMessage'></span></b></h6>
 					</div>
 					<!-- form-group// -->
 					<div class="form-group">
 						<button type="submit" id="createAcc" class="btn btn-primary btn-block">Create Account</button>
 					</div>
-					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					<!-- form-group// -->
 					<p class="text-center">
 						Have an account? <a href="${pageContext.request.contextPath}/login">Log In</a>
 					</p>
+				
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					<input type="hidden" name="js_enabled" value="0">
 				</sf:form>
 			</div>
@@ -366,9 +365,9 @@ function finalSubmit(){
 
 $('#pass, #repass').on('keyup', function () {
   if ($('#pass').val() == $('#repass').val()) {
-    $('#message').html('').css('color', 'green');
+    $('#passMessage').html('').css('color', 'green');
   } else 
-    $('#message').html('Not Matching').css('color', 'red');
+    $('#passMessage').html('Not Matching').css('color', 'red');
 });
 
 function validateEmail(){ 
