@@ -576,7 +576,8 @@ public class ClaimController {
 	        try {
 	        UserModel uModel = getUserModel();
 	        if(uModel != null){
-		        String folderPath = null;
+		        if(filename.toUpperCase().endsWith(".PDF") || filename.toUpperCase().endsWith(".JPG") || filename.toUpperCase().endsWith(".JPGE") ){
+	        	String folderPath = null;
 				if(!uModel.getEmpNum().equals("")){
 					//folderPath = "/prodshare/cpf_out/"+uModel.getEmpNum().trim()+"_KYC";//For Production server
 					  folderPath = "/fapshare/cpf_out/"+uModel.getEmpNum().trim()+"_KYC";// For Dev server	   
@@ -596,6 +597,10 @@ public class ClaimController {
 			        bout.flush();
 			        bout.close();
 				}
+		        }else{
+		        	return "redirect:/home?uploadfiletype=Kindly upload proper file formate !!!";
+		        }
+		        
 	        }else{
 		        return "redirect:/login";
 		    }

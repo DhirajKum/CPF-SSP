@@ -66,7 +66,10 @@ public class LoginController {
 	}
 
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
-	public ModelAndView home(@RequestParam(name="operation", required=false) String operation,@RequestParam(name="uploadfile", required=false) String uploadFile, HttpSession session) throws IOException {
+	public ModelAndView home(@RequestParam(name = "operation", required = false) String operation,
+			@RequestParam(name = "uploadfile", required = false) String uploadFile,
+			@RequestParam(name = "uploadfiletype", required = false) String uploadFileType, HttpSession session)
+			throws IOException {
 		ModelAndView mv = new ModelAndView("masterpage");
 		mv.addObject("title", "Home");
 		mv.addObject("clickHome", true);
@@ -84,6 +87,9 @@ public class LoginController {
 		}
 		if(uploadFile != null){
 			mv.addObject("message",uploadFile);
+		}
+		if(uploadFileType != null){
+			mv.addObject("errorMessage",uploadFileType);
 		}
 		}else{
 			return new ModelAndView("login");

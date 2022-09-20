@@ -15,10 +15,17 @@
  <td class="w-25"><b>Employer Contribution</b></td><div class="col-md-12" style="padding-left: 5px">
 
 		<c:if test="${not empty message}">
-			<div class="col-md-12">
+			<div class="col-md-12" id="message">
 				<div class="alert alert-success alert-dismissible" style="text-align: center;">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
 					${message}
+				</div>
+			</div>
+		</c:if>
+		
+		<c:if test="${not empty errorMessage}">
+			<div class="col-md-12" id="errormessage">
+				<div class="alert alert-danger alert-dismissible" style="text-align: center;">
+					${errorMessage}
 				</div>
 			</div>
 		</c:if>
@@ -130,7 +137,10 @@
 	</div>
 
 <script type="text/javascript">
-
+$(document).ready(function(){
+	//$("#message").hide();
+	//$("#errormessage").hide();
+});
 $.validate({
 	validateOnBlur : true,
 	form : '#docUploadForm',
