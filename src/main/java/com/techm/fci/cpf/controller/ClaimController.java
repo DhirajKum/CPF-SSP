@@ -567,12 +567,10 @@ public class ClaimController {
 	}
 	
 	
-	
 	@RequestMapping(value={"/uplodCpfDoc"}, method = {RequestMethod.POST})
 	public String upload(@RequestParam CommonsMultipartFile file,HttpSession session){  
 	        //String path=session.getServletContext().getRealPath("/");  
 	        String filename=file.getOriginalFilename();
-	        //int lastIndex= filename.lastIndexOf(".");
 	        try {
 	        UserModel uModel = getUserModel();
 	        if(uModel != null){
@@ -587,7 +585,6 @@ public class ClaimController {
 				Files.createDirectories(pathLoc);
 				
 				logger.info(pathLoc+"/"+filename);
-				//String custumFileName = uModel.getEmpNum().trim()+"_KYC_DOC"+filename.substring(lastIndex);
 				
 				Boolean saveStatus = userService.saveEmpKycDoc(uModel,pathLoc+"/"+filename);
 				if(saveStatus){
@@ -600,7 +597,6 @@ public class ClaimController {
 		        }else{
 		        	return "redirect:/home?uploadfiletype=Kindly upload proper file formate !!!";
 		        }
-		        
 	        }else{
 		        return "redirect:/login";
 		    }
@@ -611,7 +607,6 @@ public class ClaimController {
 	        }  
 	        return "redirect:/home?uploadfile="+filename+" file successfully uploaded";
 	}
-	
 	
 	@RequestMapping(value={"/downloadCpfDoc"}, method = {RequestMethod.GET})
 	public void download(HttpServletRequest request, HttpServletResponse response, @RequestParam(name="pathId") String pathId, @RequestParam(name="fileType") String fileType){  
