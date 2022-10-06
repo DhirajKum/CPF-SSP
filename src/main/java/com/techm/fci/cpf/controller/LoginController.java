@@ -223,12 +223,10 @@ public class LoginController {
 					result = new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.INTERNAL_SERVER_ERROR);
 				}
 			}
-		
 		}else{
 			result = new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.ACCEPTED);
 		}
 		session.setAttribute("mobile", mobileNumber);
-		
 		return result;
 	}
 	
