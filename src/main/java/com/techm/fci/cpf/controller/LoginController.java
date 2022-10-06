@@ -228,6 +228,7 @@ public class LoginController {
 			result = new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.ACCEPTED);
 		}
 		session.setAttribute("mobile", mobileNumber);
+		System.out.println("testing ");
 		return result;
 	}
 	
