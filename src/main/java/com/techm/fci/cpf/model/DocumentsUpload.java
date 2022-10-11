@@ -32,7 +32,7 @@ public class DocumentsUpload implements Serializable {
 	private Date created_date;
 	private String modified_by;
 	private Date modified_date;
-	private String info_1;
+	private String CLAIM_APPLIED_FOR;
 	private String info_2;
 	private String info_3;
 	private String info_4;
@@ -44,7 +44,7 @@ public class DocumentsUpload implements Serializable {
 	
 	public DocumentsUpload(int doc_id, String emp_num, String request_id, String file_type, String emp_phone,
 			String emp_email, String role_name, String file_path, String created_by, Date created_date,
-			String modified_by, Date modified_date, String info_1, String info_2, String info_3, String info_4,
+			String modified_by, Date modified_date, String CLAIM_APPLIED_FOR, String info_2, String info_3, String info_4,
 			String info_5) {
 		super();
 		this.doc_id = doc_id;
@@ -59,7 +59,7 @@ public class DocumentsUpload implements Serializable {
 		this.created_date = created_date;
 		this.modified_by = modified_by;
 		this.modified_date = modified_date;
-		this.info_1 = info_1;
+		this.CLAIM_APPLIED_FOR = CLAIM_APPLIED_FOR;
 		this.info_2 = info_2;
 		this.info_3 = info_3;
 		this.info_4 = info_4;
@@ -165,12 +165,12 @@ public class DocumentsUpload implements Serializable {
 		this.modified_date = modified_date;
 	}
 
-	public String getInfo_1() {
-		return info_1;
+	public String getCLAIM_APPLIED_FOR() {
+		return CLAIM_APPLIED_FOR;
 	}
 
-	public void setInfo_1(String info_1) {
-		this.info_1 = info_1;
+	public void setCLAIM_APPLIED_FOR(String cLAIM_APPLIED_FOR) {
+		CLAIM_APPLIED_FOR = cLAIM_APPLIED_FOR;
 	}
 
 	public String getInfo_2() {
@@ -210,8 +210,8 @@ public class DocumentsUpload implements Serializable {
 		return "DocumentsUpload [doc_id=" + doc_id + ", emp_num=" + emp_num + ", request_id=" + request_id
 				+ ", file_type=" + file_type + ", emp_phone=" + emp_phone + ", emp_email=" + emp_email + ", role_name="
 				+ role_name + ", file_path=" + file_path + ", created_by=" + created_by + ", created_date="
-				+ created_date + ", modified_by=" + modified_by + ", modified_date=" + modified_date + ", info_1="
-				+ info_1 + ", info_2=" + info_2 + ", info_3=" + info_3 + ", info_4=" + info_4 + ", info_5=" + info_5
+				+ created_date + ", modified_by=" + modified_by + ", modified_date=" + modified_date + ", CLAIM_APPLIED_FOR="
+				+ CLAIM_APPLIED_FOR + ", info_2=" + info_2 + ", info_3=" + info_3 + ", info_4=" + info_4 + ", info_5=" + info_5
 				+ "]";
 	}
 	

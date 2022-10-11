@@ -186,8 +186,8 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	@Override
-	public Boolean saveEmpOtherDoc(UserModel uModel, String claimSubEmpID, String reqId, String path) {
-		return empDao.saveOtherDoc(uModel, claimSubEmpID, reqId, path);
+	public Boolean saveEmpOtherDoc(UserModel uModel, String claimSubEmpID, String reqId, String claimAppliedFor, String path) {
+		return empDao.saveOtherDoc(uModel, claimSubEmpID, reqId, claimAppliedFor, path);
 	}
 	
 	@Override
@@ -208,6 +208,11 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public String getUploadedPath(String pathId, String fileType) {
 		return empDao.getUploadedPath(pathId, fileType);
+	}
+
+	@Override
+	public Boolean updateEmpOtherDoc(UserModel uModel, CpfClaimRequest cpfClaimReq) {
+		return empDao.updateOtherDoc(uModel, cpfClaimReq);
 	}
 
 }

@@ -208,9 +208,40 @@
 					</div>
 						
 				</div>
+				<div class="row marginT10">	
+					<div class="col-md-6">
+						<div class="form-group row">
+							<label for="" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Uploaded KYC Document</b></label>
+							<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?path=${claimData.kycFilePath}" class="col-sm-7" target="_blank">${claimData.kycFileName}</a>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group row">
+							<label for="" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>User Uploaded Other Documents</b></label>
+							<div class="col-sm-7">
+							<c:forEach var="userOtherFile" items="${claimData.userOtherFiles}">
+								<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?path=${userOtherFile.value}" target="_blank">${userOtherFile.key}</a></br>
+							</c:forEach>
+							</div>
+						</div>
+					</div>
+				</div>
 				
-				
-				
+				<div class="row" id="docUpload">
+				<div class="col-md-6">
+					<div class="form-group row">
+						<label cssClass="col-sm-5 col-form-label" class="labelwidth"><b>User Upload Other Documents</b></label>
+						<input type="file" class="col-sm-7" id="files" name="files" multiple data-validation="ckeckFileFormat ckeckFileSize required"/>
+					</div>
+					<small id="docUploadHelp" class="form-text text-muted" style="text-align: center;">Note: You can upload multiple file with +Ctrl key</br>File should be in pdf, png, jpg and jpeg format only.</br>File maximum size should be 5 Mb.</small>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group row">
+						<input type="button" class="col-sm-5" id="uploadOtherDoc" value="Upload File"/>
+						<div class="col-sm-7"></div>
+					</div>
+				</div>
+				</div>
 				
 				<hr class="solid">
 				<div class="row">
@@ -460,7 +491,7 @@ $("#claimAppliedFor input:radio").change(function (){
 function isNumber(evt) {
     evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+    if (charCode > 31 && ((charCode < 48) || (charCode > 57))) {
         return false;
     }
     return true;
@@ -507,14 +538,81 @@ return true;
 }
 
 function installEnbDsb(){
-
-if(document.getElementById("rd1").checked || document.getElementById("rd2").checked ||document.getElementById("rd3").checked ){	
-	$("#installmentNo").prop("disabled", true);
-	$("#installmentNo").val('');
-}else if(document.getElementById("rd4").checked){	
-	$("#installmentNo").prop("disabled", false);
-	$("#installmentNo").val('');
+	if(document.getElementById("rd1").checked || document.getElementById("rd2").checked ||document.getElementById("rd3").checked ){	
+		$("#installmentNo").prop("disabled", true);
+		$("#installmentNo").val('');
+	}else if(document.getElementById("rd4").checked){	
+		$("#installmentNo").prop("disabled", false);
+		$("#installmentNo").val('');
+	}
 }
 
+function getFileExtension(name) {
+	var splitData = name.split(".");
+	var returnFlag = false;
+	var index = splitData.length;
+	var extension = splitData[index - 1];
+	var exteArr = [ "pdf","png","jpg","jpeg" ];
+	$.each(exteArr, function(i, j) {
+		if (j == extension) {
+			returnFlag = true;
+		}
+	})
+	return returnFlag;
 }
+
+function getFileSize(file){
+	//var file = $el[0].files[0];
+	if (file.size > 5242880) {
+		return false;
+	}else{
+		return true;
+	}
+}
+
+$("#uploadOtherDoc").on('click', function(event){
+
+ var filetype=true;
+ var fd = new FormData();
+ var totalfiles = document.getElementById('files').files.length;
+ var radioValue=$("#claimAppliedFor input:radio:checked").val();
+ 
+   if(totalfiles>0){
+   for (var index = 0; index < totalfiles; index++) {
+      fd.append("files", document.getElementById('files').files[index]);
+      if(getFileExtension(document.getElementById('files').files[index].name) && getFileSize(document.getElementById('files').files[index])){
+      	filetype=true;
+      	}
+      	else
+      	{
+      	filetype=false;
+      	break;
+      }
+	}
+	}/*else{
+		alert("Kindly upload at list one document.");
+	} */
+
+if(filetype){
+  $.ajax({
+            type: 'POST',
+            url: 'multiUplodCpfDoc?${_csrf.parameterName}=${_csrf.token}&reqId=${reqId}&claimSubmittedBy=${actClaimDto.CLAIM_SUBMITTED_BY}&claimAppliedFor='+radioValue,
+            enctype: 'multipart/form-data',
+            data: fd,
+            processData: false,
+            contentType: false,
+            success: function (data, textStatus, xhr) {
+            	if (xhr.status=='200') {
+	                console.log('Upload Completed ...');
+	                window.location.href='${pageContext.request.contextPath}/claim/raiseClaimReq?reqId=${reqId}&uploadfiles='+data+' Files uploaded successfully !!!';
+                }
+            }
+        });
+}else{
+		$('#msg').html("Kindly upload your file/s according to the given instructions !!!").fadeIn('slow');
+		$('#msg').delay(10000).fadeOut('slow');
+}
+
+});
+
 </script>

@@ -75,11 +75,12 @@ public class ClaimController {
 	}
 	
 	@RequestMapping(value={"/raiseClaimReq"})
-	public ModelAndView raiseClaimReq(@RequestParam(name="reqId", required=false) String reqId, @RequestParam(name="operation", required=false) String operation){
+	public ModelAndView raiseClaimReq(@RequestParam(name="reqId", required=false) String reqId, @RequestParam(name="operation", required=false) String operation, @RequestParam(name="uploadfiles", required=false) String uploadfiles){
 		DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 		//CpfClaimRequest cpfClaimReq = new CpfClaimRequest();
 		ActClaimDto cpfClaimReq = new ActClaimDto();
 		ModelAndView mv = new ModelAndView("masterpage");  
+		
 		UserModel uModel = getUserModel();
 		mv.addObject("userModel",uModel);
 		if(uModel!=null){
@@ -143,6 +144,7 @@ public class ClaimController {
 				mv.addObject("message","Claim submission failed. As of now, admin/s not found for this location to approve your request ...!!!");
 			}
 		}
+		
 		return mv;
 	}
 	
@@ -202,6 +204,7 @@ public class ClaimController {
 				claimHistoryTrailDto.setRemarks("Claim has been created.");
 				claimHistoryTrailDto.setStatus("1");
 				userService.saveCpfClaimHistoryTrail(claimHistoryTrailDto, uModel.getEmpNum(), uModel.getRoleName());
+				userService.updateEmpOtherDoc(uModel, claimRequest);
 				
 				return "redirect:/home?operation=claimSuccess";
 			}else{
@@ -567,6 +570,7 @@ public class ClaimController {
 	}
 	
 	
+	
 	@RequestMapping(value={"/uplodCpfDoc"}, method = {RequestMethod.POST})
 	public String upload(@RequestParam CommonsMultipartFile file,HttpSession session){  
 	        //String path=session.getServletContext().getRealPath("/");  
@@ -645,7 +649,8 @@ public class ClaimController {
 	
 	
 	@RequestMapping(value={"/multiUplodCpfDoc"}, method = {RequestMethod.POST})
-	public ResponseEntity<String> multiUpload(@RequestParam CommonsMultipartFile[] files, @RequestParam(name = "reqId") String reqId, @RequestParam(name = "claimSubmittedBy") String claimSubmittedEmpID, HttpSession session){  
+	public ResponseEntity<String> multiUpload(@RequestParam CommonsMultipartFile[] files, @RequestParam(name = "reqId") String reqId, 
+			@RequestParam(name = "claimSubmittedBy") String claimSubmittedEmpID, @RequestParam(name = "claimAppliedFor", required=false) String claimAppliedFor, HttpSession session){  
 		String fileList="";
 		ResponseEntity<String> result=null;
 		try {
@@ -654,7 +659,7 @@ public class ClaimController {
 	        	
 		        String folderPath = null;
 				if(!uModel.getEmpNum().equals("")){
-					//folderPath = "/prodshare/cpf_out/"+uModel.getEmpNum().trim()+"_OTHERS";//For Production server
+					  //folderPath = "/prodshare/cpf_out/"+uModel.getEmpNum().trim()+"_OTHERS";//For Production server
 					  folderPath = "/fapshare/cpf_out/"+uModel.getEmpNum().trim()+"_OTHERS";// For Dev server	   
 				}
 		        Path pathLoc = Paths.get(folderPath);
@@ -668,7 +673,8 @@ public class ClaimController {
 				        //int lastIndex= filename.lastIndexOf(".");
 						//String custumFileName = uModel.getEmpNum().trim()+"_KYC_DOC"+filename.substring(lastIndex);
 						logger.info("File Upload location ::: "+pathLoc+"/"+filename);
-						Boolean saveStatus = userService.saveEmpOtherDoc(uModel,claimSubmittedEmpID,reqId,pathLoc+"/"+filename);
+						logger.info("claimAppliedFor :::: "+claimAppliedFor);
+						Boolean saveStatus = userService.saveEmpOtherDoc(uModel,claimSubmittedEmpID,reqId,claimAppliedFor,pathLoc+"/"+filename);
 						if(saveStatus){
 					        byte barr[]=file.getBytes();  
 					        BufferedOutputStream bout=new BufferedOutputStream(new FileOutputStream(pathLoc+"/"+filename)); 
@@ -692,6 +698,18 @@ public class ClaimController {
 		return result;
 	}
 
+	//Not in used due to version incompatible
+	@RequestMapping(value={"/getMaxPermAmount"})
+	public String getMaxPermAmount(@RequestParam(name="sancType") String sancType, @RequestParam(name="empId") String empId){
+		UserModel uModel=getUserModel();
+		String maxPermAmount=null;
+		if(uModel!=null){
+			maxPermAmount = userService.getMaxPermAmount(empId, sancType);
+		}else{
+			 return "redirect:/login";
+		}
+		return maxPermAmount;
+	}
 	
 	
 	

@@ -74,7 +74,9 @@ public interface UserService {
 	
 	public Boolean deleteEmpOtherDoc(UserModel uModel,String claimSubEmpID, String reqId);
 	
-	public Boolean saveEmpOtherDoc(UserModel uModel,String claimSubEmpID, String reqId, String path);
+	public Boolean saveEmpOtherDoc(UserModel uModel,String claimSubEmpID, String reqId, String claimAppliedFor, String path);
+	public Boolean updateEmpOtherDoc(UserModel uModel, CpfClaimRequest cpfClaimReq);
+	
 	public void insertOtpToSmsTable(String empNum,String mobile);
 	
 	public List<ClaimRequestStatusDto> getClaimReqStatus(String requestId);

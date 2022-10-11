@@ -41,12 +41,10 @@ public class CPFSendSMSUtility
                     br.close();
                     if (inputLine2.contains("Accepted")) {
                         rs2 = stmt2.executeQuery("update fcipayroll.cpf_otp_mas set del_by_smsportal='Y',msg_status='Accepted', api_response='" + inputLine2 + "' where mobile_no = " + rs.getString(3));
-                    }
-                    else {
+                    }else {
                         rs2 = stmt2.executeQuery("update fcipayroll.cpf_otp_mas set del_by_smsportal='Y',msg_status='Rejected', api_response='" + inputLine2 + "' where mobile_no = " + rs.getString(3));
                     }
-                }
-                else {
+                }else {
                     rs2 = stmt2.executeQuery("update fcipayroll.cpf_otp_mas set del_by_smsportal='Y',msg_status=" + ValidationMessage + ", api_response ='" + inputLine2 + "'  where mobile_no = " + rs.getString(3));
                 }
             }

@@ -31,6 +31,7 @@ import org.springframework.stereotype.Repository;
 import com.techm.fci.cpf.dao.BaseDao;
 import com.techm.fci.cpf.dao.EmployeeDao;
 import com.techm.fci.cpf.dto.HomeDto;
+import com.techm.fci.cpf.model.CpfClaimRequest;
 import com.techm.fci.cpf.model.CpfOtpMaster;
 import com.techm.fci.cpf.model.DocumentsUpload;
 import com.techm.fci.cpf.model.EmpMaster;
@@ -114,7 +115,6 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",Locale.ENGLISH);
 			DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-			
 			for (Map<String, Object> map : list) {
 				
 				homeDto.setEmpName(map.get("empName").toString().trim());
@@ -357,7 +357,7 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 		session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		String empNum=uModel.getEmpNum();
-		if(empNum!=null){
+		if(empNum!=null && claimSubEmpID!=null && !claimSubEmpID.equals("")){
 			String query = "select doc_id as \"docID\" from cpf_doc_uploads where emp_num=:empNum and request_id=:reqId and file_type=2";
 			
 			Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
@@ -372,16 +372,31 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 					session.delete(object);
 				}
 			}
+		}else{
+			String query = "select doc_id as \"docID\" from cpf_doc_uploads where emp_num=:empNum and file_type=3";
+			
+			Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+			if (empNum != null) {
+				hQuery.setParameter("empNum", empNum);
+			}
+			List<Map<String, Object>> list = hQuery.list();
+			if(list!=null && list.size()>0){
+				for (Map<String, Object> map : list) {
+					Object object = session.load(DocumentsUpload.class,((BigDecimal)map.get("docID")).intValue());
+					session.delete(object);
+				}
+			}
 		}
 		session.getTransaction().commit();
 		return true;
 	}
 	
 	@Override
-	public Boolean saveOtherDoc(UserModel uModel, String claimSubEmpID, String reqId, String path) {
+	public Boolean saveOtherDoc(UserModel uModel, String claimSubEmpID, String reqId, String claimAppliedFor, String path) {
 		session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		
+		if(uModel.getRoleName().equals("ADMIN") || uModel.getRoleName().equals("CPF_ADMIN")){		
 		String query1 = "select cru.emp_num as \"empNum\", cru.emp_phone as \"empPhone\",cru.emp_email as \"empEmail\",cru.role_name as \"roleName\" "
 				+ "from cpf_registered_users cru, cpf_claim_form_details ccfd "
 				+ "where cru.emp_num=ccfd.claim_submitted_by and ccfd.request_id=:reqId";
@@ -406,6 +421,45 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 			docUpload.setModified_by(uModel.getEmpNum());
 			docUpload.setModified_date(new Date());
 			session.persist(docUpload);
+		}
+		}else if (uModel.getRoleName().equals("USER")){
+			String query1 = null;
+			if(reqId!=null && !reqId.equals("")){
+				query1 = "select cru.emp_num as \"empNum\", cru.emp_phone as \"empPhone\",cru.emp_email as \"empEmail\",cru.role_name as \"roleName\" "
+						+ "from cpf_registered_users cru, cpf_claim_form_details ccfd "
+						+ "where cru.emp_num=ccfd.claim_submitted_by and ccfd.request_id=:reqId";
+			}else{
+				query1 = "select cru.emp_num as \"empNum\", cru.emp_phone as \"empPhone\",cru.emp_email as \"empEmail\",cru.role_name as \"roleName\" "
+						+ "from cpf_registered_users cru "
+						+ "where cru.emp_num=:claimSubEmpID";
+			}
+			
+			Query hQuery1 = session.createSQLQuery(query1).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+			if (reqId != null) {
+				hQuery1.setParameter("claimSubEmpID", uModel.getEmpNum());
+			}
+			List<Map<String, Object>> list1 = hQuery1.list();
+
+			for (Map<String, Object> map : list1) {
+				DocumentsUpload docUpload = new DocumentsUpload();
+				docUpload.setEmp_num(map.get("empNum").toString().trim());
+				docUpload.setEmp_email(map.get("empEmail").toString().trim());
+				docUpload.setEmp_phone(map.get("empPhone").toString().trim());
+				docUpload.setFile_type("3");
+				docUpload.setCLAIM_APPLIED_FOR(claimAppliedFor.toString().trim());
+				docUpload.setFile_path(path.toString().trim());
+				docUpload.setRole_name(map.get("roleName").toString().trim());
+				if(reqId!=null && !reqId.equals("")) {
+					docUpload.setRequest_id(reqId);
+				}else{
+					docUpload.setRequest_id("0");	
+				}
+				docUpload.setCreated_by(uModel.getEmpNum());
+				docUpload.setCreated_date(new Date());
+				docUpload.setModified_by(uModel.getEmpNum());
+				docUpload.setModified_date(new Date());
+				session.persist(docUpload);			
+			}
 		}
 		/*else{
 			String query1 = "update cpf_doc_uploads set file_path = :newPath, modified_date=:modifiedDate where emp_num=:empNum";
@@ -442,8 +496,9 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 		catch (RuntimeException re) {
 			logger.info("Insertion failed :::", re);
 			throw re;
-		}
+	
 }
+	}
 
 	@Override
 	public String getUploadedPath(String pathId, String fileType) {
@@ -474,6 +529,27 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 		}
 	}
 
-}	
-	
+@Override
+	public Boolean updateOtherDoc(UserModel uModel, CpfClaimRequest cpfClaimReq) {
+		session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		
+		String query1 = "update cpf_doc_uploads set REQUEST_ID = :reqId, modified_date=:modifiedDate "
+				+ "where emp_num=:empNum "
+				+ "and CLAIM_APPLIED_FOR=:claimAppliedFor "
+				+ "and FILE_TYPE=:fileType";
+		
+		Query hQuery1 = session.createSQLQuery(query1);
+		if (uModel.getEmpNum() != null) {
+			hQuery1.setParameter("reqId", cpfClaimReq.getREQUEST_ID());
+			hQuery1.setParameter("modifiedDate", new Date());
+			hQuery1.setParameter("empNum",uModel.getEmpNum());
+			hQuery1.setParameter("claimAppliedFor",cpfClaimReq.getCLAIM_APPLIED_FOR());
+			hQuery1.setParameter("fileType",3);
+		}
+		hQuery1.executeUpdate();
+		session.getTransaction().commit();
+		return true;
+	}
 
+}	

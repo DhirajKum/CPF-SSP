@@ -5,6 +5,7 @@ package com.techm.fci.cpf.dao;
  * @since 01/03/2021
  */
 import com.techm.fci.cpf.dto.HomeDto;
+import com.techm.fci.cpf.model.CpfClaimRequest;
 import com.techm.fci.cpf.model.CpfOtpMaster;
 import com.techm.fci.cpf.model.EmpMaster;
 import com.techm.fci.cpf.model.RegisteredUser;
@@ -34,7 +35,10 @@ public interface EmployeeDao {
 	
 	Boolean deleteOtherDoc(UserModel uModel, String claimSubEmpID, String reqId);
 	
-	Boolean saveOtherDoc(UserModel uModel, String claimSubEmpID, String reqId, String path);
+	Boolean saveOtherDoc(UserModel uModel, String claimSubEmpID, String reqId, String claimAppliedFor, String path);
+	
+	Boolean updateOtherDoc(UserModel uModel, CpfClaimRequest cpfClaimReq);
+	
 	public void insertOtpToSmsTable(String empNum,String mobile);
 	
 	public String getUploadedPath(String pathId, String fileType);
