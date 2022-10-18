@@ -135,6 +135,10 @@ public class LoginController {
 		model.addAttribute("clickRegistration", true);
 		model.addAttribute("showNavBar",true);*/
 		
+		//Temp change for bypass the OTP functionality 
+		otpValidate="SUCCESS";
+		//Temp change for bypass the OTP functionality 
+		
 		RegisteredUser registeredUser = new RegisteredUser();
 		model.addAttribute("regInfo", session.getAttribute("regInfo"));
 		model.addAttribute("registeredUser", registeredUser);

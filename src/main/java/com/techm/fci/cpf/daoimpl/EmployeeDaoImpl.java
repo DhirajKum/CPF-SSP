@@ -71,6 +71,11 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 		session.beginTransaction();
 		RegisteredUser regUserForSave = new RegisteredUser();
 		//getOtpData(regUser.getEmpPhone());
+		
+		//Temp change for bypass the OTP functionality 
+		otpVerificationFlag = Boolean.TRUE;
+		//Temp change for bypass the OTP functionality 
+		
 		if(regUser!=null && !regUser.getEmpEmail().equals("") && !regUser.getEmpPhone().equals("") && !regUser.getPassword().equals("")  && otpVerificationFlag){
 		regUserForSave.setEmpNum(regUser.getEmpNum());
 		regUserForSave.setEmpName(regUser.getEmpName());
