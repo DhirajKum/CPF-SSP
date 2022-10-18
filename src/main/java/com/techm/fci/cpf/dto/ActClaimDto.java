@@ -66,14 +66,13 @@ public class ActClaimDto implements Serializable{
 	private String kycFileName;
 	
 	private Map<String,String> otherFiles;
+	private Map<String,String> userOtherFiles;
+	
 	private String empStatus;
 	
 	public ActClaimDto(){
 		
 	}
-	
-	
-	
 	
 	public ActClaimDto(String rEQUEST_ID, String cLAIM_SUBMITTED_BY, Date cLAIM_SUBMITTED_DATE,
 			String cLAIM_APPLIED_FOR, String eMP_NAME, String fATHER_HUSBAND_NAME, String bASIC, String uAN,
@@ -84,7 +83,7 @@ public class ActClaimDto implements Serializable{
 			String iNFO2, String iNFO3, String iNFO4, String iNFO5, boolean pERMISSIBLE_AMOUNT,
 			boolean dEC_NOT_EMP_TWOMONTH, boolean eMP_DECLARATION, String cASTE_DISPUTE_CERT, String aMOUNT_SANCTION,
 			String remarks, String locId, String parentZone, String claimSubmittedDate, String kycFilePath,
-			String kycFileName, Map<String, String> otherFiles, String empStatus) {
+			String kycFileName, Map<String, String> otherFiles, Map<String, String> userOtherFiles, String empStatus) {
 		super();
 		REQUEST_ID = rEQUEST_ID;
 		CLAIM_SUBMITTED_BY = cLAIM_SUBMITTED_BY;
@@ -128,9 +127,9 @@ public class ActClaimDto implements Serializable{
 		this.kycFilePath = kycFilePath;
 		this.kycFileName = kycFileName;
 		this.otherFiles = otherFiles;
+		this.userOtherFiles = userOtherFiles;
 		this.empStatus = empStatus;
 	}
-
 
 	public String getREQUEST_ID() {
 		return REQUEST_ID;
@@ -460,6 +459,14 @@ public class ActClaimDto implements Serializable{
 	public void setOtherFiles(Map<String, String> otherFiles) {
 		this.otherFiles = otherFiles;
 	}
+	
+	public Map<String, String> getUserOtherFiles() {
+		return userOtherFiles;
+	}
+
+	public void setUserOtherFiles(Map<String, String> userOtherFiles) {
+		this.userOtherFiles = userOtherFiles;
+	}
 
 	public String getEmpStatus() {
 		return empStatus;
@@ -494,9 +501,8 @@ public class ActClaimDto implements Serializable{
 				+ ", EMP_DECLARATION=" + EMP_DECLARATION + ", CASTE_DISPUTE_CERT=" + CASTE_DISPUTE_CERT
 				+ ", AMOUNT_SANCTION=" + AMOUNT_SANCTION + ", remarks=" + remarks + ", locId=" + locId + ", parentZone="
 				+ parentZone + ", claimSubmittedDate=" + claimSubmittedDate + ", kycFilePath=" + kycFilePath
-				+ ", kycFileName=" + kycFileName + ", otherFiles=" + otherFiles + ", empStatus=" + empStatus + "]";
+				+ ", kycFileName=" + kycFileName + ", otherFiles=" + otherFiles + ", userOtherFiles=" + userOtherFiles
+				+ ", empStatus=" + empStatus + "]";
 	}
-
-	
 	
 }
