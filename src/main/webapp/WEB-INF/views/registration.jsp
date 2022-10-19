@@ -161,10 +161,9 @@ label {
 							<span class="input-group-text"> <i class="fa fa-phone"></i>	</span>
 						</div>
 						<label>Phone number</label>		
-						    <%-- <sf:input path="empPhone" id="phone" maxLength="10" size="10" cssClass="form-control"  onChange="activeSendOTP();" /><br/> --%>
-							<!-- <a style="background-color:#007bff;color: #fff;padding-top: 3px;padding-left: 25px;padding-right: 25px;"
-							href="javascript:void(0)" class="btn btn-default" id="sendOtp">Send Otp</a> -->
-							<sf:input path="empPhone" id="phone" maxLength="10" size="10" cssClass="form-control"/><br/>
+						    <sf:input path="empPhone" id="phone" maxLength="10" size="10" cssClass="form-control"  onChange="activeSendOTP();" /><br/>
+							<a style="background-color:#007bff;color: #fff;padding-top: 3px;padding-left: 25px;padding-right: 25px;"
+							href="javascript:void(0)" class="btn btn-default" id="sendOtp">Send Otp</a>
 					</div>
                    <!-- data-toggle="modal"
                    	<a href="#" onClick="MyWindow=window.open('http://www.google.com',
@@ -291,15 +290,6 @@ $(document).ready(function() {
 		$("#pass").prop('readonly', false);
 		$("#repass").prop('readonly', false);
 		$('#sendOtp').addClass('disabled');
-		
-		//Temp chenges for bypass the OTP functionality
-		$("#empNum").val('');
-		$("#empName").val('');
-		$("#empEmail").val('');
-		$("#phone").val('');
-		$("#uan").val('');
-		$("#empNum").prop('readonly', false);
-		$("#phone").prop('readonly', false);
 	}
 	
 	let empNumError=true;
