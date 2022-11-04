@@ -17,12 +17,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.ParameterMode;
+import javax.persistence.PersistenceContext;
+import javax.persistence.StoredProcedureQuery;
 import javax.servlet.http.HttpSession;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
@@ -253,7 +258,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				+ "dsgn_desc as \"dsgnDesc\",pres_location_code as \"locCode\",loc_desc as \"locDesc\",parent_zone as \"parentZone\",father_name as \"fatherName\","
 				+ "emp_birth_date as \"empDOB\",basic as \"basic\",staff_code as \"staffCode\",a.uan as \"uan\", "
 				+ "comp_joining_date as \"comJoiningDate\",retirement_date as \"retirementDate\",emp_pan_no as \"empPan\","
-				+ "r.emp_phone as \"empPhone\", r.emp_email as \"empEmail\", a.cpf_code as \"cpfcode\", cdu.file_path as \"kycFilePath\",a.emp_status as \"empStatus\" "
+				+ "r.emp_phone as \"empPhone\", r.emp_email as \"empEmail\", a.cpf_code as \"cpfcode\", cdu.file_path as \"kycFilePath\", cdu.doc_id as \"kycDocId\", a.emp_status as \"empStatus\" "
 				+ "from pay_emp_mast a,pay_dsgn_mst b,com_loc_mst c,cpf_registered_users r,CPF_DOC_UPLOADS cdu "
 				+ "where a.emp_num=:empNum and a.designation_id=b.dsgn_id and c.loc_id=pres_location_code and a.emp_num=r.emp_num "
 				+ "and r.emp_num=cdu.emp_num and cdu.file_type=1";
@@ -278,7 +283,30 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 			claimDataForForm.setCPF_ACCOUNT_NUMBER(map.get("cpfcode")!=null?map.get("cpfcode").toString().trim():"");
 			claimDataForForm.setSTAFF_CODE(map.get("staffCode")!=null?map.get("staffCode").toString().trim():"");
 			claimDataForForm.setMOBILE_NUMBER(map.get("empPhone")!=null?map.get("empPhone").toString().trim():"");
-			claimDataForForm.setKycFilePath(map.get("kycFilePath")!=null?map.get("kycFilePath").toString().trim():"");
+			
+			claimDataForForm.setKycFilePath(map.get("kycDocId")!=null?map.get("kycDocId").toString().trim():"");
+			File file = new File(map.get("kycFilePath").toString().trim());
+			claimDataForForm.setKycFileName(file.getName());
+			
+			String query3 = "select du.file_path as \"filePath\", du.CLAIM_APPLIED_FOR as \"claimAppliedFor\", du.doc_id as \"docId\" "
+					+ "from cpf_doc_uploads du "
+					+ "where du.emp_num=:empNum and du.file_type=3";
+			Query hQuery3 = session.createSQLQuery(query3).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+			if(empNum!=null){
+				hQuery3.setParameter("empNum", empNum.trim());
+			}
+			List<Map<String, Object>> list3 = hQuery3.list();
+			if(list3!=null && list3.size()>0){
+				Map<String,String> fileMap = new HashMap();
+				for (Map<String, Object> map3 : list3) {
+					File file1 = new File(map3.get("filePath").toString().trim());
+					//fileMap.put(file1.getName(), map3.get("filePath")!=null?map3.get("filePath").toString().trim():"");
+					fileMap.put(file1.getName(),map3.get("docId")!=null?map3.get("docId").toString().trim():"");
+					claimDataForForm.setUserOtherFiles(fileMap);
+					claimDataForForm.setCLAIM_APPLIED_FOR(map3.get("claimAppliedFor")!=null?map3.get("claimAppliedFor").toString().trim():"");
+				}
+			}
+			
 			claimDataForForm.setEmpStatus(map.get("empStatus")!=null?map.get("empStatus").toString().trim():"");
 					
 			String query1 = "select count(*) from pay_loan_hdr where loan_type=87 and invoice_num is not null and emp_num=:empNum";
@@ -906,6 +934,22 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					//fileMap.put(file.getName(), map3.get("filePath")!=null?map3.get("filePath").toString().trim():"");
 					fileMap.put(file.getName(), map3.get("docId")!=null?map3.get("docId").toString().trim():"");
 					claimDataForForm.setOtherFiles(fileMap);
+				}
+			}
+			
+			String query4 = "select du.file_path as \"filePath\" from cpf_doc_uploads du where du.emp_num=:empNum and du.request_id=:reqId and du.file_type=3";
+			Query hQuery4 = session.createSQLQuery(query4).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+			if(reqId!=null){
+				hQuery4.setParameter("empNum", map.get("CLAIM_SUBMITTED_BY").toString().trim());
+				hQuery4.setParameter("reqId", reqId);
+			}
+			List<Map<String, Object>> list4 = hQuery4.list();
+			if(list4!=null && list4.size()>0){
+				Map<String,String> fileMap = new HashMap();
+				for (Map<String, Object> map4 : list4) {
+					File file = new File(map4.get("filePath").toString().trim());
+					fileMap.put(file.getName(), map4.get("filePath")!=null?map4.get("filePath").toString().trim():"");
+					claimDataForForm.setUserOtherFiles(fileMap);
 				}
 			}
 		}

@@ -615,7 +615,7 @@ public class ClaimController {
 	@RequestMapping(value={"/downloadCpfDoc"}, method = {RequestMethod.GET})
 	public void download(HttpServletRequest request, HttpServletResponse response, @RequestParam(name="pathId") String pathId, @RequestParam(name="fileType") String fileType){  
 
-	String filePath = userService.getUploadedPath(pathId, "1");
+	String filePath = userService.getUploadedPath(pathId, fileType);
 		
 	File file = new File(filePath); 
 	String filename=file.getName().trim();

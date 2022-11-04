@@ -423,7 +423,8 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 			docUpload.setModified_date(new Date());
 			session.persist(docUpload);
 		}
-		}else if (uModel.getRoleName().equals("USER")){
+		}
+		if (uModel.getRoleName().equals("USER") || uModel.getRoleName().equals("ADMIN") || uModel.getRoleName().equals("CPF_ADMIN")){
 			String query1 = null;
 			if(reqId!=null && !reqId.equals("")){
 				query1 = "select cru.emp_num as \"empNum\", cru.emp_phone as \"empPhone\",cru.emp_email as \"empEmail\",cru.role_name as \"roleName\" "
