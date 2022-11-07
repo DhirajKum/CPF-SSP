@@ -327,7 +327,7 @@
 							<label for="" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>User Uploaded Other Documents</b></label>
 							<div class="col-sm-7">
 							<c:forEach var="userOtherFile" items="${actClaimDto.userOtherFiles}">
-								<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?path=${userOtherFile.value}" target="_blank">${userOtherFile.key}</a></br>
+								<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${userOtherFile.value}&fileType=3" target="_blank">${userOtherFile.key}</a></br>
 							</c:forEach>
 							</div>
 						</div>

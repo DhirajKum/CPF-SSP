@@ -437,9 +437,12 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 			}
 			
 			Query hQuery1 = session.createSQLQuery(query1).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-			if (reqId != null) {
+			if (reqId != null && !reqId.equals("")) {
+				hQuery1.setParameter("reqId", reqId);
+			}else{
 				hQuery1.setParameter("claimSubEmpID", uModel.getEmpNum());
 			}
+			
 			List<Map<String, Object>> list1 = hQuery1.list();
 
 			for (Map<String, Object> map : list1) {
@@ -531,7 +534,7 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 		}
 	}
 
-@Override
+	@Override
 	public Boolean updateOtherDoc(UserModel uModel, CpfClaimRequest cpfClaimReq) {
 		session = sessionFactory.getCurrentSession();
 		session.beginTransaction();

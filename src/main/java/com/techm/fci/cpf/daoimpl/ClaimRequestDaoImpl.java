@@ -937,7 +937,8 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				}
 			}
 			
-			String query4 = "select du.file_path as \"filePath\" from cpf_doc_uploads du where du.emp_num=:empNum and du.request_id=:reqId and du.file_type=3";
+			String query4 = "select du.file_path as \"filePath\", du.doc_id as \"docId\" "
+					+ "from cpf_doc_uploads du where du.emp_num=:empNum and du.request_id=:reqId and du.file_type=3";
 			Query hQuery4 = session.createSQLQuery(query4).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 			if(reqId!=null){
 				hQuery4.setParameter("empNum", map.get("CLAIM_SUBMITTED_BY").toString().trim());
@@ -948,7 +949,8 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				Map<String,String> fileMap = new HashMap();
 				for (Map<String, Object> map4 : list4) {
 					File file = new File(map4.get("filePath").toString().trim());
-					fileMap.put(file.getName(), map4.get("filePath")!=null?map4.get("filePath").toString().trim():"");
+					//fileMap.put(file.getName(), map4.get("filePath")!=null?map4.get("filePath").toString().trim():"");
+					fileMap.put(file.getName(),map4.get("docId")!=null?map4.get("docId").toString().trim():"");
 					claimDataForForm.setUserOtherFiles(fileMap);
 				}
 			}
