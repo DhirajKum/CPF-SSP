@@ -355,13 +355,19 @@ public class LoginController {
 	}
 
 	@RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
-	public String forgotPassword(ModelMap model, HttpSession session, @ModelAttribute("forgotPassword") ForgotPassword forgotPass) {
+	public String forgotPassword(ModelMap model, HttpSession session, @ModelAttribute("forgotPassword") ForgotPassword forgotPass, @RequestParam String js_enabled) {
 		logger.info("Going to set forgot password :::: ");
-		Boolean smsSentStatus = userService.changePassword(forgotPass.getNewPassword(), forgotPass.getEmpNum());
-		if (!smsSentStatus) {
-			return "forgotPassword";
-		}else{
-			return "login";
+		if(js_enabled.equals("1")){
+			Boolean smsSentStatus = userService.changePassword(forgotPass.getNewPassword(), forgotPass.getEmpNum());
+			if (!smsSentStatus) {
+				return "forgotPassword";
+			}else{
+				return "login";
+			}
+		} else if(js_enabled.equals("0")){
+				session.setAttribute("forgotMessage", "You don't have javascript enabled. Kindly enable it before going through the forgot password process.");
+				return "forgotPassword";
 		}
+		return null;
 	}
 }

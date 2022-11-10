@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 
@@ -40,13 +41,35 @@
 
 </head>
 <body>
+<div class="container">
+<div class="row row-fluid">
+	<div class="col-md-5" style="">
+	<img style="padding-top: 5px !important" class="header-logo" id="header-icon-img" src="${pageContext.request.contextPath}/resources/static/images/fci.jpg">
+			<a class="navbar-brand navbar-right" href="#" style="margin-top: 5px;"> 
+			<span class="header-text">CPF Self Service Portal </span><br> 
+			<span class="hidden-xs header-sub-text" style=""> Food Corporation Of India</span>
+			</a>
+	</div>
+</div>
+</div>
+	<c:if test="${not empty forgotMessage}">
+		<div class="col-md-12" style= "float:none" id="message">
+			<div class="alert alert-danger alert-dismissible" style="text-align: center;">
+				<!-- <button type="button" class="close" data-dismiss="alert">&times;</button> -->
+				<h4><b>${forgotMessage}</b></h4>
+			</div>
+		</div>
+	</c:if>
 	
 	<div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins">
 		<div class="wrapper wrapper--w680">
 			<div class="card card-4">
 				<div class="card-body">
 					<h2 class="title">Forgot Password</h2>
-					<sf:form id="forgotPasswordForm" action='${pageContext.request.contextPath}/resetPassword' method="POST" modelAttribute="forgotPassword">
+					<sf:form id="forgotPasswordForm" action='${pageContext.request.contextPath}/resetPassword' method="POST" modelAttribute="forgotPassword" onsubmit="this.js_enabled.value=1;return true;">
+						<noscript>
+							<div id="noJS" class="alert alert-danger" style="padding-left: 20px; padding-right: 0px; margin-left: 0px;">Please enable JavaScript in your browser</div>
+						</noscript>
 						<div class="form-group input-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text"> <i class="fa fa-phone"></i>
@@ -83,7 +106,7 @@
 						<div class="form-group">
 							<button type="submit" class="btn btn-primary btn-block">Update</button>
 						</div>
-
+					<input type="hidden" name="js_enabled" value="0">
 					</sf:form>
 				</div>
 				<!-- card.// -->
@@ -103,6 +126,7 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
+	$("#message").hide();
 	$('#forgotPassSendOtp').addClass('disabled');
 	$("#newPass").prop('readonly', true);
 	$("#confNewPass").prop('readonly', true);

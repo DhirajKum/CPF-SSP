@@ -20,11 +20,11 @@
 <body onload='document.loginForm.username.focus();'>
 
 <div class="limiter">
-<c:if test="${not empty message}">
+	<c:if test="${not empty message}">
 		<div class = "alert alert-danger" style="text-align: center;">
 			${message}
 		</div>	
-</c:if>
+	</c:if>
 	<div class="container-login100">
 		<div class="wrap-login100" style="padding-top: 50px;">
 			<div class="login100-pic js-tilt" data-tilt>
@@ -112,7 +112,9 @@
 	
 	}*/
 	
-	
+	$(document).ready(function() {
+	 $("#message").hide();
+	});
 	
 </script>
 <script	src="${pageContext.request.contextPath}/resources/COMMON/JS/main.js"></script>
