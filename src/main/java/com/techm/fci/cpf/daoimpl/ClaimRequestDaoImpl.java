@@ -440,7 +440,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				}
 				List<Map<String, Object>> list = hQuery.list();
 				DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",Locale.ENGLISH);
-				DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+				DateFormat myFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
 				for (Map<String, Object> map : list) {
 					ClaimRequestStatusDto cpfClaimRequestStatusDto = new ClaimRequestStatusDto();
 					
@@ -536,7 +536,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					}
 					List<Map<String, Object>> list = hQuery.list();
 					DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",Locale.ENGLISH);
-					DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+					DateFormat myFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
 					for (Map<String, Object> map : list) {
 						ClaimRequestStatusDto cpfClaimRequestStatusDto = new ClaimRequestStatusDto();
 						
@@ -630,7 +630,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						+ "and cfd.claim_submitted_date=st.claim_submitted_date "
 						+ "and st.status=1 "
 						+ "and st.claim_submitted_by<>st.admin_action_taken_by "
-						+ "and st.admin_action_taken_by=:empNum";
+						+ "and st.admin_action_taken_by=:empNum order by st.claim_submitted_date desc";
 				
 				Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 				if (empNum != null) {
@@ -638,7 +638,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				}
 				List<Map<String, Object>> list = hQuery.list();
 				DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",Locale.ENGLISH);
-				DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+				DateFormat myFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
 				for (Map<String, Object> map : list) {
 					ClaimRequestStatusDto cpfClaimRequestStatusDto = new ClaimRequestStatusDto();
 					cpfClaimRequestStatusDto.setRequestId(map.get("REQUEST_ID").toString());
@@ -676,7 +676,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				}
 				List<Map<String, Object>> list = hQuery.list();
 				DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",Locale.ENGLISH);
-				DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+				DateFormat myFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
 				for (Map<String, Object> map : list) {
 					ClaimRequestStatusDto cpfClaimRequestStatusDto = new ClaimRequestStatusDto();
 					
@@ -771,7 +771,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						+ "and cfd.claim_submitted_date=st.claim_submitted_date "
 						+ "and st.status=2 "
 						+ "and st.claim_submitted_by<>st.cpfsec_action_taken_by "
-						+ "and st.cpfsec_action_taken_by=:empNum";
+						+ "and st.cpfsec_action_taken_by=:empNum order by st.ADMIN_ACTION_DATE desc";
 				
 				Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 				if (empNum != null) {
@@ -779,7 +779,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				}
 				List<Map<String, Object>> list = hQuery.list();
 				DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",Locale.ENGLISH);
-				DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+				DateFormat myFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
 				for (Map<String, Object> map : list) {
 					ClaimRequestStatusDto cpfClaimRequestStatusDto = new ClaimRequestStatusDto();
 					cpfClaimRequestStatusDto.setRequestId(map.get("REQUEST_ID").toString());

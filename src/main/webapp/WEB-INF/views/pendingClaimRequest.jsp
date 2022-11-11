@@ -56,10 +56,10 @@
   <thead>
     <tr>
       <th class="th-sm">Request Id</th>
-      <th class="th-sm">Date of Submission</th>
+      <th class="th-sm">Date of Submission (yyyy/mm/dd)</th>
       <th class="th-sm">Submitted By</th>
       <th class="th-sm">Designation</th>
-      <th class="th-sm">Claim Arrived</th>
+      <th class="th-sm">Claim Received (yyyy/mm/dd)</th>
       <th class="th-sm">Action Taken By</th>
       <th class="th-sm">Remarks</th>
       <th class="th-sm">Invoice No</th>
@@ -82,8 +82,9 @@
 	var $table = $('#pendingclaimdatatable');
 	if($table.length){
 			$table.dataTable({
-				lengthMenu:[[5,10,15,-1],['5','10','15','ALL']],
+				lengthMenu:[[10,15,-1],['10','15','ALL']],
 				pageLength:5,
+				order: [[5, 'desc']],
 				ajax:{
 					url:urlVar,
 					dataSrc:''
