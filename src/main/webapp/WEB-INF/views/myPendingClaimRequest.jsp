@@ -41,7 +41,7 @@
       <th class="th-sm">Claim Received (yyyy/mm/dd)</th>
       <th class="th-sm">Action Taken By</th>
       <th class="th-sm">Remarks</th>
-      <th class="th-sm">Invoice No</th> 
+      <th class="th-sm">Invoice No</th>
       <th class="th-sm">Sanction Amount</th>
       <th class="th-sm">Status</th>
       <th class="th-sm">Action</th>
@@ -74,7 +74,7 @@
 			$table.dataTable({
 				lengthMenu:[[5,10,15,-1],['5','10','15','ALL']],
 				pageLength:5,
-				order: [[5, 'desc']],
+				order: [[3, 'desc']],
 				ajax:{
 					url:urlVar,
 					dataSrc:''

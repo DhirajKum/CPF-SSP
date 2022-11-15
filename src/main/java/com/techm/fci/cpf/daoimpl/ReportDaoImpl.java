@@ -358,7 +358,7 @@ public static final Logger logger = LoggerFactory.getLogger(ReportDaoImpl.class)
 			Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 			
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",Locale.ENGLISH);
-			DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+			DateFormat myFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
 				//RevokeRoleStatusDto revokeRoleStatusDto = new RevokeRoleStatusDto();
 
 				List<Map<String, Object>> list = hQuery.list();

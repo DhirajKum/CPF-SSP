@@ -82,9 +82,9 @@
 	var $table = $('#pendingclaimdatatable');
 	if($table.length){
 			$table.dataTable({
-				lengthMenu:[[10,15,-1],['10','15','ALL']],
+				lengthMenu:[[5,10,15,-1],['5','10','15','ALL']],
 				pageLength:5,
-				order: [[5, 'desc']],
+				order: [[4, 'desc']],
 				ajax:{
 					url:urlVar,
 					dataSrc:''

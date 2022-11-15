@@ -27,19 +27,19 @@
 
 <%-- <sf:form action='' id="generateReportForm" modelAttribute="claimRequestReportDto"> --%>
 <div class="row" style="text-align: center;">	
-	<div class="col-md-5">
+	<div class="col-md-6">
 		<div class="form-group row">
-			<label class="col-sm-4 col-form-label"><b>From Date</b></label>
-			<div class="col-sm-8">
-				<input id="datepicker1" cssClass="form-control" />
+			<label class="col-sm-5 col-form-label"><b>From Date</b></label>
+			<div class="col-sm-5">
+				<input id="datepicker1" style="width: 180px;" cssClass="form-control" />
 			</div>
 		</div>
 	</div>
-	<div class="col-md-5">
+	<div class="col-md-6">
 		<div class="form-group row">
-			<label class="col-sm-4 col-form-label"><b>To Date</b></label>
-			<div class="col-sm-8">
-				<input id="datepicker2" cssClass="form-control" />
+			<label class="col-sm-5 col-form-label"><b>To Date</b></label>
+			<div class="col-sm-5">
+				<input id="datepicker2" style="width: 180px;" cssClass="form-control" />
 			</div>
 		</div>
 	</div>
@@ -47,22 +47,22 @@
 </div>
 
 <div class="row" style="text-align: center;">	
-	<div class="col-md-5">
+	<div class="col-md-6">
 		<div class="form-group row">
-			<label class="col-sm-4 col-form-label"><b>Emp Num </b></label>
-			<div class="col-sm-8">
-				<input id="empNum" cssClass="form-control numbers" />
+			<label class="col-sm-5 col-form-label"><b>Emp Num </b></label>
+			<div class="col-sm-5">
+				<input id="empNum" style="width: 180px;" cssClass="form-control numbers" />
 			</div>
 		</div>
 	</div>
 	
-	</div>
+</div>
 	
 	<div class="row" style="text-align: center;">	
-	<div class="col-md-5">
+	<div class="col-md-6">
 		<div class="form-group row">
-			<label class="col-sm-4 col-form-label"><b>Claim Type </b></label>
-			<div class="col-sm-8">
+			<label class="col-sm-5 col-form-label"><b>Claim Type </b></label>
+			<div class="col-sm-5">
 				<select cssclass="form-control" id="claimType">
 					<option value="" label="---Select---"/>
 					<option value="CpfFinalSettlement"> CPF Final Settlement </option>
@@ -134,7 +134,7 @@
       <th class="th-sm">Employee Name</th>
       <th class="th-sm">Claim Id</th>
       <th class="th-sm">Claim Type</th>
-      <th class="th-sm">Claim Date</th>
+      <th class="th-sm">Claim Date (yyyy/mm/dd)</th>
       <th class="th-sm">Claim Status</th>
       <th class="th-sm">Present Place Of Posting</th>
       <th class="th-sm">Parent Zone</th>
@@ -178,7 +178,7 @@ if($table.length){
 		//lengthMenu:[[5,10,15,-1],['5','10','15','ALL']],
 		pageLength:10,
 		dom: 'Bfrtip',
-		buttons: ['copy','excel',{
+		buttons: ['excel'/*, 'copy', {
 	      extend: 'pdf',
 	      text: '<i class="fa fa-file-pdf-o"></i> PDF',
 	      title: $('h1').text(),
@@ -188,7 +188,8 @@ if($table.length){
           orientation : 'landscape',
           pageSize : 'A3',
 	      footer: true
-	    },'print'],
+	    },'print' */],
+	    //order: [[5, 'desc']],
 		ajax:{
 			url:urlVar,
 			dataSrc:''

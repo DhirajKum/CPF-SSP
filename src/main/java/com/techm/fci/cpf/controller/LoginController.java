@@ -16,7 +16,6 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,8 +42,8 @@ import com.techm.fci.cpf.util.AesUtil;
 public class LoginController {
 	public static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-	@Autowired
-	private Environment env;
+	/*@Autowired
+	private Environment env;*/
 	
 	@Autowired
 	private HttpSession session;
