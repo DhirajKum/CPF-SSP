@@ -60,7 +60,16 @@
       <th class="th-sm">Submitted By</th>
       <th class="th-sm">Designation</th>
       <th class="th-sm">Claim Received (yyyy/mm/dd)</th>
-      <th class="th-sm">Action Taken By</th>
+      <security:authorize access="isAuthenticated()">
+      	<security:authorize access="hasRole('USER')">
+      		<th class="th-sm">Application Goes To</th>
+      	</security:authorize>
+      </security:authorize>
+      <security:authorize access="isAuthenticated()">
+      	<security:authorize access="hasAnyRole('ADMIN','CPF_ADMIN')">
+      		<th class="th-sm">Action Taken By</th>
+      	</security:authorize>
+      </security:authorize>
       <th class="th-sm">Remarks</th>
       <th class="th-sm">Invoice No</th>
       <th class="th-sm">Sanction Amount</th>
