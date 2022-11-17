@@ -24,6 +24,7 @@ public class ClaimRequestStatusDto implements Serializable {
 	private String statusCode;
 	
 	private String designation;
+	private String claimType;
 	
 	
 	public ClaimRequestStatusDto() {
@@ -32,7 +33,8 @@ public class ClaimRequestStatusDto implements Serializable {
 
 	public ClaimRequestStatusDto(String requestId, String claimSubmittedEmpId, String claimSubmittedBy,
 			String claimSubmittedDate, String adminActionDate, String adminActionTakenBy, String adminAction,
-			String remarks, String invoiceNo, String sancAmount, String status, String statusCode, String designation) {
+			String remarks, String invoiceNo, String sancAmount, String status, String statusCode, String designation,
+			String claimType) {
 		super();
 		this.requestId = requestId;
 		this.claimSubmittedEmpId = claimSubmittedEmpId;
@@ -45,8 +47,9 @@ public class ClaimRequestStatusDto implements Serializable {
 		this.invoiceNo = invoiceNo;
 		this.sancAmount = sancAmount;
 		this.status = status;
+		this.statusCode = statusCode;
 		this.designation = designation;
-		this.statusCode =statusCode;
+		this.claimType = claimType;
 	}
 
 	public String getRequestId() {
@@ -143,6 +146,14 @@ public class ClaimRequestStatusDto implements Serializable {
 	public void setDesignation(String designation) {
 		this.designation = designation;
 	}
+	
+	public String getClaimType() {
+		return claimType;
+	}
+
+	public void setClaimType(String claimType) {
+		this.claimType = claimType;
+	}
 
 	@Override
 	public String toString() {
@@ -151,7 +162,7 @@ public class ClaimRequestStatusDto implements Serializable {
 				+ ", adminActionDate=" + adminActionDate + ", adminActionTakenBy=" + adminActionTakenBy
 				+ ", adminAction=" + adminAction + ", remarks=" + remarks + ", invoiceNo=" + invoiceNo + ", sancAmount="
 				+ sancAmount + ", status=" + status + ", statusCode=" + statusCode + ", designation=" + designation
-				+ "]";
+				+ ", claimType=" + claimType + "]";
 	}
 
 }

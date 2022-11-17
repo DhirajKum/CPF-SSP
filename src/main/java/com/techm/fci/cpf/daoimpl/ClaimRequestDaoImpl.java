@@ -622,7 +622,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				
 				String query = "select st.request_id,st.claim_submitted_by as \"empNum\", reg.emp_name as \"claim_submitted_by\",st.claim_submitted_date, "
 						+ "(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.admin_action_taken_by) admin_action_taken_by, dsm.dsgn_desc as \"desig\", "
-						+ "st.admin_action_date,st.status, st.admin_remarks "
+						+ "st.admin_action_date,st.status, st.admin_remarks, cfd.claim_applied_for "
 						+ "FROM cpf_claim_form_status st, cpf_claim_form_details cfd, cpf_registered_users reg, pay_dsgn_mst dsm "
 						+ "WHERE st.claim_submitted_by=reg.emp_num "
 						+ "and cfd.claim_submitted_by in (select Claim_Submitted_By from cpf_claim_form_status where admin_action_taken_by=:empNum) "
@@ -652,6 +652,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					
 					cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
 					//cpfClaimRequestStatusDto.setRemarks(map.get("admin_remarks").toString());
+					cpfClaimRequestStatusDto.setClaimType(map.get("CLAIM_APPLIED_FOR").toString());
 					cpfClaimRequestStatusDto.setStatus("Pending at admin");
 					cpfClaimRequestStatusDto.setDesignation(map.get("desig")!=null?map.get("desig").toString():"");
 					
@@ -762,7 +763,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						+ "and st.cpfsec_action_taken_by=:empNum";*/
 				
 				String query = "SELECT st.request_id,reg.emp_num as \"claimSubmitEmpNum\",reg.emp_name as \"claim_submitted_by\",st.claim_submitted_date, "
-						+ "st.cpfsec_action_date, st.status, st.cpfsec_remarks, st.ADMIN_ACTION_DATE, "
+						+ "st.cpfsec_action_date, st.status, st.cpfsec_remarks, st.ADMIN_ACTION_DATE, cfd.claim_applied_for, "
 						+ "(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.admin_action_taken_by) admin_action_taken_by, dsm.dsgn_desc as \"desig\" "
 						+ "FROM cpf_claim_form_status st,cpf_claim_form_details cfd,cpf_registered_users reg,pay_dsgn_mst dsm "
 						+ "WHERE reg.emp_num=st.claim_submitted_by "
@@ -795,6 +796,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					
 					cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
 					//cpfClaimRequestStatusDto.setRemarks(map.get("admin_remarks").toString());
+					cpfClaimRequestStatusDto.setClaimType(map.get("CLAIM_APPLIED_FOR").toString());
 					cpfClaimRequestStatusDto.setStatus("Pending At CPF Admin");
 					cpfClaimRequestStatusDto.setDesignation(map.get("desig")!=null?map.get("desig").toString():"");
 					
