@@ -78,8 +78,6 @@
 							<label for="EMP_NAME" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Name of the member <span class="red">*</span></b></label>
 							<div class="col-sm-7">	
 								  <sf:input path="EMP_NAME" id="empName" cssClass="form-control" maxlength="20"  />
-			
-		<%-- 						<sf:input type="text" path="EMP_NAME" class="form-control" id="empName" placeholder="" maxlength="20" /> --%>
 							</div>
 						</div>
 					</div>
@@ -89,8 +87,7 @@
 							<div class="col-sm-7">
 								<sf:input path="DESIGNATION" cssclass="form-control  form-control-sm" id="designation"  maxlength="20" />
 				
-				<%-- 				<sf:input type="text" path="DESIGNATION" class="form-control  form-control-sm" id="designation" placeholder="" maxlength="20" />
-				 --%>			</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -100,8 +97,8 @@
 							<label for="FATHER_HUSBAND_NAME" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Father's Name/Husband's Name <span class="red">*</span></b></label>
 							<div class="col-sm-7">
 								<sf:input path="FATHER_HUSBAND_NAME" cssclass="form-control" id="fatherName"  maxlength="20" />			
-			<%-- 					<sf:input type="text" path="FATHER_HUSBAND_NAME" class="form-control" id="fatherName" placeholder="" maxlength="20" />
-			 --%>				</div>
+			
+							</div>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -310,7 +307,6 @@
 						<div class="form-group row">
 							<label for="" cssclass="col-sm-5 col-form-label" class="labelwidth"></label>
 							<div class="col-sm-7">
-								<%-- <sf:input path="" cssclass="form-control  form-control-sm"/> --%>
 							</div>
 						</div>
 					</div>
@@ -354,7 +350,6 @@
 				</div>
 				
 				<div class="row" id="docUpload">
-				<%-- <sf:form id="docUploadForm" action="multiUplodCpfDoc?${_csrf.parameterName}=${_csrf.token}&reqId=${reqId}" method="POST" enctype="multipart/form-data"> --%>
 				<div class="col-md-6">
 					<div class="form-group row">
 						<label cssClass="col-sm-5 col-form-label" class="labelwidth"><b>Upload Other Documents</b></label>
@@ -368,7 +363,6 @@
 						<div class="col-sm-7"></div>
 					</div>
 				</div>
-				<%-- </sf:form> --%>
 				</div>
 				<div class="form-group row">
 					<div class="col-sm-10">
@@ -377,13 +371,6 @@
 						</div>
 					</div>
 				</div>
-				<!-- <div class="form-group row">
-					<div class="col-sm-10">
-						<div class="checkbox">
-							<label><input type="checkbox"> In case the amount is used for any purpose other than stated in column(10) above, I am liable to return the entire amount with penal interest</label>
-						</div>
-					</div>
-				</div> -->
 				<div class="form-group row">
 					<div class="col-sm-12">
 						<div class="checkbox">
@@ -391,13 +378,13 @@
 						</div>
 					</div>
 				</div>						
-				<%-- <div class="form-group row">
+				<div class="form-group row">
 					<div class="col-sm-12">
 						<div class="checkbox">
-							<label><sf:checkbox path="CASTE_DISPUTE_CERT" id="casteDispute" /> Upload caste dispute certificate</label>
+							<label><sf:checkbox path="EMP_ACCEPTANCE" id="empAccept"/> In case the amount is used for any purpose other than stated above, I am liable to return the entire amount with penal interest.</label>
 						</div>
 					</div>
-				</div> --%>
+				</div>
 				
 				<div class="row">
 				<div class="col-md-12">
@@ -409,8 +396,6 @@
 						</div>
 					</div>
 				</div>
-				
-
 			    <div style="text-align: center;">
 			    	
 					<c:set var = "claimSubmittedBy" scope = "session" value = '${actClaimDto.CLAIM_SUBMITTED_BY}'/>
@@ -431,12 +416,7 @@
 				<sf:hidden path="parentZone"/>
 				<sf:hidden path="CLAIM_SUBMITTED_BY"/>
 				<sf:hidden path="claimSubmittedDate"/>
-				
-				
 			</sf:form>
-			
-		
-
 		</div>
 	</div>
 </div>
@@ -497,6 +477,8 @@ $(document).ready(function() {
   $("#amount90Partfinal").prop("disabled", true); 
   jQuery('#decNotEmpTwoMonth').prop("disabled", true);
   jQuery('#empDec').prop("disabled", true);
+  jQuery('#empAccept').prop("disabled", true);
+  
   if('${userModel.roleName}' === 'CPF_ADMIN'){
 	jQuery('#casteDispute').prop("disabled", true);
   }
@@ -590,9 +572,7 @@ $("#remarks").focus();
 else{
 return true;
 }
-
 }
-		
 
 function getFileExtension(name) {
 	var splitData = name.split(".");
@@ -622,6 +602,8 @@ $("#uploadOtherDoc").on('click', function(event){
  var filetype=true;
  var fd = new FormData();
  var totalfiles = document.getElementById('files').files.length;
+ var radioValue=$("#claimAppliedFor input:radio:checked").val();
+ 
    if(totalfiles>0){
    for (var index = 0; index < totalfiles; index++) {
       fd.append("files", document.getElementById('files').files[index]);
@@ -641,7 +623,7 @@ $("#uploadOtherDoc").on('click', function(event){
 if(filetype){
   $.ajax({
             type: 'POST',
-            url: 'multiUplodCpfDoc?${_csrf.parameterName}=${_csrf.token}&reqId=${reqId}&claimSubmittedBy=${actClaimDto.CLAIM_SUBMITTED_BY}',
+            url: 'multiUplodCpfDoc?${_csrf.parameterName}=${_csrf.token}&reqId=${reqId}&claimSubmittedBy=${actClaimDto.CLAIM_SUBMITTED_BY}&claimAppliedFor='+radioValue,
             enctype: 'multipart/form-data',
             data: fd,
             processData: false,

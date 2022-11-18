@@ -8,14 +8,6 @@
 		<div class="alert alert-danger"	style="padding-left: 20px; padding-right: 0px; margin-left: 0px;">Please enable JavaScript in your browser</div>
 	</noscript>
 
-	<!-- <div class="bs-example" style="padding-top: 1%;">
-		<ul class="breadcrumb">
-			<li>Online Services</li>
-			<li class="active">Track Claim Status</li>
-		</ul>
-	</div> -->
-
-
 <div class="panel panel-info ocs-track-status" style="margin-left:5px">
 	<div class="panel-heading p-3" style="background: #E6E6E6;">
 		<h5 class="panel-title">
@@ -47,11 +39,7 @@
 	
 	</div>
 <div class="panel-body in" style="height: auto;">
-		<!-- <table class="table table-bordered table-responsive">
-			<tr>
-				<td><b style="color: red">Claim Record Not Found</b></td>
-			</tr>
-		</table>-->
+		
 <table id="pendingclaimdatatable" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
   <thead>
     <tr>

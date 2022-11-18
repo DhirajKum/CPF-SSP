@@ -249,13 +249,6 @@
 						<div class="checkbox">
 							<label><sf:checkbox path="LAST_DRAWN_ADVANCE" id="lastDrawnAdvance"/><b>Particular of Temporary advance last drawn, if  any</b></label>
 						</div>
-						
-						<%-- <div class="form-group row">
-							<label for="LAST_DRAWN_ADVANCE" class="col-sm-5 col-form-label"><b>Particular of Temporary advance last drawn, if  any</b></label>
-							<div class="col-sm-7">
-								<sf:input type="text" path="LAST_DRAWN_ADVANCE" class="form-control" id="lastDrawnAdvance" placeholder="" maxlength="20"/>
-							</div>
-						</div> --%>
 					</div>
 					</div>
 					<div class="row">	
@@ -302,13 +295,6 @@
 						</div>
 					</div>
 				</div>
-				<!-- <div class="form-group row">
-					<div class="col-sm-10">
-						<div class="checkbox">
-							<label><input type="checkbox"> In case the amount is used for any purpose other than stated in column(10) above, I am liable to return the entire amount with penal interest</label>
-						</div>
-					</div>
-				</div> -->
 				<div class="form-group row">
 					<div class="col-sm-12">
 						<div class="checkbox">
@@ -316,6 +302,13 @@
 						</div>
 					</div>
 				</div>						
+				<div class="form-group row">
+					<div class="col-sm-12">
+						<div class="checkbox">
+							<label><sf:checkbox path="EMP_ACCEPTANCE" id="empAccept"/> In case the amount is used for any purpose other than stated above, I am liable to return the entire amount with penal interest.</label>
+						</div>
+					</div>
+				</div>
 				
 				<div style="text-align: center;">
 				<button type="submit" id="saveClaim" class="btn btn-primary btn-sm" onclick="return finalSubmit()">Submit</button>&nbsp;<a href="" class="btn btn-primary btn-sm reset-form">Cancel</a>
@@ -331,20 +324,20 @@
 <script>		
 $(document).ready(function() {
 
-	 $("#empName").prop("readonly", true);   
-	 $("#designation").prop("readonly", true); 
-	 $("#fatherName").prop("readonly", true); 
-	 $("#dob").prop("readonly", true); 
-	 $("#basic").prop("readonly", true); 
-	 $("#cpfAccountNumber").prop("readonly", true); 
-	 $("#staffCode").prop("readonly", true); 
-	 $("#uan").prop("readonly", true); 
-	 $("#mobileNo").prop("readonly", true); 
-	 $("#dojFci").prop("readonly", true); 
-	 $("#retirementDate").prop("readonly", true); 
-	 $("#pan").prop("readonly", true); 
-	 $("#placepost").prop("readonly", true);
-	 document.getElementById("rd1").checked = true;
+	$("#empName").prop("readonly", true);   
+	$("#designation").prop("readonly", true); 
+	$("#fatherName").prop("readonly", true); 
+	$("#dob").prop("readonly", true); 
+	$("#basic").prop("readonly", true); 
+	$("#cpfAccountNumber").prop("readonly", true); 
+	$("#staffCode").prop("readonly", true); 
+	$("#uan").prop("readonly", true); 
+	$("#mobileNo").prop("readonly", true); 
+	$("#dojFci").prop("readonly", true); 
+	$("#retirementDate").prop("readonly", true); 
+	$("#pan").prop("readonly", true); 
+	$("#placepost").prop("readonly", true);
+	document.getElementById("rd1").checked = true;
 	$('#advanceAmount').prop("readonly", true);
 	//$("#advanceAmount").val('');
 	$('#outstandingBal').prop("readonly", true);
@@ -356,12 +349,11 @@ $(document).ready(function() {
 	if(document.getElementById("rd1").checked || document.getElementById("rd2").checked){	
 		$("#installmentNo").prop("disabled", true);
 		$("#installmentNo").val('');
-		if(${kycUpdate}==0){
+		if(${kycUpdate} == 0){
 			$("#saveClaim").prop("disabled",true);
 		}
 	$("#perAmount").prop("disabled", true);
 	}
-
 });
 
 $('#claimForm').submit(function (){

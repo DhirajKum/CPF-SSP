@@ -8,8 +8,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
-//import javax.validation.constraints.NotNull;
-
 public class ActClaimDto implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -45,15 +43,19 @@ public class ActClaimDto implements Serializable{
 	public String INFO3;
 	public String INFO4;
 	public String INFO5;
+
 	@org.hibernate.annotations.Type(type="true_false")
-	//@NotNull
 	public boolean PERMISSIBLE_AMOUNT;
+	
 	@org.hibernate.annotations.Type(type="true_false")
-	//@NotNull
 	public boolean DEC_NOT_EMP_TWOMONTH;
+	
 	@org.hibernate.annotations.Type(type="true_false")
-	//@NotNull
 	public boolean EMP_DECLARATION;
+	
+	@org.hibernate.annotations.Type(type = "true_false")
+	public boolean EMP_ACCEPTANCE;
+	
 	public String CASTE_DISPUTE_CERT;
 	public String AMOUNT_SANCTION;
 	
@@ -81,9 +83,10 @@ public class ActClaimDto implements Serializable{
 			String aMOUNT, String iNSTALLMENT_NUMBER, boolean lAST_DRAWN_ADVANCE, String aDVANCE_AMOUNT,
 			String aMOUNT_REPAID, String oUTSTANDING_BAL, String aMOUNT_90PARTFINAL_BEF_RETR, String iNFO1,
 			String iNFO2, String iNFO3, String iNFO4, String iNFO5, boolean pERMISSIBLE_AMOUNT,
-			boolean dEC_NOT_EMP_TWOMONTH, boolean eMP_DECLARATION, String cASTE_DISPUTE_CERT, String aMOUNT_SANCTION,
-			String remarks, String locId, String parentZone, String claimSubmittedDate, String kycFilePath,
-			String kycFileName, Map<String, String> otherFiles, Map<String, String> userOtherFiles, String empStatus) {
+			boolean dEC_NOT_EMP_TWOMONTH, boolean eMP_DECLARATION, boolean eMP_ACCEPTANCE, String cASTE_DISPUTE_CERT,
+			String aMOUNT_SANCTION, String remarks, String locId, String parentZone, String claimSubmittedDate,
+			String kycFilePath, String kycFileName, Map<String, String> otherFiles, Map<String, String> userOtherFiles,
+			String empStatus) {
 		super();
 		REQUEST_ID = rEQUEST_ID;
 		CLAIM_SUBMITTED_BY = cLAIM_SUBMITTED_BY;
@@ -118,6 +121,7 @@ public class ActClaimDto implements Serializable{
 		PERMISSIBLE_AMOUNT = pERMISSIBLE_AMOUNT;
 		DEC_NOT_EMP_TWOMONTH = dEC_NOT_EMP_TWOMONTH;
 		EMP_DECLARATION = eMP_DECLARATION;
+		EMP_ACCEPTANCE = eMP_ACCEPTANCE;
 		CASTE_DISPUTE_CERT = cASTE_DISPUTE_CERT;
 		AMOUNT_SANCTION = aMOUNT_SANCTION;
 		this.remarks = remarks;
@@ -130,6 +134,8 @@ public class ActClaimDto implements Serializable{
 		this.userOtherFiles = userOtherFiles;
 		this.empStatus = empStatus;
 	}
+
+
 
 	public String getREQUEST_ID() {
 		return REQUEST_ID;
@@ -396,6 +402,14 @@ public class ActClaimDto implements Serializable{
 		EMP_DECLARATION = eMP_DECLARATION;
 	}
 	
+	public boolean isEMP_ACCEPTANCE() {
+		return EMP_ACCEPTANCE;
+	}
+
+	public void setEMP_ACCEPTANCE(boolean eMP_ACCEPTANCE) {
+		EMP_ACCEPTANCE = eMP_ACCEPTANCE;
+	}
+
 	public String getCASTE_DISPUTE_CERT() {
 		return CASTE_DISPUTE_CERT;
 	}
@@ -498,11 +512,10 @@ public class ActClaimDto implements Serializable{
 				+ OUTSTANDING_BAL + ", AMOUNT_90PARTFINAL_BEF_RETR=" + AMOUNT_90PARTFINAL_BEF_RETR + ", INFO1=" + INFO1
 				+ ", INFO2=" + INFO2 + ", INFO3=" + INFO3 + ", INFO4=" + INFO4 + ", INFO5=" + INFO5
 				+ ", PERMISSIBLE_AMOUNT=" + PERMISSIBLE_AMOUNT + ", DEC_NOT_EMP_TWOMONTH=" + DEC_NOT_EMP_TWOMONTH
-				+ ", EMP_DECLARATION=" + EMP_DECLARATION + ", CASTE_DISPUTE_CERT=" + CASTE_DISPUTE_CERT
-				+ ", AMOUNT_SANCTION=" + AMOUNT_SANCTION + ", remarks=" + remarks + ", locId=" + locId + ", parentZone="
-				+ parentZone + ", claimSubmittedDate=" + claimSubmittedDate + ", kycFilePath=" + kycFilePath
-				+ ", kycFileName=" + kycFileName + ", otherFiles=" + otherFiles + ", userOtherFiles=" + userOtherFiles
-				+ ", empStatus=" + empStatus + "]";
+				+ ", EMP_DECLARATION=" + EMP_DECLARATION + ", EMP_ACCEPTANCE=" + EMP_ACCEPTANCE
+				+ ", CASTE_DISPUTE_CERT=" + CASTE_DISPUTE_CERT + ", AMOUNT_SANCTION=" + AMOUNT_SANCTION + ", remarks="
+				+ remarks + ", locId=" + locId + ", parentZone=" + parentZone + ", claimSubmittedDate="
+				+ claimSubmittedDate + ", kycFilePath=" + kycFilePath + ", kycFileName=" + kycFileName + ", otherFiles="
+				+ otherFiles + ", userOtherFiles=" + userOtherFiles + ", empStatus=" + empStatus + "]";
 	}
-	
 }

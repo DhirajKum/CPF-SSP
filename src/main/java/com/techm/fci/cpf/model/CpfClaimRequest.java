@@ -14,7 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
-//import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "cpf_claim_form_details")
@@ -55,15 +54,18 @@ public class CpfClaimRequest implements Serializable {
 	public String INFO3;
 	public String INFO4;
 	public String CASTE_DISPUTE_CERT;
+	
 	@org.hibernate.annotations.Type(type = "true_false")
-	// @NotNull
 	public boolean PERMISSIBLE_AMOUNT;
+	
 	@org.hibernate.annotations.Type(type = "true_false")
-	// @NotNull
 	public boolean DEC_NOT_EMP_TWOMONTH;
+
 	@org.hibernate.annotations.Type(type = "true_false")
-	// @NotNull
 	public boolean EMP_DECLARATION;
+
+	@org.hibernate.annotations.Type(type = "true_false")
+	public boolean EMP_ACCEPTANCE;
 	
 	public String AMOUNT_SANCTION;
 	public Date RE_CLAIM_SUBMITTED_DATE;
@@ -81,8 +83,8 @@ public class CpfClaimRequest implements Serializable {
 			Date rETIREMENT_DATE, String pURPOSE, String aMOUNT, String iNSTALLMENT_NUMBER, boolean lAST_DRAWN_ADVANCE,
 			String aDVANCE_AMOUNT, String aMOUNT_REPAID, String oUTSTANDING_BAL, String aMOUNT_90PARTFINAL_BEF_RETR,
 			String iNFO1, String iNFO2, String iNFO3, String iNFO4, String cASTE_DISPUTE_CERT,
-			boolean pERMISSIBLE_AMOUNT, boolean dEC_NOT_EMP_TWOMONTH, boolean eMP_DECLARATION, String aMOUNT_SANCTION,
-			Date rE_CLAIM_SUBMITTED_DATE, int cLAIM_COUNT) {
+			boolean pERMISSIBLE_AMOUNT, boolean dEC_NOT_EMP_TWOMONTH, boolean eMP_DECLARATION, boolean eMP_ACCEPTANCE,
+			String aMOUNT_SANCTION, Date rE_CLAIM_SUBMITTED_DATE, int cLAIM_COUNT) {
 		super();
 		REQUEST_ID = rEQUEST_ID;
 		CLAIM_SUBMITTED_BY = cLAIM_SUBMITTED_BY;
@@ -118,12 +120,11 @@ public class CpfClaimRequest implements Serializable {
 		PERMISSIBLE_AMOUNT = pERMISSIBLE_AMOUNT;
 		DEC_NOT_EMP_TWOMONTH = dEC_NOT_EMP_TWOMONTH;
 		EMP_DECLARATION = eMP_DECLARATION;
+		EMP_ACCEPTANCE = eMP_ACCEPTANCE;
 		AMOUNT_SANCTION = aMOUNT_SANCTION;
 		RE_CLAIM_SUBMITTED_DATE = rE_CLAIM_SUBMITTED_DATE;
 		CLAIM_COUNT = cLAIM_COUNT;
 	}
-
-
 
 	@Id
 	@GenericGenerator(name = "cpfClaimSeq", strategy = "com.techm.fci.cpf.daoimpl.RequestIdGenerator")
@@ -409,6 +410,14 @@ public class CpfClaimRequest implements Serializable {
 		EMP_DECLARATION = eMP_DECLARATION;
 	}
 	
+	public boolean isEMP_ACCEPTANCE() {
+		return EMP_ACCEPTANCE;
+	}
+
+	public void setEMP_ACCEPTANCE(boolean eMP_ACCEPTANCE) {
+		EMP_ACCEPTANCE = eMP_ACCEPTANCE;
+	}
+
 	public String getAMOUNT_SANCTION() {
 		return AMOUNT_SANCTION;
 	}
@@ -448,7 +457,7 @@ public class CpfClaimRequest implements Serializable {
 				+ AMOUNT_90PARTFINAL_BEF_RETR + ", INFO1=" + INFO1 + ", INFO2=" + INFO2 + ", INFO3=" + INFO3
 				+ ", INFO4=" + INFO4 + ", CASTE_DISPUTE_CERT=" + CASTE_DISPUTE_CERT + ", PERMISSIBLE_AMOUNT="
 				+ PERMISSIBLE_AMOUNT + ", DEC_NOT_EMP_TWOMONTH=" + DEC_NOT_EMP_TWOMONTH + ", EMP_DECLARATION="
-				+ EMP_DECLARATION + ", AMOUNT_SANCTION=" + AMOUNT_SANCTION + ", RE_CLAIM_SUBMITTED_DATE="
-				+ RE_CLAIM_SUBMITTED_DATE + ", CLAIM_COUNT=" + CLAIM_COUNT + "]";
+				+ EMP_DECLARATION + ", EMP_ACCEPTANCE=" + EMP_ACCEPTANCE + ", AMOUNT_SANCTION=" + AMOUNT_SANCTION
+				+ ", RE_CLAIM_SUBMITTED_DATE=" + RE_CLAIM_SUBMITTED_DATE + ", CLAIM_COUNT=" + CLAIM_COUNT + "]";
 	}
 }

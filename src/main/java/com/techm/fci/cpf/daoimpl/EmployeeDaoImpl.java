@@ -397,7 +397,7 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 		session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		
-		if(uModel.getRoleName().equals("ADMIN") || uModel.getRoleName().equals("CPF_ADMIN")){		
+		if((uModel.getRoleName().equals("ADMIN") || uModel.getRoleName().equals("CPF_ADMIN")) && reqId!=null){		
 		String query1 = "select cru.emp_num as \"empNum\", cru.emp_phone as \"empPhone\",cru.emp_email as \"empEmail\",cru.role_name as \"roleName\" "
 				+ "from cpf_registered_users cru, cpf_claim_form_details ccfd "
 				+ "where cru.emp_num=ccfd.claim_submitted_by and ccfd.request_id=:reqId";

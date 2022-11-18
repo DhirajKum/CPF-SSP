@@ -283,23 +283,27 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="" cssclass="col-sm-5 col-form-label" class="labelwidth"></label>
+							<label for="" cssclass="col-sm-5 col-form-label"  class="labelwidth"><b>Uploaded KYC Document</b></label>
 							<div class="col-sm-7">
-								<%-- <sf:input path="" cssclass="form-control  form-control-sm"/> --%>
+								<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${claimData.kycFilePath}&fileType=1" target="_blank">${claimData.kycFileName}</a>
 							</div>
 						</div>
-					</div>
+					</div>	
 				</div>		
 							
 				<div class="row">	
+				
 				<div class="col-md-6">
 					<div class="form-group row">
-						<label for="" cssclass="col-sm-5 col-form-label"  class="labelwidth"><b>Uploaded KYC Document</b></label>
+						<label for="" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>User Uploaded Other Documents</b></label>
 						<div class="col-sm-7">
-							<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${claimData.kycFilePath}&fileType=1" target="_blank">${claimData.kycFileName}</a>
+						<c:forEach var="userOtherFile" items="${claimData.userOtherFiles}">
+							<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${userOtherFile.value}&fileType=3" target="_blank">${userOtherFile.key}</a></br>
+						</c:forEach>
 						</div>
 					</div>
 				</div>
+				
 				<div class="col-md-6">
 					<div class="form-group row">
 						<label for="" cssclass="col-sm-5 col-form-label"  class="labelwidth"><b>Uploaded Other Documents</b></label>
@@ -318,13 +322,6 @@
 						</div>
 					</div>
 				</div>
-				<!-- <div class="form-group row">
-					<div class="col-sm-10">
-						<div class="checkbox">
-							<label><input type="checkbox"> In case the amount is used for any purpose other than stated in column(10) above, I am liable to return the entire amount with penal interest</label>
-						</div>
-					</div>
-				</div> -->
 				<div class="form-group row">
 					<div class="col-sm-12">
 						<div class="checkbox">
@@ -332,21 +329,16 @@
 						</div>
 					</div>
 				</div>						
-			<%-- 	<div class="form-group row">
+				<div class="form-group row">
 					<div class="col-sm-12">
 						<div class="checkbox">
-							<label><sf:checkbox path="CASTE_DISPUTE_CERT" id="casteDispute" /> Upload caste dispute certificate</label>
+							<label><sf:checkbox path="EMP_ACCEPTANCE" id="empAccept"/> In case the amount is used for any purpose other than stated above, I am liable to return the entire amount with penal interest.</label>
 						</div>
 					</div>
-				</div> --%>
-				<!-- <div style="text-align: center;">
-				<button type="submit" class="btn btn-primary btn-sm">Submit</button>&nbsp;<a href="" class="btn btn-primary btn-sm reset-form">Cancel</a>
-				</div> -->
+				</div>
 				</sf:form>
-
 			</div>
 		</div>
-		
 </div>
 </div>
 </div>
@@ -405,6 +397,7 @@ $(document).ready(function() {
   $("#amount90Partfinal").prop("disabled", true); 
   jQuery('#decNotEmpTwoMonth').prop("disabled", true);
   jQuery('#empDec').prop("disabled", true);
+  jQuery('#empAccept').prop("disabled", true);
   jQuery('#casteDispute').prop("disabled", true);
   jQuery('#amountSanc').prop("disabled", true);
 });

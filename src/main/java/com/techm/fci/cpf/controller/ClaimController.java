@@ -144,7 +144,6 @@ public class ClaimController {
 				mv.addObject("message","Claim submission failed. As of now, admin/s not found for this location to approve your request ...!!!");
 			}
 		}
-		
 		return mv;
 	}
 	
