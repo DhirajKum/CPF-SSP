@@ -349,12 +349,32 @@ $(document).ready(function() {
 	if(document.getElementById("rd1").checked || document.getElementById("rd2").checked){	
 		$("#installmentNo").prop("disabled", true);
 		$("#installmentNo").val('');
-		if(${kycUpdate} == 0){
+		if('${kycUpdate}' === '0'){
 			$("#saveClaim").prop("disabled",true);
 		}
 	$("#perAmount").prop("disabled", true);
 	}
 });
+
+/* document.oncontextmenu = rightClick;
+function rightClick(clickEvent) {
+    clickEvent.preventDefault();
+    return false;
+}
+document.onkeydown = function(e) {
+	if(event.keyCode == 123) {
+	return false;
+	}
+	if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)){
+	return false;
+	}
+	if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)){
+	return false;
+	}
+	if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)){
+	return false;
+	}
+} */
 
 $('#claimForm').submit(function (){
 	var radioValue=$("#claimAppliedFor input:radio:checked").val();

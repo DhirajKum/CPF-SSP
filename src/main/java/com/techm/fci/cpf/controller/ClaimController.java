@@ -577,7 +577,7 @@ public class ClaimController {
 	        try {
 	        UserModel uModel = getUserModel();
 	        if(uModel != null){
-		        if(filename.toUpperCase().endsWith(".PDF") || filename.toUpperCase().endsWith(".JPG") || filename.toUpperCase().endsWith(".JPGE") ){
+		        if(filename.toUpperCase().endsWith(".PDF") || filename.toUpperCase().endsWith(".JPG") || filename.toUpperCase().endsWith(".JPEG") ){
 	        	String folderPath = null;
 				if(!uModel.getEmpNum().equals("")){
 					//folderPath = "/prodshare/cpf_out/"+uModel.getEmpNum().trim()+"_KYC";//For Production server

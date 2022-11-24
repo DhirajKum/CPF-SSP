@@ -428,6 +428,7 @@ $("#empdetails").on('click', function(event){
 		//data : input,
 		async : false,
 		contentType : "application/json",
+		headers: {"Authorization" : "8UmRUqrVzelvotk6jI2NpVke75B"},
 		success : function(res) {
 			if (res) {
 					setEmployeeData(res);						
@@ -461,6 +462,25 @@ function setEmployeeData(res) {
 }
 
 
+document.oncontextmenu = rightClick;
+function rightClick(clickEvent) {
+    clickEvent.preventDefault();
+    return false;
+}
+document.onkeydown = function(e) {
+	if(event.keyCode == 123) {
+	return false;
+	}
+	if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)){
+	return false;
+	}
+	if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)){
+	return false;
+	}
+	if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)){
+	return false;
+	}
+}
 
 $("#sendOtp").on('click', function(event){
 		

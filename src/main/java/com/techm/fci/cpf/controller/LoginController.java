@@ -19,9 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,6 +58,9 @@ public class LoginController {
 	
 	@Autowired
 	private OTPService otpService;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 	
 	String otpValidate="";
 	
@@ -115,7 +120,7 @@ public class LoginController {
 	public String logout(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(false);
 		SecurityContextHolder.clearContext();
-		session = request.getSession(false);
+		//session = request.getSession(false);
 		if (session != null) {
 			session.invalidate();
 		}
@@ -149,15 +154,21 @@ public class LoginController {
 
 	@RequestMapping(value = "/getEmpDetailsByEmpNum", method = RequestMethod.GET)
 	@ResponseBody
-	public EmpMaster getEmpDetailsByEmpNum(@RequestParam String empNum, HttpSession session,ModelMap model) {
+	public ResponseEntity<EmpMaster> getEmpDetailsByEmpNum(@RequestParam String empNum, @RequestHeader(value="Authorization") String authCode, HttpSession session, ModelMap model) {
 		EmpMaster empMas = new EmpMaster();
-		empMas = userService.getEmpDetailsByEmpNum(empNum);
-		if(empMas==null){
-			session.setAttribute("empIdStatus", "Employee ID not valid !!!");
+		ResponseEntity<EmpMaster> returnEmpMas =null;
+		String salt="8UmRUqrVzelvotk6jI2NpVke75B";
+		String finalAuthCode = authCode+salt;
+		if(passwordEncoder.matches(finalAuthCode, passwordEncoder.encode(finalAuthCode))){
+			empMas = userService.getEmpDetailsByEmpNum(empNum);
+			if(empMas==null){
+				session.setAttribute("empIdStatus", "Employee ID not valid !!!");
+			}
+			returnEmpMas = new ResponseEntity<EmpMaster>(empMas, HttpStatus.OK); 
+		}else{
+			returnEmpMas = new ResponseEntity<EmpMaster>(empMas, HttpStatus.BAD_REQUEST);
 		}
-		
-		return empMas; 
-		
+		return returnEmpMas;
 	}
 
 	// @RequestMapping(value = "/saveRegistrationData", method =

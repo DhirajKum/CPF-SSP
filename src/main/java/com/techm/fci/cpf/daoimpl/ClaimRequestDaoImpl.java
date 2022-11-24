@@ -425,7 +425,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						+ "(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.admin_action_taken_by) "
 						+ "admin_action_taken_by, admin_action_date, status, admin_remarks as \"adminRemarks\","
 						+ "(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.cpfsec_action_taken_by) as \"cpfsecActionTakenBy\", "
-						+ "st.cpfsec_action_date as \"cpfsecActionDate\", st.cpfsec_remarks as \"cpfsecRemarks\", dsm.dsgn_desc as \"desig\" "
+						+ "st.cpfsec_action_date as \"cpfsecActionDate\", st.cpfsec_remarks as \"cpfsecRemarks\", dsm.dsgn_desc as \"desig\", cfd.claim_applied_for, cfd.purpose "
 						+ "from cpf_claim_form_status st,cpf_registered_users reg,cpf_claim_form_details cfd,pay_dsgn_mst dsm "
 						+ "where st.claim_submitted_by=reg.emp_num "
 						+ "and cfd.claim_submitted_by=reg.emp_num "
@@ -460,6 +460,9 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					cpfClaimRequestStatusDto.setClaimSubmittedDate(myFormat.format(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString().trim())));
 					cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString());
 					cpfClaimRequestStatusDto.setDesignation(map.get("desig").toString());
+					String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
+					String claimPur=map.get("PURPOSE")!=null?map.get("PURPOSE").toString().trim():"";
+					cpfClaimRequestStatusDto.setClaimType(claimAppFor+" ("+claimPur+")");
 					
 					if(map.get("STATUS").toString().equals("0")){
 						cpfClaimRequestStatusDto.setStatus("Request Rejected");
@@ -522,7 +525,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				if(reqType.equals("myReq")){
 					String query = "select st.request_id,reg.emp_name as \"claim_submitted_by\",st.claim_submitted_date,(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.admin_action_taken_by) "
 							+ "admin_action_taken_by, admin_action_date, status, admin_remarks as \"adminRemarks\",(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.cpfsec_action_taken_by) as \"cpfsecActionTakenBy\", "
-							+ "cpfsec_action_date as \"cpfsecActionDate\", cpfsec_remarks as \"cpfsecRemarks\", dsm.dsgn_desc as \"desig\" "
+							+ "cpfsec_action_date as \"cpfsecActionDate\", cpfsec_remarks as \"cpfsecRemarks\", dsm.dsgn_desc as \"desig\", cfd.claim_applied_for, cfd.purpose "
 							+ "from cpf_claim_form_status st, cpf_registered_users reg, cpf_claim_form_details cfd, pay_dsgn_mst dsm "
 							+ "where st.claim_submitted_by=reg.emp_num "
 							+ "and cfd.claim_submitted_by=reg.emp_num "
@@ -556,6 +559,9 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						cpfClaimRequestStatusDto.setClaimSubmittedDate(myFormat.format(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString().trim())));
 						cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString());
 						cpfClaimRequestStatusDto.setDesignation(map.get("desig").toString());
+						String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
+						String claimPur=map.get("PURPOSE")!=null?map.get("PURPOSE").toString().trim():"";
+						cpfClaimRequestStatusDto.setClaimType(claimAppFor+" ("+claimPur+")");
 						
 						if(map.get("STATUS").toString().equals("0")){
 							cpfClaimRequestStatusDto.setStatus("Request Rejected");
@@ -622,7 +628,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				
 				String query = "select st.request_id,st.claim_submitted_by as \"empNum\", reg.emp_name as \"claim_submitted_by\",st.claim_submitted_date, "
 						+ "(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.admin_action_taken_by) admin_action_taken_by, dsm.dsgn_desc as \"desig\", "
-						+ "st.admin_action_date,st.status, st.admin_remarks, cfd.claim_applied_for "
+						+ "st.admin_action_date,st.status, st.admin_remarks, cfd.claim_applied_for, cfd.purpose  "
 						+ "FROM cpf_claim_form_status st, cpf_claim_form_details cfd, cpf_registered_users reg, pay_dsgn_mst dsm "
 						+ "WHERE st.claim_submitted_by=reg.emp_num "
 						+ "and cfd.claim_submitted_by in (select Claim_Submitted_By from cpf_claim_form_status where admin_action_taken_by=:empNum) "
@@ -652,7 +658,11 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					
 					cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
 					//cpfClaimRequestStatusDto.setRemarks(map.get("admin_remarks").toString());
-					cpfClaimRequestStatusDto.setClaimType(map.get("CLAIM_APPLIED_FOR").toString());
+					String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
+					String claimPur=map.get("PURPOSE")!=null?map.get("PURPOSE").toString().trim():"";
+					cpfClaimRequestStatusDto.setClaimType(claimAppFor+" ("+claimPur+")");
+					
+					
 					cpfClaimRequestStatusDto.setStatus("Pending at admin");
 					cpfClaimRequestStatusDto.setDesignation(map.get("desig")!=null?map.get("desig").toString():"");
 					
@@ -663,7 +673,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				if(reqType.equals("myReq")){
 				String query = "select st.request_id,reg.emp_name as \"claim_submitted_by\",st.claim_submitted_date,(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.admin_action_taken_by) "
 						+ "admin_action_taken_by, st.admin_action_date, st.status, st.admin_remarks as \"adminRemarks\",(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.cpfsec_action_taken_by) as \"cpfsecActionTakenBy\", "
-						+ "st.cpfsec_action_date as \"cpfsecActionDate\", st.cpfsec_remarks as \"cpfsecRemarks\", dsm.dsgn_desc as \"desig\" "
+						+ "st.cpfsec_action_date as \"cpfsecActionDate\", st.cpfsec_remarks as \"cpfsecRemarks\", dsm.dsgn_desc as \"desig\", cfd.claim_applied_for, cfd.purpose "
 						+ "from cpf_claim_form_status st,cpf_registered_users reg, cpf_claim_form_details cfd, pay_dsgn_mst dsm "
 						+ "where st.claim_submitted_by=reg.emp_num "
 						+ "and cfd.claim_submitted_by=reg.emp_num "
@@ -697,6 +707,9 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					cpfClaimRequestStatusDto.setClaimSubmittedDate(myFormat.format(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString().trim())));
 					cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString());
 					cpfClaimRequestStatusDto.setDesignation(map.get("desig").toString());
+					String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
+					String claimPur=map.get("PURPOSE")!=null?map.get("PURPOSE").toString().trim():"";
+					cpfClaimRequestStatusDto.setClaimType(claimAppFor+" ("+claimPur+")");
 					
 					if(map.get("STATUS").toString().equals("0")){
 						cpfClaimRequestStatusDto.setStatus("Request Rejected");
@@ -763,7 +776,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						+ "and st.cpfsec_action_taken_by=:empNum";*/
 				
 				String query = "SELECT st.request_id,reg.emp_num as \"claimSubmitEmpNum\",reg.emp_name as \"claim_submitted_by\",st.claim_submitted_date, "
-						+ "st.cpfsec_action_date, st.status, st.cpfsec_remarks, st.ADMIN_ACTION_DATE, cfd.claim_applied_for, "
+						+ "st.cpfsec_action_date, st.status, st.cpfsec_remarks, st.ADMIN_ACTION_DATE, cfd.claim_applied_for, cfd.purpose, "
 						+ "(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.admin_action_taken_by) admin_action_taken_by, dsm.dsgn_desc as \"desig\" "
 						+ "FROM cpf_claim_form_status st,cpf_claim_form_details cfd,cpf_registered_users reg,pay_dsgn_mst dsm "
 						+ "WHERE reg.emp_num=st.claim_submitted_by "
@@ -796,7 +809,10 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					
 					cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
 					//cpfClaimRequestStatusDto.setRemarks(map.get("admin_remarks").toString());
-					cpfClaimRequestStatusDto.setClaimType(map.get("CLAIM_APPLIED_FOR").toString());
+					String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
+					String claimPur=map.get("PURPOSE")!=null?map.get("PURPOSE").toString().trim():"";
+					cpfClaimRequestStatusDto.setClaimType(claimAppFor+" ("+claimPur+")");
+					
 					cpfClaimRequestStatusDto.setStatus("Pending At CPF Admin");
 					cpfClaimRequestStatusDto.setDesignation(map.get("desig")!=null?map.get("desig").toString():"");
 					
