@@ -22,6 +22,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,7 +149,7 @@ public class ClaimController {
 	}
 	
 @RequestMapping(value = {"/saveClaimRequest"}, method = {RequestMethod.POST})
-	public String saveClaimRequestData(@ModelAttribute("claimData") CpfClaimRequest cpfClaim) {
+	public String saveClaimRequestData(@Valid @ModelAttribute("claimData") CpfClaimRequest cpfClaim) {
 		logger.info("::::: In side save claim request method :::::");
 		
 		List<CpfClaimRequest> cpfClaimReqList = new ArrayList<CpfClaimRequest>();
@@ -363,7 +364,7 @@ public class ClaimController {
 	}	
 	
 	@RequestMapping(value={"/updateClaimRequest"}, method = {RequestMethod.POST})
-	public String updateClaimRequest(@ModelAttribute("actClaimDto") ActClaimDto actClaimDto, @RequestParam(name="reqType") String rqType, @RequestParam(name="claimReq") String reqType,
+	public String updateClaimRequest(@Valid @ModelAttribute("actClaimDto") ActClaimDto actClaimDto, @RequestParam(name="reqType") String rqType, @RequestParam(name="claimReq") String reqType,
 			@RequestParam(name="reqId") String reqId){
 	
 		UserModel uModel=getUserModel();

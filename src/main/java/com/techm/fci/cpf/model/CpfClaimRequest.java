@@ -12,8 +12,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 @Table(name = "cpf_claim_form_details")
@@ -40,6 +42,7 @@ public class CpfClaimRequest implements Serializable {
 	public String MOBILE_NUMBER;
 	public Date RETIREMENT_DATE;
 	public String PURPOSE;
+	@NotBlank(message="Amount should not be blank")
 	public String AMOUNT;
 	public String INSTALLMENT_NUMBER;
 	@org.hibernate.annotations.Type(type = "true_false")

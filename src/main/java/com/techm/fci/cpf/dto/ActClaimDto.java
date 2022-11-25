@@ -8,6 +8,11 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.SafeHtml;
+
 public class ActClaimDto implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -58,7 +63,9 @@ public class ActClaimDto implements Serializable{
 	
 	public String CASTE_DISPUTE_CERT;
 	public String AMOUNT_SANCTION;
-	
+	@NotNull
+	@NotBlank
+	//@SafeHtml
 	public String remarks;
 	public String locId;
 	public String parentZone;
