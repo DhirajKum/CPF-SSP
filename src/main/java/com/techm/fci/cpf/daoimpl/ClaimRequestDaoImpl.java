@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.EntityManager;
 import javax.persistence.ParameterMode;
@@ -983,6 +985,17 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 		return claimDataForForm;
 	}
 
+	@Override
+	public Boolean checkInputData(ActClaimDto actClaimDto){
+        String regex = "<(\"[^\"]*\"|'[^']*'|[^'\">])*>(.*<(\"[^\"]*\"|'[^']*'|[^'\">])*>)?";
+        Pattern p = Pattern.compile(regex);
+        if (actClaimDto.getRemarks() == null) {
+            return false;
+        }
+        Matcher m = p.matcher(actClaimDto.getRemarks());
+        return m.matches();
+	}
+	
 	@Override
 	public Boolean updateClaimReq(ActClaimDto actClaimDto, String reqType, String reqId, String empNum, String empRole, String locCode, String parentZone) {
 		Session session = sessionFactory.getCurrentSession();

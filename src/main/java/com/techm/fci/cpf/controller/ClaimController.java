@@ -149,7 +149,7 @@ public class ClaimController {
 	}
 	
 @RequestMapping(value = {"/saveClaimRequest"}, method = {RequestMethod.POST})
-	public String saveClaimRequestData(@Valid @ModelAttribute("claimData") CpfClaimRequest cpfClaim) {
+	public String saveClaimRequestData(@Valid @ModelAttribute("claimData") CpfClaimRequest cpfClaim, @RequestParam String js_enabled) {
 		logger.info("::::: In side save claim request method :::::");
 		
 		List<CpfClaimRequest> cpfClaimReqList = new ArrayList<CpfClaimRequest>();
@@ -157,7 +157,7 @@ public class ClaimController {
 		int covidCount = 0;
 		UserModel uModel = getUserModel();
 		
-		if(uModel!=null){
+		if(uModel!=null && js_enabled.equals("1")){
 		cpfClaimReqList = userService.empClaimLookup(uModel.getEmpNum());
 		
 		for(CpfClaimRequest cpfClaimReq :cpfClaimReqList){
@@ -221,8 +221,11 @@ public class ClaimController {
 			else
 				return "redirect:/claim/raiseClaimReq?operation=duplicate";
 		}
-		}else{
-		return "redirect:/login";
+		} else if(js_enabled.equals("0")){
+			session.setAttribute("regInfo", "Your javascript is disabled. Kindly enable it before going to raise your claim.");
+			return "redirect:/claim/raiseClaimReq?operation=failed";
+		} else{
+			return "redirect:/login";
 		}
 	}
 
@@ -365,42 +368,50 @@ public class ClaimController {
 	
 	@RequestMapping(value={"/updateClaimRequest"}, method = {RequestMethod.POST})
 	public String updateClaimRequest(@Valid @ModelAttribute("actClaimDto") ActClaimDto actClaimDto, @RequestParam(name="reqType") String rqType, @RequestParam(name="claimReq") String reqType,
-			@RequestParam(name="reqId") String reqId){
+			@RequestParam(name="reqId") String reqId, @RequestParam(required=true)String js_enabled){
 	
-		UserModel uModel=getUserModel();
-		if(uModel!=null){
-		boolean result = userService.updateClaimReq(actClaimDto, reqType, reqId, uModel.getEmpNum(), uModel.getRoleName(), actClaimDto.getLocId(), actClaimDto.getParentZone());
-		
-		ClaimHistoryTrailDto claimHistoryTrailDto = new ClaimHistoryTrailDto();
-		claimHistoryTrailDto.setRequestId(reqId);
-		claimHistoryTrailDto.setClaimCreatedBy(actClaimDto.getCLAIM_SUBMITTED_BY());
-		claimHistoryTrailDto.setActionTakenBy(uModel.getEmpNum());
-		claimHistoryTrailDto.setRemarks(actClaimDto.getRemarks());
-		claimHistoryTrailDto.setAction("Approve");
-		if(uModel.getRoleName().equals("USER")){
-			claimHistoryTrailDto.setStatus("1");
-			claimHistoryTrailDto.setAction("Re-Create");
-			claimHistoryTrailDto.setRemarks("Claim has been created.");
-		}else if(uModel.getRoleName().equals("ADMIN")){
-			claimHistoryTrailDto.setStatus("2");
-		}else if(uModel.getRoleName().equals("CPF_ADMIN")){
-			claimHistoryTrailDto.setStatus("3");
-		}
-		
-		userService.saveCpfClaimHistoryTrail(claimHistoryTrailDto, uModel.getEmpNum(), uModel.getRoleName());
-		
-		if(result){
-			return "redirect:/claim/pendingReq?reqType="+rqType+"&operation=updateSuccessfully";			
-		}else{
-			return "redirect:/claim/pendingReq?reqType="+rqType+"&operation=updateFail";
-		}
-		}else{
-		return "redirect:/login";
+		UserModel uModel = getUserModel();
+		boolean result = false;
+		if (uModel != null && js_enabled.equals("1")) {
+			if (!userService.checkInputData(actClaimDto)) {
+				result = userService.updateClaimReq(actClaimDto, reqType, reqId, uModel.getEmpNum(),
+						uModel.getRoleName(), actClaimDto.getLocId(), actClaimDto.getParentZone());
+
+				ClaimHistoryTrailDto claimHistoryTrailDto = new ClaimHistoryTrailDto();
+				claimHistoryTrailDto.setRequestId(reqId);
+				claimHistoryTrailDto.setClaimCreatedBy(actClaimDto.getCLAIM_SUBMITTED_BY());
+				claimHistoryTrailDto.setActionTakenBy(uModel.getEmpNum());
+				claimHistoryTrailDto.setRemarks(actClaimDto.getRemarks());
+				claimHistoryTrailDto.setAction("Approve");
+				if (uModel.getRoleName().equals("USER")) {
+					claimHistoryTrailDto.setStatus("1");
+					claimHistoryTrailDto.setAction("Re-Create");
+					claimHistoryTrailDto.setRemarks("Claim has been created.");
+				} else if (uModel.getRoleName().equals("ADMIN")) {
+					claimHistoryTrailDto.setStatus("2");
+				} else if (uModel.getRoleName().equals("CPF_ADMIN")) {
+					claimHistoryTrailDto.setStatus("3");
+				}
+
+				userService.saveCpfClaimHistoryTrail(claimHistoryTrailDto, uModel.getEmpNum(), uModel.getRoleName());
+			}
+			if (result) {
+				return "redirect:/claim/pendingReq?reqType=" + rqType + "&operation=updateSuccessfully";
+			} else {
+				return "redirect:/claim/pendingReq?reqType=" + rqType + "&operation=updateFail";
+			}
+
+		} else if (js_enabled.equals("0")) {
+			session.setAttribute("regInfo", "Your javascript is disabled. Kindly enable it, before take any action.");
+			return "redirect:/claim/pendingReq?reqType=" + rqType + "&operation=updateFail";
+		} else {
+			return "redirect:/login";
 		}
 	}
 	
 	@RequestMapping(value={"/rejectClaimRequest"})
-	public String rejectClaimRequest(@RequestParam(name="claimType") String reqType, @RequestParam(name="reqId") String reqId, @RequestParam(name="remark") String remarks,  @RequestParam(name="casteDisp") String casteDisp){
+	public String rejectClaimRequest(@RequestParam(name="claimType") String reqType, @RequestParam(name="reqId") String reqId, @RequestParam(name="remark") String remarks, 
+			@RequestParam(name="casteDisp") String casteDisp){
 		UserModel uModel=getUserModel();
 		if(uModel!=null){
 		boolean result = userService.rejectClaimReq(remarks, reqType, reqId, uModel.getEmpNum(), uModel.getRoleName(),casteDisp);

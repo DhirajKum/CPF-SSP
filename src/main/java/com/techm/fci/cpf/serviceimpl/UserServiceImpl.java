@@ -120,6 +120,11 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	@Override
+	public Boolean checkInputData(ActClaimDto actClaimDto) {
+		return claimReqDao.checkInputData(actClaimDto);
+	}
+	
+	@Override
 	public Boolean updateClaimReq(ActClaimDto actClaimDto, String reqType, String reqId, String empNum, String empRole, String locCode, String parentZone) {
 		return claimReqDao.updateClaimReq(actClaimDto,reqType,reqId,empNum,empRole,locCode,parentZone);
 	}

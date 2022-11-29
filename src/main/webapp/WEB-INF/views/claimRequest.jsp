@@ -29,7 +29,10 @@
 		
 		<div class="row marginT20" style="margin-left:-5px">
 			<div class="col-md-12">
-			 <sf:form action='${pageContext.request.contextPath}/claim/saveClaimRequest' method='POST' modelAttribute="claimData" id="claimForm">
+			 <sf:form action='${pageContext.request.contextPath}/claim/saveClaimRequest' method='POST' modelAttribute="claimData" id="claimForm" onsubmit="this.js_enabled.value=1;return true;">
+			 	<noscript>
+					<div id="noJS" class="alert alert-danger" style="padding-left: 20px; padding-right: 0px; margin-left: 0px;">Please enable JavaScript in your browser</div>
+				</noscript>
 			 	<div class="form-group row">
 					<label for="oldpassword" class="col-sm-3 col-form-label"><b>Claim applied for  <span class="red">*</span></b></label>
 					<div class="col-sm-9" id="claimAppliedFor">
@@ -194,7 +197,7 @@
 						<div class="form-group row">
 							<label for="INSTALLMENT_NUMBER" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>No. of installments in which advance is to be recovered <span class="red">*</span></b></label>
 							<div class="col-sm-7">
-								<sf:input path="INSTALLMENT_NUMBER" cssclass="form-control  form-control-sm" id="installmentNo"  maxlength="20" onkeypress="return isNumber(event)" onblur="return range()"/>
+								<sf:input path="INSTALLMENT_NUMBER" cssclass="form-control  form-control-sm" id="installmentNo"  maxlength="3" onkeypress="return isNumber(event)"/>
 							</div>
 						</div>
 					</div>
@@ -313,7 +316,7 @@
 				<div style="text-align: center;">
 				<button type="submit" id="saveClaim" class="btn btn-primary btn-sm" onclick="return finalSubmit()">Submit</button>&nbsp;<a href="" class="btn btn-primary btn-sm reset-form">Cancel</a>
 				</div>
-				
+				<input type="hidden" name="js_enabled" value="0">
 				</sf:form>
 			</div>
 		</div>
@@ -323,7 +326,7 @@
 
 <script>		
 $(document).ready(function() {
-
+ 	$("#noJS").hide();
 	$("#empName").prop("readonly", true);   
 	$("#designation").prop("readonly", true); 
 	$("#fatherName").prop("readonly", true); 
@@ -356,7 +359,7 @@ $(document).ready(function() {
 	}
 });
 
-/* document.oncontextmenu = rightClick;
+document.oncontextmenu = rightClick;
 function rightClick(clickEvent) {
     clickEvent.preventDefault();
     return false;
@@ -374,7 +377,7 @@ document.onkeydown = function(e) {
 	if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)){
 	return false;
 	}
-} */
+}
 
 $('#claimForm').submit(function (){
 	var radioValue=$("#claimAppliedFor input:radio:checked").val();

@@ -26,6 +26,7 @@ public interface ClaimRequestDao {
 	//public CpfClaimRequest getClaimReqDetails(String empNum);
 	
 	public ActClaimDto getClaimReqDetails(String reqId);
+	public Boolean checkInputData(ActClaimDto actClaimDto);
 	public Boolean updateClaimReq(ActClaimDto actClaimDto,String reqType, String reqId, String empNum, String empRole, String locCode, String parentZone);
 	public Boolean rejectClaimReq(String remarks,String reqType, String reqId, String empNum, String empRole, String casteDisp);
 	public List<ClaimRequestStatusDto> getAllApprovedClaimReq(String empNum,String roleName);

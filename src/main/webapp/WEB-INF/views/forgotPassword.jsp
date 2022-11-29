@@ -53,7 +53,7 @@
 </div>
 </div>
 	<c:if test="${not empty forgotMessage}">
-		<div class="col-md-12" style= "float:none" id="message">
+		<div class="col-md-12" style= "float:none" id="forgotMessage">
 			<div class="alert alert-danger alert-dismissible" style="text-align: center;">
 				<!-- <button type="button" class="close" data-dismiss="alert">&times;</button> -->
 				<h4><b>${forgotMessage}</b></h4>
@@ -98,8 +98,8 @@
 							</div>
 							<label class="labelwidth">Confirm New Password</label>
 							<input type="password" id="confNewPass" class="form-control"  >
-							<h5><b><span id='message'></span></h5>
 						</div>
+						<h5><b><span id="message"></span></h5>
 						<!-- form-group// -->
 
 						<!-- form-group// -->
@@ -126,7 +126,7 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-	$("#message").hide();
+	$("#forgotMessage").hide();
 	$('#forgotPassSendOtp').addClass('disabled');
 	$("#newPass").prop('readonly', true);
 	$("#confNewPass").prop('readonly', true);
@@ -196,8 +196,11 @@ function activateSendOTP(){
 $('#newPass, #confNewPass').on('keyup', function () {
   if ($('#newPass').val() == $('#confNewPass').val()) {
     $('#message').html('').css('color', 'green');
-  } else 
+    $(":submit").attr("disabled", false);
+  } else {
     $('#message').html('Not Matching').css('color', 'red');
+    $(":submit").attr("disabled", true);
+  }
 });
 
 $(document).ajaxSend(function() {

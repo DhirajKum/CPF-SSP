@@ -195,7 +195,7 @@ public class LoginController {
 				return "redirect:/userRegistration?operation=registrationfailed";
 			}
 		} else if(js_enabled.equals("0")){
-			session.setAttribute("regInfo", "You don't have javascript enabled. Kindly enable it before going through the registration process.");
+			session.setAttribute("regInfo", "Your javascript is disabled. Kindly enable it before going through the registration process.");
 			return "redirect:/userRegistration";
 		} else {
 			logger.info("rUser :::: INFO" + rUser.toString());

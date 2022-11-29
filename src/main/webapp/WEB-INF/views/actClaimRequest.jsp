@@ -35,7 +35,10 @@
 		</div>
 		<div class="row marginT20" style="margin-left:-5px">
 			<div class="col-md-12">
-			  <sf:form action='${pageContext.request.contextPath}/claim/updateClaimRequest?reqType=${reqType}&claimReq=approve&reqId=${reqId}' method='POST' modelAttribute="actClaimDto" id="actClaimForm">
+			  <sf:form action='${pageContext.request.contextPath}/claim/updateClaimRequest?reqType=${reqType}&claimReq=approve&reqId=${reqId}' method='POST' modelAttribute="actClaimDto" id="actClaimForm" onsubmit="this.js_enabled.value=1;return true;">
+				<noscript>
+					<div id="noJS" class="alert alert-danger" style="padding-left: 20px; padding-right: 0px; margin-left: 0px;">Please enable JavaScript in your browser</div>
+				</noscript>
 				<div class="row">
 				<div class="col-md-3">
 				<div class="form-group row">
@@ -416,6 +419,8 @@
 				<sf:hidden path="parentZone"/>
 				<sf:hidden path="CLAIM_SUBMITTED_BY"/>
 				<sf:hidden path="claimSubmittedDate"/>
+				<input type="hidden" name="js_enabled" value="0">
+				
 			</sf:form>
 		</div>
 	</div>
@@ -448,7 +453,7 @@ $(document).ready(function() {
 		}
 	});
 	
-	
+  $("#noJS").hide();	
   jQuery('#cpffinal').prop("disabled", true);
   jQuery('#cpfpartfinal').prop("disabled", true);
   jQuery('#cpfwdrl').prop("disabled", true);
@@ -505,6 +510,7 @@ $('#actClaimForm').submit(function (){
 		if($("#casteDispute").val()!=''){
 			if('${userModel.roleName}' === 'CPF_ADMIN' && $("#amountSanc").val()!="" && parseInt($("#amountSanc").val().trim())!=0){
 				if($("#remarks").val().trim().length>0){
+					//fillRemarks();
 					$("#claimApprove").prop("disabled",true);
 					$("#claimApprove").html('<i class="fa fa-spinner fa-spin"></i>Approval in progress ...');
 					return true;
@@ -515,6 +521,7 @@ $('#actClaimForm').submit(function (){
 				}
 			} else if('${userModel.roleName}' === 'ADMIN'){
 				if($("#remarks").val().trim().length>0){
+					//fillRemarks();
 					$("#claimApprove").prop("disabled",true);
 					$("#claimApprove").html('<i class="fa fa-spinner fa-spin"></i>Approval in progress ...');
 					return true;
@@ -557,29 +564,40 @@ function assignCall(){
 	var remarks = $("#remarks").val();
 	window.location = "${pageContext.request.contextPath}/claim/assignClaimRequest?claimType=assign&reqId="+${reqId};
 }
-		
-		
 
-function fillRemarks(){
-var val=$("#remarks").val();
-var finalVal= $.trim(val);
-if(finalVal.length<=0){
-alert("Kindly give your remarks ...!!!");
-$("#remarks").val("");
-$("#remarks").focus();
- return false
-}
-else{
-return true;
-}
+function fillRemarks() {
+	var val = $("#remarks").val();
+	var finalVal = $.trim(val);
+	if (finalVal.length <= 0) {
+		alert("Kindly give your remarks ...!!!");
+		$("#remarks").val("");
+		$("#remarks").focus();
+		return false
+	} else {
+		//checkHTML(val);
+		return true;
+	}
 }
 
+/* function checkHTML(html) {
+  //var openingTags, closingTags;
+
+  html        = html.replace(/<[^>]*\/\s?>/g, '');      // Remove all self closing tags
+  html        = html.replace(/<(br|hr|img).*?>/g, '');  // Remove all <br>, <hr>, and <img> tags
+  openingTags = html.match(<(\[^\]*\|'[^']*'|[^'\>])*>) || [];        // Get remaining opening tags
+  closingTags = html.match(<(\"[^\"]*\"|'[^']*'|[^'\">])*>) || [];           // Get remaining closing tags
+  //return openingTags.length === closingTags.length ? false : true;
+  
+  //return /<([A-Za-z-]+)\s?[A-Za-z="\s?]*\/?>(\n?.*\n?<\/\1>)?.test(html) ? false : true;
+  //return html.innerHTML;
+} 
+ */
 function getFileExtension(name) {
 	var splitData = name.split(".");
 	var returnFlag = false;
 	var index = splitData.length;
 	var extension = splitData[index - 1];
-	var exteArr = [ "pdf","png","jpg","jpeg" ];
+	var exteArr = [ "pdf", "png", "jpg", "jpeg" ];
 	$.each(exteArr, function(i, j) {
 		if (j == extension) {
 			returnFlag = true;
@@ -588,60 +606,72 @@ function getFileExtension(name) {
 	return returnFlag;
 }
 
-function getFileSize(file){
+function getFileSize(file) {
 	//var file = $el[0].files[0];
 	if (file.size > 5242880) {
 		return false;
-	}else{
+	} else {
 		return true;
 	}
 }
 
-$("#uploadOtherDoc").on('click', function(event){
+$("#uploadOtherDoc")
+		.on(
+				'click',
+				function(event) {
 
- var filetype=true;
- var fd = new FormData();
- var totalfiles = document.getElementById('files').files.length;
- var radioValue=$("#claimAppliedFor input:radio:checked").val();
- 
-   if(totalfiles>0){
-   for (var index = 0; index < totalfiles; index++) {
-      fd.append("files", document.getElementById('files').files[index]);
-      if(getFileExtension(document.getElementById('files').files[index].name) && getFileSize(document.getElementById('files').files[index])){
-      	filetype=true;
-      	}
-      	else
-      	{
-      	filetype=false;
-      	break;
-      }
-	}
-	}/*else{
-		alert("Kindly upload at list one document.");
-	} */
+					var filetype = true;
+					var fd = new FormData();
+					var totalfiles = document.getElementById('files').files.length;
+					var radioValue = $(
+							"#claimAppliedFor input:radio:checked").val();
 
-if(filetype){
-  $.ajax({
-            type: 'POST',
-            url: 'multiUplodCpfDoc?${_csrf.parameterName}=${_csrf.token}&reqId=${reqId}&claimSubmittedBy=${actClaimDto.CLAIM_SUBMITTED_BY}&claimAppliedFor='+radioValue,
-            enctype: 'multipart/form-data',
-            data: fd,
-            processData: false,
-            contentType: false,
-            success: function (data, textStatus, xhr) {
-            	if (xhr.status=='200') {
-	                console.log('Upload Completed ...');
-	                window.location.href='${pageContext.request.contextPath}/claim/actClaimReq?reqType=otherReq&reqId=${reqId}&uploadfiles='+data+' Files uploaded successfully !!!';
-                }
-            }
-        });
-}else{
-		$('#msg').html("Kindly upload your file/s according to the given instructions !!!").fadeIn('slow');
-		$('#msg').delay(10000).fadeOut('slow');
-}
+					if (totalfiles > 0) {
+						for (var index = 0; index < totalfiles; index++) {
+							fd.append("files", document
+									.getElementById('files').files[index]);
+							if (getFileExtension(document
+									.getElementById('files').files[index].name)
+									&& getFileSize(document
+											.getElementById('files').files[index])) {
+								filetype = true;
+							} else {
+								filetype = false;
+								break;
+							}
+						}
+					}/*else{
+							alert("Kindly upload at list one document.");
+						} */
 
-});
+					if (filetype) {
+						$
+								.ajax({
+									type : 'POST',
+									url : 'multiUplodCpfDoc?${_csrf.parameterName}=${_csrf.token}&reqId=${reqId}&claimSubmittedBy=${actClaimDto.CLAIM_SUBMITTED_BY}&claimAppliedFor='
+											+ radioValue,
+									enctype : 'multipart/form-data',
+									data : fd,
+									processData : false,
+									contentType : false,
+									success : function(data, textStatus,
+											xhr) {
+										if (xhr.status == '200') {
+											console
+													.log('Upload Completed ...');
+											window.location.href = '${pageContext.request.contextPath}/claim/actClaimReq?reqType=otherReq&reqId=${reqId}&uploadfiles='
+													+ data
+													+ ' Files uploaded successfully !!!';
+										}
+									}
+								});
+					} else {
+						$('#msg')
+								.html(
+										"Kindly upload your file/s according to the given instructions !!!")
+								.fadeIn('slow');
+						$('#msg').delay(10000).fadeOut('slow');
+					}
 
-
-
+				});
 </script>

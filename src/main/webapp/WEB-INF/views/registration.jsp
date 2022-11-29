@@ -125,7 +125,7 @@ label {
 							</span>
 						</div>
 						<label>Employee number</label>		
-		    			<sf:input path="empNum" id="empNum" cssClass="form-control"/>
+		    			<sf:input path="empNum" id="empNum" cssClass="form-control" onkeypress="return isNumber(event)"/>
 						<a href="javascript:void(0)" id="empdetails" style="background-color:#007bff;color: #fff;padding-top: 4px;padding-left: 25px;padding-right: 25px;" class="btn btn-default">Get Details</a>
 						<div class="invalid-feedback">Please enter a valid employee number</div>
 					</div>
@@ -161,7 +161,7 @@ label {
 							<span class="input-group-text"> <i class="fa fa-phone"></i>	</span>
 						</div>
 						<label>Phone number</label>		
-						    <sf:input path="empPhone" id="phone" maxLength="10" size="10" cssClass="form-control"  onChange="activeSendOTP();" /><br/>
+						    <sf:input path="empPhone" id="phone" maxLength="10" size="10" cssClass="form-control"  onChange="activeSendOTP();" onkeypress="return isNumber(event)"/><br/>
 							<a style="background-color:#007bff;color: #fff;padding-top: 3px;padding-left: 25px;padding-right: 25px;"
 							href="javascript:void(0)" class="btn btn-default" id="sendOtp">Send Otp</a>
 					</div>
@@ -362,6 +362,14 @@ function finalSubmit(){
 }
 });
 
+function isNumber(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && ((charCode < 48) || (charCode > 57))) {
+        return false;
+    }
+    return true;
+}
 
 $('#pass, #repass').on('keyup', function () {
   if ($('#pass').val() == $('#repass').val()) {
