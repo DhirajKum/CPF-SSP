@@ -987,8 +987,8 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 
 	@Override
 	public Boolean checkInputData(ActClaimDto actClaimDto){
-        String regex = "<(\"[^\"]*\"|'[^']*'|[^'\">])*>(.*<(\"[^\"]*\"|'[^']*'|[^'\">])*>)?";
-        Pattern p = Pattern.compile(regex);
+        String regex = "[A-Za-z0-9 A-Za-z0-9]*\\s*<(\"[^\"]*\"|'[^']*'|[^'\">])*>(.*<(\"[^\"]*\"|'[^']*'|[^'\">])*>)?\\s*[A-Za-z0-9 A-Za-z0-9]*";
+		Pattern p = Pattern.compile(regex);
         if (actClaimDto.getRemarks() == null) {
             return false;
         }

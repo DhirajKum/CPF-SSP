@@ -130,6 +130,7 @@ public class ClaimController {
 			mv.addObject("message","Session Expired, Kindly Go For Login !!!");
 		}
 		mv.addObject("claimData",cpfClaimReq);
+		mv.addObject("actClaimDto",cpfClaimReq);
 		
 		if(operation != null){
 			if(operation.equals("failed")){
@@ -340,7 +341,8 @@ public class ClaimController {
 	
 	
 	@RequestMapping(value={"/actClaimReq"})
-	public ModelAndView actClaimReq(@RequestParam(name="reqType", required=true) String reqType, @RequestParam(name="reqId", required=true) String reqId, @RequestParam(name="uploadfiles", required=false) String uploadfiles){
+	public ModelAndView actClaimReq(@RequestParam(name="reqType", required=true) String reqType, @RequestParam(name="reqId", required=true) String reqId, 
+			@RequestParam(name="uploadfiles", required=false) String uploadfiles, @RequestParam (name="validationMessage", required = false) String validationMessage){
 		DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 		ActClaimDto actClaimDto = new ActClaimDto();
 		
@@ -362,7 +364,11 @@ public class ClaimController {
 		mv.addObject("reqId",reqId);
 		mv.addObject("actClaimDto",actClaimDto);
 		mv.addObject("message",uploadfiles);
-		
+		if(validationMessage != null){
+			if(validationMessage.equals("htmltagvalidation")){
+				mv.addObject("validationMessage","Kindly pass valid comment in remarks field (not used html tags)");
+			}
+		}
 		return mv;
 	}	
 	
@@ -392,8 +398,9 @@ public class ClaimController {
 				} else if (uModel.getRoleName().equals("CPF_ADMIN")) {
 					claimHistoryTrailDto.setStatus("3");
 				}
-
 				userService.saveCpfClaimHistoryTrail(claimHistoryTrailDto, uModel.getEmpNum(), uModel.getRoleName());
+			}else{
+				return "redirect:/claim/actClaimReq?reqType=" + rqType + "&reqId=" + reqId + "&validationMessage=htmltagvalidation";
 			}
 			if (result) {
 				return "redirect:/claim/pendingReq?reqType=" + rqType + "&operation=updateSuccessfully";
@@ -412,21 +419,28 @@ public class ClaimController {
 	@RequestMapping(value={"/rejectClaimRequest"})
 	public String rejectClaimRequest(@RequestParam(name="claimType") String reqType, @RequestParam(name="reqId") String reqId, @RequestParam(name="remark") String remarks, 
 			@RequestParam(name="casteDisp") String casteDisp){
+		boolean result = false;
+		ActClaimDto actClaimDto = new ActClaimDto();
+		actClaimDto.setRemarks(remarks);
+		
 		UserModel uModel=getUserModel();
 		if(uModel!=null){
-		boolean result = userService.rejectClaimReq(remarks, reqType, reqId, uModel.getEmpNum(), uModel.getRoleName(),casteDisp);
-		
-		ClaimHistoryTrailDto claimHistoryTrailDto = new ClaimHistoryTrailDto();
-		claimHistoryTrailDto.setRequestId(reqId);
-		//claimHistoryTrailDto.setClaimCreatedBy(actClaimDto.getCLAIM_SUBMITTED_BY());
-		claimHistoryTrailDto.setActionTakenBy(uModel.getEmpNum());
-		claimHistoryTrailDto.setRemarks(remarks);
-		claimHistoryTrailDto.setAction("Reject");
-		//if(uModel.getRoleName().equals("ADMIN"))
-		claimHistoryTrailDto.setStatus("0");
-		
-		userService.saveCpfClaimHistoryTrail(claimHistoryTrailDto, uModel.getEmpNum(), uModel.getRoleName());
-		
+			if (!userService.checkInputData(actClaimDto)) {
+			result = userService.rejectClaimReq(remarks, reqType, reqId, uModel.getEmpNum(), uModel.getRoleName(),casteDisp);
+			
+			ClaimHistoryTrailDto claimHistoryTrailDto = new ClaimHistoryTrailDto();
+			claimHistoryTrailDto.setRequestId(reqId);
+			//claimHistoryTrailDto.setClaimCreatedBy(actClaimDto.getCLAIM_SUBMITTED_BY());
+			claimHistoryTrailDto.setActionTakenBy(uModel.getEmpNum());
+			claimHistoryTrailDto.setRemarks(remarks);
+			claimHistoryTrailDto.setAction("Reject");
+			//if(uModel.getRoleName().equals("ADMIN"))
+			claimHistoryTrailDto.setStatus("0");
+			
+			userService.saveCpfClaimHistoryTrail(claimHistoryTrailDto, uModel.getEmpNum(), uModel.getRoleName());
+		}else{
+			return "redirect:/claim/actClaimReq?reqType=" + reqType + "&reqId=" + reqId + "&validationMessage=htmltagvalidation";
+		}
 		if(result){
 			return "redirect:/claim/pendingReq?reqType=otherReq&operation=updateSuccessfully";			
 		}else{
@@ -542,9 +556,13 @@ public class ClaimController {
 	@RequestMapping(value={"/assignToClaimRequest"})
 	public String assignToClaimReq(@RequestParam(name="claimType") String reqType, @RequestParam(name="reqId", required=true) String reqId, 
 			@ModelAttribute("assignToClaimDto") AssignToClaimDto assignToClaimDto){
-				
+
+		ActClaimDto actClaimDtoOnlyForRemarks = new ActClaimDto();
+		actClaimDtoOnlyForRemarks.setRemarks(assignToClaimDto.getRemarks());
 		UserModel uModel=getUserModel();
+		
 		if(uModel!=null){
+			if (!userService.checkInputData(actClaimDtoOnlyForRemarks)){
 			ActClaimDto actClaimDto = userService.getClaimReqDetails(reqId);
 			boolean result = userService.assignToClaimReq(assignToClaimDto, actClaimDto, reqType, uModel.getEmpNum(), uModel.getRoleName());
 			
@@ -569,6 +587,9 @@ public class ClaimController {
 			}else{
 				return "redirect:/claim/pendingReq?reqType=otherReq&operation=updateFail";
 			}
+		}else{
+			return "redirect:/claim/actClaimReq?reqType=" + reqType + "&reqId=" + reqId + "&validationMessage=htmltagvalidation";
+		}
 		}else{
 		return "redirect:/login";
 		}

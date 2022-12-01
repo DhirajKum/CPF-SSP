@@ -29,7 +29,11 @@
 		
 		<div class="row marginT20">
 			<div class="col-md-12">
-			 <sf:form action='${pageContext.request.contextPath}/claim/updateClaimRequest?reqId=${reqId}&reqType=${reqType}&claimReq=resubmit' method='POST' modelAttribute="claimData" id="claimForm">
+			 <sf:form action='${pageContext.request.contextPath}/claim/updateClaimRequest?reqType=${reqType}&claimReq=resubmit&reqId=${reqId}' method='POST' modelAttribute="actClaimDto" id="reClaimForm" onsubmit="this.js_enabled.value=1;return true;">
+			 <noscript>
+				<div id="noJS" class="alert alert-danger" style="padding-left: 20px; padding-right: 0px; margin-left: 0px;">Please enable JavaScript in your browser</div>
+			 </noscript>
+			 
 			 <div class="form-group row">
 					<label for="oldpassword" class="col-sm-3 col-form-label"><b>Claim applied for  <span class="red">*</span></b></label>
 					<div class="col-sm-9" id="claimAppliedFor">
@@ -290,6 +294,7 @@
 				<sf:hidden path="parentZone"/>		
 				<sf:hidden path="CLAIM_SUBMITTED_BY"/>
 				<sf:hidden path="claimSubmittedDate"/>
+				<input type="hidden" name="js_enabled" value="0">
 				
 				</sf:form>
 			</div>
@@ -323,6 +328,7 @@ $(document).ready(function() {
 		}
 	});
 
+	 $("#noJS").hide();
 	 $("#empName").prop("readonly", true);   
 	 $("#designation").prop("readonly", true); 
 	 $("#fatherName").prop("readonly", true); 
@@ -348,7 +354,7 @@ $(document).ready(function() {
 	if(document.getElementById("rd1").checked || document.getElementById("rd2").checked || document.getElementById("rd3").checked){	
 		$("#installmentNo").prop("disabled", true);
 		$("#installmentNo").val('');
-		if(${kycUpdate}==0){
+		if('${kycUpdate}' === '0'){
 			$("#saveClaim").prop("disabled",true);
 		}
 	}
@@ -359,7 +365,7 @@ $(document).ready(function() {
 
 });
 
-$('#claimForm').submit(function (){
+$('#reClaimForm').submit(function (){
 	var radioValue=$("#claimAppliedFor input:radio:checked").val();
 	if(radioValue==='CpfFinalSettlement'){
 	if('${empStatus}'==='RESG'){
@@ -485,7 +491,7 @@ $("#claimAppliedFor input:radio").change(function (){
 function isNumber(evt) {
     evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+    if (charCode > 31 && ((charCode < 48) || (charCode > 57))) {
         return false;
     }
     return true;

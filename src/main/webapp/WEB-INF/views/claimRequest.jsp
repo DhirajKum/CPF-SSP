@@ -230,7 +230,7 @@
 					</div>
 				</div>
 				
-				<div class="row" id="docUpload">
+		<!-- 		<div class="row" id="docUpload">
 				<div class="col-md-6">
 					<div class="form-group row">
 						<label cssClass="col-sm-5 col-form-label" class="labelwidth"><b>User Upload Other Documents</b></label>
@@ -244,7 +244,7 @@
 						<div class="col-sm-7"></div>
 					</div>
 				</div>
-				</div>
+				</div> -->
 				
 				<hr class="solid">
 				<div class="row">

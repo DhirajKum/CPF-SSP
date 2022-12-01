@@ -13,10 +13,18 @@
 	<div class="row profile profile-card">
 <!-- <div class="row profile profile-card"> -->
 	<c:if test="${not empty message}">
-			<div class="col-md-12" style= "float:none">
+			<div class="col-md-12" style= "float:none" id="message">
 				<div class="alert alert-success alert-dismissible" style="text-align: center;">
 					<button type="button" class="close" data-dismiss="alert">&times;</button>
 					${message}
+				</div>
+			</div>
+		</c:if>
+		<c:if test="${not empty validationMessage}">
+			<div class="col-md-12" style= "float:none" id="validationMessage">
+				<div class="alert alert-success alert-dismissible" style="text-align: center;">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					${validationMessage}
 				</div>
 			</div>
 		</c:if>
@@ -453,7 +461,7 @@ $(document).ready(function() {
 		}
 	});
 	
-  $("#noJS").hide();	
+  $("#noJS").hide();
   jQuery('#cpffinal').prop("disabled", true);
   jQuery('#cpfpartfinal').prop("disabled", true);
   jQuery('#cpfwdrl').prop("disabled", true);
@@ -510,7 +518,6 @@ $('#actClaimForm').submit(function (){
 		if($("#casteDispute").val()!=''){
 			if('${userModel.roleName}' === 'CPF_ADMIN' && $("#amountSanc").val()!="" && parseInt($("#amountSanc").val().trim())!=0){
 				if($("#remarks").val().trim().length>0){
-					//fillRemarks();
 					$("#claimApprove").prop("disabled",true);
 					$("#claimApprove").html('<i class="fa fa-spinner fa-spin"></i>Approval in progress ...');
 					return true;
@@ -521,7 +528,6 @@ $('#actClaimForm').submit(function (){
 				}
 			} else if('${userModel.roleName}' === 'ADMIN'){
 				if($("#remarks").val().trim().length>0){
-					//fillRemarks();
 					$("#claimApprove").prop("disabled",true);
 					$("#claimApprove").html('<i class="fa fa-spinner fa-spin"></i>Approval in progress ...');
 					return true;
@@ -574,24 +580,10 @@ function fillRemarks() {
 		$("#remarks").focus();
 		return false
 	} else {
-		//checkHTML(val);
 		return true;
 	}
 }
 
-/* function checkHTML(html) {
-  //var openingTags, closingTags;
-
-  html        = html.replace(/<[^>]*\/\s?>/g, '');      // Remove all self closing tags
-  html        = html.replace(/<(br|hr|img).*?>/g, '');  // Remove all <br>, <hr>, and <img> tags
-  openingTags = html.match(<(\[^\]*\|'[^']*'|[^'\>])*>) || [];        // Get remaining opening tags
-  closingTags = html.match(<(\"[^\"]*\"|'[^']*'|[^'\">])*>) || [];           // Get remaining closing tags
-  //return openingTags.length === closingTags.length ? false : true;
-  
-  //return /<([A-Za-z-]+)\s?[A-Za-z="\s?]*\/?>(\n?.*\n?<\/\1>)?.test(html) ? false : true;
-  //return html.innerHTML;
-} 
- */
 function getFileExtension(name) {
 	var splitData = name.split(".");
 	var returnFlag = false;

@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.techm.fci.cpf.dto.ActClaimDto;
 import com.techm.fci.cpf.dto.ForgotPassword;
 import com.techm.fci.cpf.dto.HomeDto;
 import com.techm.fci.cpf.dto.LoginForm;
@@ -368,11 +369,18 @@ public class LoginController {
 	public String forgotPassword(ModelMap model, HttpSession session, @ModelAttribute("forgotPassword") ForgotPassword forgotPass, @RequestParam String js_enabled) {
 		logger.info("Going to set forgot password :::: ");
 		if(js_enabled.equals("1")){
+			ActClaimDto actClaimDto = new ActClaimDto();
+			actClaimDto.setRemarks(forgotPass.getNewPassword());
+			if (!userService.checkInputData(actClaimDto)) {
 			Boolean smsSentStatus = userService.changePassword(forgotPass.getNewPassword(), forgotPass.getEmpNum());
-			if (!smsSentStatus) {
-				return "forgotPassword";
+				if (!smsSentStatus) {
+					return "forgotPassword";
+				}else{
+					return "login";
+				}
 			}else{
-				return "login";
+				session.setAttribute("validationMessage", "Kindly take password without html tags");
+				return "forgotPassword";
 			}
 		} else if(js_enabled.equals("0")){
 				session.setAttribute("forgotMessage", "You don't have javascript enabled. Kindly enable it before going through the forgot password process.");

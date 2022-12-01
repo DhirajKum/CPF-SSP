@@ -60,6 +60,14 @@
 			</div>
 		</div>
 	</c:if>
+	<c:if test="${not empty validationMessage}">
+		<div class="col-md-12" style= "float:none" id="validationMessage">
+			<div class="alert alert-success alert-dismissible" style="text-align: center;">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				${validationMessage}
+			</div>
+		</div>
+	</c:if>
 	
 	<div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins">
 		<div class="wrapper wrapper--w680">
@@ -127,6 +135,7 @@
 
 $(document).ready(function() {
 	$("#forgotMessage").hide();
+	$("#validationMessage").hide();
 	$('#forgotPassSendOtp').addClass('disabled');
 	$("#newPass").prop('readonly', true);
 	$("#confNewPass").prop('readonly', true);
