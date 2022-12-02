@@ -463,6 +463,14 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString());
 					cpfClaimRequestStatusDto.setDesignation(map.get("desig").toString());
 					String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
+					switch(claimAppFor){
+					case "abc":
+					break;
+					case "dfsd":
+					break;
+					default:
+					}
+					
 					String claimPur=map.get("PURPOSE")!=null?map.get("PURPOSE").toString().trim():"";
 					cpfClaimRequestStatusDto.setClaimType(claimAppFor+" ("+claimPur+")");
 					
