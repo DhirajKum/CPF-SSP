@@ -462,15 +462,23 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					cpfClaimRequestStatusDto.setClaimSubmittedDate(myFormat.format(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString().trim())));
 					cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString());
 					cpfClaimRequestStatusDto.setDesignation(map.get("desig").toString());
-					String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
-					switch(claimAppFor){
-					case "abc":
-					break;
-					case "dfsd":
-					break;
+					//String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
+					String claimAppFor=null;
+					switch(map.get("CLAIM_APPLIED_FOR").toString().trim()){
+					case "CpfFinalSettlement":
+						claimAppFor="Final Settlement";
+						break;
+					case "CpfPartFinalWithdrawal":
+						claimAppFor="Part Final Settlement";
+						break;
+					case "90%Withdrawal":
+						claimAppFor="90% Withdrawal";
+						break;
+					case "TempAdv":
+						claimAppFor="Temp. Advance";
+						break;
 					default:
 					}
-					
 					String claimPur=map.get("PURPOSE")!=null?map.get("PURPOSE").toString().trim():"";
 					cpfClaimRequestStatusDto.setClaimType(claimAppFor+" ("+claimPur+")");
 					
@@ -569,7 +577,23 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						cpfClaimRequestStatusDto.setClaimSubmittedDate(myFormat.format(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString().trim())));
 						cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString());
 						cpfClaimRequestStatusDto.setDesignation(map.get("desig").toString());
-						String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
+						//String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
+						String claimAppFor=null;
+						switch(map.get("CLAIM_APPLIED_FOR").toString().trim()){
+						case "CpfFinalSettlement":
+							claimAppFor="Final Settlement";
+							break;
+						case "CpfPartFinalWithdrawal":
+							claimAppFor="Part Final Settlement";
+							break;
+						case "90%Withdrawal":
+							claimAppFor="90% Withdrawal";
+							break;
+						case "TempAdv":
+							claimAppFor="Temp. Advance";
+							break;
+						default:
+						}
 						String claimPur=map.get("PURPOSE")!=null?map.get("PURPOSE").toString().trim():"";
 						cpfClaimRequestStatusDto.setClaimType(claimAppFor+" ("+claimPur+")");
 						
@@ -668,7 +692,23 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					
 					cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
 					//cpfClaimRequestStatusDto.setRemarks(map.get("admin_remarks").toString());
-					String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
+					//String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
+					String claimAppFor=null;
+					switch(map.get("CLAIM_APPLIED_FOR").toString().trim()){
+					case "CpfFinalSettlement":
+						claimAppFor="Final Settlement";
+						break;
+					case "CpfPartFinalWithdrawal":
+						claimAppFor="Part Final Settlement";
+						break;
+					case "90%Withdrawal":
+						claimAppFor="90% Withdrawal";
+						break;
+					case "TempAdv":
+						claimAppFor="Temp. Advance";
+						break;
+					default:
+					}
 					String claimPur=map.get("PURPOSE")!=null?map.get("PURPOSE").toString().trim():"";
 					cpfClaimRequestStatusDto.setClaimType(claimAppFor+" ("+claimPur+")");
 					
@@ -717,7 +757,23 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					cpfClaimRequestStatusDto.setClaimSubmittedDate(myFormat.format(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString().trim())));
 					cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString());
 					cpfClaimRequestStatusDto.setDesignation(map.get("desig").toString());
-					String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
+					//String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
+					String claimAppFor=null;
+					switch(map.get("CLAIM_APPLIED_FOR").toString().trim()){
+					case "CpfFinalSettlement":
+						claimAppFor="Final Settlement";
+						break;
+					case "CpfPartFinalWithdrawal":
+						claimAppFor="Part Final Settlement";
+						break;
+					case "90%Withdrawal":
+						claimAppFor="90% Withdrawal";
+						break;
+					case "TempAdv":
+						claimAppFor="Temp. Advance";
+						break;
+					default:
+					}
 					String claimPur=map.get("PURPOSE")!=null?map.get("PURPOSE").toString().trim():"";
 					cpfClaimRequestStatusDto.setClaimType(claimAppFor+" ("+claimPur+")");
 					
@@ -819,7 +875,23 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					
 					cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
 					//cpfClaimRequestStatusDto.setRemarks(map.get("admin_remarks").toString());
-					String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
+					//map.get("CLAIM_APPLIED_FOR").toString().trim();
+					String claimAppFor=null;
+					switch(map.get("CLAIM_APPLIED_FOR").toString().trim()){
+					case "CpfFinalSettlement":
+						claimAppFor="Final Settlement";
+						break;
+					case "CpfPartFinalWithdrawal":
+						claimAppFor="Part Final Settlement";
+						break;
+					case "90%Withdrawal":
+						claimAppFor="90% Withdrawal";
+						break;
+					case "TempAdv":
+						claimAppFor="Temp. Advance";
+						break;
+					default:
+					}
 					String claimPur=map.get("PURPOSE")!=null?map.get("PURPOSE").toString().trim():"";
 					cpfClaimRequestStatusDto.setClaimType(claimAppFor+" ("+claimPur+")");
 					
