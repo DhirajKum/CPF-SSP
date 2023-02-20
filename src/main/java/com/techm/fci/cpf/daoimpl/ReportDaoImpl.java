@@ -101,7 +101,7 @@ public static final Logger logger = LoggerFactory.getLogger(ReportDaoImpl.class)
 		try{
 		String query = "select month,type,COMPL,MATCHING,E_VPF,E_EPS,EMPLOYEE_PF_OPEN_BAL,EMPLOYER_PF_OPEN_BAL,E_FPS,"
 				+ "EMP_INT,EMPR_INT,EMPLOYEE_PF_CLOSE_BAL,EMPLOYER_PF_CLOSE_BAL,EMP_NUM,amt_withdrawn,adv_refund,"
-				+ "adv_taken,adv_taken_vpf,amt_withdrawn_vpf,vpf_open_bal,vpf_close_bal,amt_withdrawn_emplr,vpf_int,vpf_close_bal,UNIT_CODE,a "
+				+ "adv_taken,adv_taken_vpf,amt_withdrawn_vpf,vpf_open_bal,vpf_close_bal,amt_withdrawn_emplr,vpf_int,UNIT_CODE,a "
 				+ "from pay_cpf_slip_data "
 				+ "where FROM_YEAR =:fromYear and TO_YEAR =:toYear and emp_num =:empNum";
 		Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);

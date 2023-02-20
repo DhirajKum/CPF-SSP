@@ -164,9 +164,7 @@ $(document).ready(function() {
 	});
 });
 
-//$("#generateRep").on('click',function(event)
-$("#").on('click',function(event) {
-
+$("#generateRep").on('click',function(event){
 var fromDate = $('#datepicker1').val();
 var toDate = $('#datepicker2').val();
 var empNum = $('#empNum').val();
