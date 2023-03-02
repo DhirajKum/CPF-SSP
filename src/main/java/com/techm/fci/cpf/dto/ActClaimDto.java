@@ -8,10 +8,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
+//import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.SafeHtml;
 
 public class ActClaimDto implements Serializable{
 
@@ -63,7 +62,7 @@ public class ActClaimDto implements Serializable{
 	
 	public String CASTE_DISPUTE_CERT;
 	public String AMOUNT_SANCTION;
-	@NotNull
+	//@NotNull
 	@NotBlank
 	//@SafeHtml
 	public String remarks;

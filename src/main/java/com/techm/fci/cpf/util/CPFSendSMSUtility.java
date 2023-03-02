@@ -16,7 +16,7 @@ public class CPFSendSMSUtility
             Class.forName("oracle.jdbc.xa.client.OracleXADataSource");
             System.out.println("::::: CPF Self Service Module ::::: Inside CPFSendSMSUtility jar ::::: Call forName method ::::");
             
-            final Connection con = DriverManager.getConnection("jdbc:oracle:thin:@10.248.225.38:1521/PROD", "fcipayroll", "qwerty#0786");
+            final Connection con = DriverManager.getConnection("jdbc:oracle:thin:@144.24.112.101:1521/PROD", "fcipayroll", "qwerty#0786");
             System.out.println("::::: CPF Self Service Module ::::: Inside CPFSendSMSUtility jar ::::: Connection Created ::::");
             
             final Statement stmt = con.createStatement();

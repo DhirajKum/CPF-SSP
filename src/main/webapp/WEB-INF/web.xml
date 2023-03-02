@@ -40,7 +40,7 @@
   <welcome-file-list>
     <welcome-file>login.jsp</welcome-file>
   </welcome-file-list>
-  <servlet>
+  <!-- <servlet>
     <description></description>
     <display-name>UploadFile</display-name>
     <servlet-name>UploadFile</servlet-name>
@@ -49,5 +49,5 @@
   <servlet-mapping>
     <servlet-name>UploadFile</servlet-name>
     <url-pattern>/UploadFile</url-pattern>
-  </servlet-mapping>
+  </servlet-mapping> -->
 </web-app>

@@ -11,10 +11,9 @@
 	<!-- <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations" value="classpath:jdbc.properties" />
 	</bean> -->
-	<bean id="JDBC Data Source-0" class="org.springframework.jndi.JndiObjectFactoryBean" p:jndiName="jdbc/FCIPAYDS"/>
-		
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
-		<property name="dataSource" ref="JDBC Data Source-0" />
+	<bean id="JDBC Data Source-CPF" class="org.springframework.jndi.JndiObjectFactoryBean" p:jndiName="jdbc/FCICPFSSP"/>
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="JDBC Data Source-CPF" />
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hbm2ddl.auto">update</prop>
@@ -30,9 +29,8 @@
 			<value>classpath:hibernate.cfg.xml</value>
 		</property>
 	</bean>
-	
 	<tx:annotation-driven />
-	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+	<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 </beans>
