@@ -446,7 +446,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 
 					Query hQuery1 = session.createSQLQuery(query1).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 					if (empNum != null) {
-						hQuery1.setParameter("requestId", map.get("REQUEST_ID").toString());
+						hQuery1.setParameter("requestId", map.get("REQUEST_ID"));
 					}
 					List<Map<String, Object>> list1 = hQuery1.list();
 					for(Map<String, Object> map1 : list1){
