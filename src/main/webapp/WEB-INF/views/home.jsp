@@ -109,7 +109,7 @@
 			</div> -->
 			<!-- <div class="col-md-6"> -->
 				<!-- <div class="form-group row"> -->
-				<label class="col-sm-4 col-form-label" style="text-align: center;"><b>Upload KYC Document <span class="red">*</span></b><small class="form-text text-muted" style="text-align: center;">Upload "UAN" document</small></label>
+				<label class="col-sm-4 col-form-label" style="text-align: center;"><b>Upload UAN Document <span class="red">*</span></b><!-- <small class="form-text text-muted" style="text-align: center;">Upload "UAN" document</small> --></label>
 				
 				<div class="col-sm-4">
 					<span id="uploadSupptDoc"></span>

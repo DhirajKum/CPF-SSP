@@ -308,7 +308,7 @@
 				<div class="form-group row">
 					<div class="col-sm-12">
 						<div class="checkbox">
-							<label><sf:checkbox path="EMP_ACCEPTANCE" id="empAccept"/> In case the amount is used for any purpose other than stated above, I am liable to return the entire amount with penal interest.</label>
+							<label><sf:checkbox path="EMP_ACCEPTANCE" checked="checked" id="empAccept"/> In case the amount is used for any purpose other than stated above, I am liable to return the entire amount with penal interest.</label>
 						</div>
 					</div>
 				</div>
@@ -356,6 +356,7 @@ $(document).ready(function() {
 			$("#saveClaim").prop("disabled",true);
 		}
 	$("#perAmount").prop("disabled", true);
+	jQuery('#empAccept').prop("disabled", true);
 	}
 });
 
