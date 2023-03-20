@@ -50,7 +50,7 @@ public class CPFRegistrationProcess {
 			passUpdateEmpNo=new ArrayList<String>();
 			noMobileEmailEmpNo=new ArrayList<String>();
 			
-			File file = new File("C:\\CPF_Registration_excel_file\\15march23.xlsx");
+			File file = new File("C:\\CPF_Registration_excel_file\\CPF_Registration_Urgent.xlsx");
 			FileInputStream fis = new FileInputStream(file);
 			XSSFWorkbook wb = new XSSFWorkbook(fis);
 			XSSFSheet sheet = wb.getSheetAt(0);
@@ -80,9 +80,11 @@ public class CPFRegistrationProcess {
 							}
 							break;
 						default:
-							System.out.print("Default\n");
+							//System.out.print("Default\n");
 						}
 					}
+					
+					if(empNo!=null) {
 					System.out.println("Processing Start For Employee Number ::: " + empNo);
 					final Statement stmt = con.createStatement();
 					ResultSet rs = stmt.executeQuery("SELECT * FROM fcipayroll.cpf_registered_users where emp_num =" + empNo);
@@ -120,6 +122,7 @@ public class CPFRegistrationProcess {
 								empMobile=null;
 								empEmail=null;
 								System.out.println("Registration Done For Employee Number :::: " + empNo);
+								empNo=null;
 							}else{
 								System.out.println("Not going for registration because of not found of Mobile number or Email ID for Emp Number ::: "+empNo);
 								empMobile=null;
@@ -133,10 +136,15 @@ public class CPFRegistrationProcess {
 						stmt4.executeUpdate("update cpf_registered_users set password='$2a$10$NWxgAEXPjJj.8UmRUqrVzelvotk6jI2NpVke75B.hPT4vB5G6vp9C', modified_date= to_date(to_char(SYSDATE, 'dd-mm-YYYY HH24:MI:SS'),'dd-mm-YYYY HH24:MI:SS')	"
 								+ "where emp_num in ("+empNo +")");
 						passUpdateEmpNo.add(empNo);
+						System.out.println("Password updation done for Employee Number :::: " + empNo);
+						empNo=null;
+						
 					}
 					con.setAutoCommit(true);
 					System.out.println("Auto commit true now");
 				}
+				}
+				
 			}
 			con.close();
 			System.out.println("connection closed");

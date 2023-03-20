@@ -176,7 +176,7 @@ public class ClaimController {
 							}
 						}else if(cpfClaim.getPURPOSE().equals("")){
 							recordFound=true;
-						}else if(!cpfClaim.getPURPOSE().equals("COVID-19") && !cpfClaimReq.getPURPOSE().equals("COVID-19") && cpfClaimReq.getCLAIM_COUNT()>=1) {
+						}else if(!cpfClaim.getPURPOSE().equals("COVID-19") && !cpfClaimReq.getPURPOSE().equals("COVID-19") && cpfClaimReq.getCLAIM_COUNT()>=6) {
 							recordFound=true;
 						}
 					}else if(claimRequestStatusDto.getStatus().equals("0") && cpfClaimReq.getCLAIM_APPLIED_FOR().equals(cpfClaim.getCLAIM_APPLIED_FOR())){

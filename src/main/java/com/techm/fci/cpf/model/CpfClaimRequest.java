@@ -411,7 +411,7 @@ public class CpfClaimRequest implements Serializable {
 		EMP_DECLARATION = eMP_DECLARATION;
 	}
 	
-	public boolean isEMP_ACCEPTANCE() {
+	public boolean getEMP_ACCEPTANCE() {
 		return EMP_ACCEPTANCE;
 	}
 
