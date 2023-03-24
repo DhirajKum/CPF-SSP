@@ -47,6 +47,7 @@ public class CpfClaimRequestStatus implements Serializable {
 	public String INFO5;
 	public Date RE_CLAIM_SUBMITTED_DATE;
 	
+	
 	public CpfClaimRequestStatus(){
 		
 	}

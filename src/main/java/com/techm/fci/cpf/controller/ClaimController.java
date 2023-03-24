@@ -16,8 +16,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,6 +47,7 @@ import com.techm.fci.cpf.dto.ActClaimDto;
 import com.techm.fci.cpf.dto.AssignToClaimDto;
 import com.techm.fci.cpf.dto.ClaimHistoryTrailDto;
 import com.techm.fci.cpf.dto.ClaimRequestStatusDto;
+import com.techm.fci.cpf.dto.ClaimSaveConditionCheckDto;
 import com.techm.fci.cpf.dto.DropdownDto;
 import com.techm.fci.cpf.model.CpfClaimRequest;
 import com.techm.fci.cpf.model.EmpMaster;
@@ -152,45 +155,34 @@ public class ClaimController {
 @RequestMapping(value = {"/saveClaimRequest"}, method = {RequestMethod.POST})
 	public String saveClaimRequestData(@Valid @ModelAttribute("claimData") CpfClaimRequest cpfClaim, @RequestParam String js_enabled) {
 		logger.info("::::: In side save claim request method :::::");
-		
-		List<CpfClaimRequest> cpfClaimReqList = new ArrayList<CpfClaimRequest>();
 		boolean recordFound = false;
 		int covidCount = 0;
+		String status = null;
 		UserModel uModel = getUserModel();
 		
-		if(uModel!=null && js_enabled.equals("1")){
-		cpfClaimReqList = userService.empClaimLookup(uModel.getEmpNum());
 		
-		for(CpfClaimRequest cpfClaimReq :cpfClaimReqList){
+		if(uModel!=null && js_enabled.equals("1")){
+		
+			List<CpfClaimRequest> cpfClaimReqList = new ArrayList<CpfClaimRequest>();
+			List<ClaimSaveConditionCheckDto> claimConditionCheck = new ArrayList<>();
+			ClaimSaveConditionCheckDto claimSaveConditionCheckDto = new ClaimSaveConditionCheckDto();
+			Map<String, List<ClaimSaveConditionCheckDto>> checkMap = new HashMap<>();
 			
-			List<ClaimRequestStatusDto> claimRequestStatusList = userService.getClaimReqStatus(cpfClaimReq.getREQUEST_ID());
-			for(ClaimRequestStatusDto claimRequestStatusDto : claimRequestStatusList){
-				if(!claimRequestStatusDto.getStatus().equals("-1")){
-					if(!claimRequestStatusDto.getStatus().equals("0") && cpfClaimReq.getCLAIM_APPLIED_FOR().equals(cpfClaim.getCLAIM_APPLIED_FOR())){
-						if(cpfClaim.getPURPOSE()!=null && cpfClaim.getPURPOSE().equals("COVID-19") && cpfClaimReq.getPURPOSE().equals(cpfClaim.getPURPOSE())){
-							if(cpfClaimReq.getCLAIM_COUNT()>=2){
-								recordFound=true;
-								covidCount=cpfClaimReq.getCLAIM_COUNT();
-							}else{
-								cpfClaim.setCLAIM_COUNT(cpfClaimReq.getCLAIM_COUNT());					
-							}
-						}else if(cpfClaim.getPURPOSE().equals("")){
-							recordFound=true;
-						}else if(!cpfClaim.getPURPOSE().equals("COVID-19") && !cpfClaimReq.getPURPOSE().equals("COVID-19") && cpfClaimReq.getCLAIM_COUNT()>=6) {
-							recordFound=true;
-						}
-					}else if(claimRequestStatusDto.getStatus().equals("0") && cpfClaimReq.getCLAIM_APPLIED_FOR().equals(cpfClaim.getCLAIM_APPLIED_FOR())){
-						if(cpfClaim.getPURPOSE()!=null && cpfClaim.getPURPOSE().equals("COVID-19") && cpfClaimReq.getPURPOSE().equals(cpfClaim.getPURPOSE())){
-							cpfClaim.setCLAIM_COUNT(cpfClaimReq.getCLAIM_COUNT());					
-						}else if(cpfClaim.getPURPOSE().equals("")){
-							recordFound=true;
-						}else if(!cpfClaim.getPURPOSE().equals("COVID-19") && !cpfClaimReq.getPURPOSE().equals("COVID-19") && cpfClaimReq.getCLAIM_COUNT()>=1) {
-							recordFound=true;
-						}
-					}
-				}
+			cpfClaimReqList = userService.empClaimLookup(uModel.getEmpNum());
+			for(CpfClaimRequest cpfClaimRequest : cpfClaimReqList) {
+				status = userService.getClaimStatus(cpfClaimRequest.getREQUEST_ID());
+				
+				claimSaveConditionCheckDto.setClaimType(cpfClaimRequest.getCLAIM_APPLIED_FOR());
+				claimSaveConditionCheckDto.setClaimPurpose(cpfClaimRequest.getPURPOSE());
+				claimSaveConditionCheckDto.setClaimCount(cpfClaimRequest.getCLAIM_COUNT());
+				claimSaveConditionCheckDto.setClaimStatus(status);
+				claimConditionCheck.add(claimSaveConditionCheckDto);
 			}
-		}
+			checkMap.put(uModel.getEmpNum(), claimConditionCheck);
+		
+			
+			
+			
 		if(!recordFound){
 			String locCode = session.getAttribute("locCode").toString();
 			CpfClaimRequest claimRequest = userService.saveClaimData(cpfClaim, uModel.getEmpNum(), locCode, uModel.getRoleName()); 

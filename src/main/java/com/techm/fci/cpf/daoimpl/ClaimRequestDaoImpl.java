@@ -2005,7 +2005,29 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 		return cpfAdminList;
 	}
 
+	@Override
+	public String getClaimStatus(String reqId) {
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		String status = null;
+		try {
+			String query = "select distinct STATUS from cpf_claim_form_status s where s.REQUEST_ID = :reqId and status<>-1";
 
+			Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+			if (reqId != null) {
+				hQuery.setParameter("reqId", reqId);
+			}
+			List<String> statusList = hQuery.list();
+			status=statusList.get(0);
+			session.getTransaction().commit();
+		} catch (RuntimeException re) {
+			logger.info("Find by example failed :::", re);
+			re.printStackTrace();
+		}
+		return status;
+	}
+	
+	
 	@Override
 	public List<ClaimRequestStatusDto> getClaimReqStatus(String reqId) {
 		Session session = sessionFactory.getCurrentSession();
@@ -2134,6 +2156,9 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 	}
 		return "";
 	}
+
+
+	
 
 	
 }
