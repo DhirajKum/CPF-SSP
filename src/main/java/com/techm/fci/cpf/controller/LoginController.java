@@ -219,6 +219,7 @@ public class LoginController {
 	@RequestMapping(value = "/send-otp", method = RequestMethod.GET)
 	public ResponseEntity<Boolean> sendOtp(@RequestParam(value = "mobile", required = true) String mobileNumber,@RequestParam(value = "empNum", required = true) String empNum,@RequestParam(value = "empName", required = true) String empName) {
 		logger.info("going to send otp number ");
+		System.out.println("::::: CPF Self Service Module ::::: LoginController ::::: Inside send-otp mapping");
 		ResponseEntity<Boolean> result = new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.OK);
 		RegisteredUser regUser = userService.findByEmpNum(empNum);
 		if(regUser==null){
@@ -229,6 +230,7 @@ public class LoginController {
 			if(registerUser!=null && registerUser.getEmpPhone().equals(mobileNumber)){
 				result = new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.CREATED);
 			}else{
+				System.out.println("::::: CPF Self Service Module ::::: LoginController ::::: Call sendOtpSms method");
 				Boolean smsSentStatus = otpService.sendOtpSms(mobileNumber, empNum, empName);
 				if (!smsSentStatus) {
 					result = new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.INTERNAL_SERVER_ERROR);

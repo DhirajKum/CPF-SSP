@@ -3,7 +3,8 @@ package com.techm.fci.cpf.dto;
 import java.util.Date;
 
 public class ClaimSaveConditionCheckDto {
-
+	
+	public String claimReqId;
 	public String claimType;
 	public String claimPurpose;
 	public String claimStatus;
@@ -15,15 +16,25 @@ public class ClaimSaveConditionCheckDto {
 
 	}
 
-	public ClaimSaveConditionCheckDto(String claimType, String claimPurpose, String claimStatus, int claimCount,
-			Date empRegDate, Date empRetirementDate) {
+	public ClaimSaveConditionCheckDto(String claimReqId, String claimType, String claimPurpose, String claimStatus,
+			int claimCount, Date empRegDate, Date empRetirementDate) {
 		super();
+		this.claimReqId = claimReqId;
 		this.claimType = claimType;
 		this.claimPurpose = claimPurpose;
 		this.claimStatus = claimStatus;
 		this.claimCount = claimCount;
 		this.empRegDate = empRegDate;
 		this.empRetirementDate = empRetirementDate;
+	}
+
+
+	public String getClaimReqId() {
+		return claimReqId;
+	}
+
+	public void setClaimReqId(String claimReqId) {
+		this.claimReqId = claimReqId;
 	}
 
 	public String getClaimType() {
@@ -76,9 +87,9 @@ public class ClaimSaveConditionCheckDto {
 
 	@Override
 	public String toString() {
-		return "ClaimSaveConditionCheckDto [claimType=" + claimType + ", claimPurpose=" + claimPurpose
-				+ ", claimStatus=" + claimStatus + ", claimCount=" + claimCount + ", empRegDate=" + empRegDate
-				+ ", empRetirementDate=" + empRetirementDate + "]";
+		return "ClaimSaveConditionCheckDto [claimReqId=" + claimReqId + ", claimType=" + claimType + ", claimPurpose="
+				+ claimPurpose + ", claimStatus=" + claimStatus + ", claimCount=" + claimCount + ", empRegDate="
+				+ empRegDate + ", empRetirementDate=" + empRetirementDate + "]";
 	}
 
 }

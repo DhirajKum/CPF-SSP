@@ -214,7 +214,7 @@
 				<div class="row marginT10">	
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Uploaded KYC Document</b></label>
+							<label for="" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Uploaded UAN Document</b></label>
 							<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${claimData.kycFilePath}&fileType=1" class="col-sm-7" target="_blank">${claimData.kycFileName}</a>
 						</div>
 					</div>

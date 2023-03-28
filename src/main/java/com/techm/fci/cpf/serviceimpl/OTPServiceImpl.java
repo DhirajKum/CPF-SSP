@@ -45,6 +45,8 @@ public class OTPServiceImpl implements OTPService {
 	@Override
 	public boolean sendOtpSms(String mobileNumber, String empNum, String empName) {
 		//SmsSender smsSender = new SmsSender();
+		System.out.println("::::: CPF Self Service Module ::::: Inside send OTP SMS service ::::");
+		
 		CpfOtpMaster cpfOtpMaster = new CpfOtpMaster();	
 		String otp=null;
 		String otpExpiryTime = CPFCommonConstants.OTP_EXPIRY_TIME;
@@ -62,12 +64,15 @@ public class OTPServiceImpl implements OTPService {
 			otpMessage = otpMessage.replace("<name>", empName);
 			String encodedMessage = otpMessage.replace(" ", "%20");
 			empDao.addOtpData(mobileNumber, otp, otpExpiryTime, empNum, USERNAME, PIN, encodedMessage, SIGNATURE, DEL_BY_SMSPORTAL, DLT_ENTITY_ID, DLT_TEMPLATE_ID);
+			System.out.println("::::: CPF Self Service Module ::::: persist data in cpf_otp_mas ::::");
 		}else{
 			empDao.updateOtpData(mobileNumber,cpfOtpMaster.getOTP(),otpExpiryTime);
 			otp=cpfOtpMaster.getOTP();
+			System.out.println("::::: CPF Self Service Module ::::: update data in cpf_otp_mas ::::");
 		}
 		
 		logger.info("Going to send sms for opt...");
+		System.out.println("::::: CPF Self Service Module ::::: Going for call CPFSendSMSUtility.sh file ::::");
 		boolean sendSMSStatus=false;
 		try {
 			//runScript("/prod/apps/fs2/EBSapps/appl/fci/12.0.0/bin/smsSender.sh", empNum);//For Production server
@@ -128,7 +133,7 @@ public class OTPServiceImpl implements OTPService {
 	            System.out.println("Received from script: " + bufferedReader.readLine());
 	        }
 	    } catch (Exception ex) {
-	    	logger.info(ex.getMessage());
+	    	ex.printStackTrace();
 	    }
 	}
 	

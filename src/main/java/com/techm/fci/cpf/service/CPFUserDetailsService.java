@@ -22,8 +22,10 @@ import com.techm.fci.cpf.model.RegisteredUser;
 @Service("cpfUserDetailsService")
 public class CPFUserDetailsService implements UserDetailsService {
 
-	  	@Autowired
-	    private UserService userService;
+	//private static final Logger logger = LoggerFactory.getLogger(CPFUserDetailsService.class);
+	  	
+	@Autowired
+	private UserService userService;
 	     
 	    @Transactional(readOnly=true)
 	    public UserDetails loadUserByUsername(String empNum) throws UsernameNotFoundException {
@@ -45,7 +47,7 @@ public class CPFUserDetailsService implements UserDetailsService {
 	            authorities.add(new SimpleGrantedAuthority("ROLE_"+userProfile.getType()));
 	        }*/
 	        
-	        System.out.println("User : "+user.getUserRole());
+	        System.out.println("User Role : "+user.getUserRole());
             authorities.add(new SimpleGrantedAuthority("ROLE_"+user.getUserRole()));
 	        
 	        System.out.print("authorities :"+authorities);

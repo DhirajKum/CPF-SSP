@@ -53,6 +53,7 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 	
 	@Override
 	public EmpMaster getEmpDetailsByEmpNum(String empNum) {
+		System.out.println("::::: CPF Self Service Module ::::: EmployeeDaoImpl.java ::::: Inside Get User Details ");
 		EmpMaster empMaster = null;
     	session = sessionFactory.getCurrentSession();
     	session.beginTransaction();
@@ -60,6 +61,7 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 	    	Criteria crit = createEntityCriteria();
 	        crit.add(Restrictions.eq("EMP_NUM", empNum));
 	        empMaster=(EmpMaster) crit.uniqueResult();
+	        System.out.println("::::: CPF Self Service Module ::::: EmployeeDaoImpl.java ::::: Get User Details ");
     	}
         session.getTransaction().commit();
         return empMaster;

@@ -159,19 +159,49 @@ public class ClaimController {
 		int covidCount = 0;
 		String status = null;
 		UserModel uModel = getUserModel();
-		
-		
+		/*List<CpfClaimRequest> cpfClaimReqList = new ArrayList<CpfClaimRequest>();*/
+			
 		if(uModel!=null && js_enabled.equals("1")){
-		
+			/*cpfClaimReqList = userService.empClaimLookup(uModel.getEmpNum());
+			for(CpfClaimRequest cpfClaimReq :cpfClaimReqList){
+				
+				List<ClaimRequestStatusDto> claimRequestStatusList = userService.getClaimReqStatus(cpfClaimReq.getREQUEST_ID());
+				for(ClaimRequestStatusDto claimRequestStatusDto : claimRequestStatusList){
+					if(!claimRequestStatusDto.getStatus().equals("-1")){
+						if(!claimRequestStatusDto.getStatus().equals("0") && cpfClaimReq.getCLAIM_APPLIED_FOR().equals(cpfClaim.getCLAIM_APPLIED_FOR())){
+							if(cpfClaim.getPURPOSE()!=null && cpfClaim.getPURPOSE().equals("COVID-19") && cpfClaimReq.getPURPOSE().equals(cpfClaim.getPURPOSE())){
+								if(cpfClaimReq.getCLAIM_COUNT()>=2){
+									recordFound=true;
+									covidCount=cpfClaimReq.getCLAIM_COUNT();
+								}else{
+									cpfClaim.setCLAIM_COUNT(cpfClaimReq.getCLAIM_COUNT());					
+								}
+							}else if(cpfClaim.getPURPOSE().equals("")){
+								recordFound=true;
+							}else if(!cpfClaim.getPURPOSE().equals("COVID-19") && !cpfClaimReq.getPURPOSE().equals("COVID-19") && cpfClaimReq.getCLAIM_COUNT()>=1) {
+								recordFound=true;
+							}
+						}else if(claimRequestStatusDto.getStatus().equals("0") && cpfClaimReq.getCLAIM_APPLIED_FOR().equals(cpfClaim.getCLAIM_APPLIED_FOR())){
+							if(cpfClaim.getPURPOSE()!=null && cpfClaim.getPURPOSE().equals("COVID-19") && cpfClaimReq.getPURPOSE().equals(cpfClaim.getPURPOSE())){
+								cpfClaim.setCLAIM_COUNT(cpfClaimReq.getCLAIM_COUNT());					
+							}else if(cpfClaim.getPURPOSE().equals("")){
+								recordFound=true;
+							}else if(!cpfClaim.getPURPOSE().equals("COVID-19") && !cpfClaimReq.getPURPOSE().equals("COVID-19") && cpfClaimReq.getCLAIM_COUNT()>=1) {
+								recordFound=true;
+							}
+						}
+					}
+				}
+			}*/
 			List<CpfClaimRequest> cpfClaimReqList = new ArrayList<CpfClaimRequest>();
-			List<ClaimSaveConditionCheckDto> claimConditionCheck = new ArrayList<>();
-			ClaimSaveConditionCheckDto claimSaveConditionCheckDto = new ClaimSaveConditionCheckDto();
+			List<ClaimSaveConditionCheckDto> claimConditionCheck =  new ArrayList<>();
 			Map<String, List<ClaimSaveConditionCheckDto>> checkMap = new HashMap<>();
 			
 			cpfClaimReqList = userService.empClaimLookup(uModel.getEmpNum());
 			for(CpfClaimRequest cpfClaimRequest : cpfClaimReqList) {
+				ClaimSaveConditionCheckDto claimSaveConditionCheckDto = new ClaimSaveConditionCheckDto();
 				status = userService.getClaimStatus(cpfClaimRequest.getREQUEST_ID());
-				
+				claimSaveConditionCheckDto.setClaimReqId(cpfClaimRequest.getREQUEST_ID());
 				claimSaveConditionCheckDto.setClaimType(cpfClaimRequest.getCLAIM_APPLIED_FOR());
 				claimSaveConditionCheckDto.setClaimPurpose(cpfClaimRequest.getPURPOSE());
 				claimSaveConditionCheckDto.setClaimCount(cpfClaimRequest.getCLAIM_COUNT());
@@ -179,10 +209,7 @@ public class ClaimController {
 				claimConditionCheck.add(claimSaveConditionCheckDto);
 			}
 			checkMap.put(uModel.getEmpNum(), claimConditionCheck);
-		
-			
-			
-			
+						
 		if(!recordFound){
 			String locCode = session.getAttribute("locCode").toString();
 			CpfClaimRequest claimRequest = userService.saveClaimData(cpfClaim, uModel.getEmpNum(), locCode, uModel.getRoleName()); 

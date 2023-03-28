@@ -2017,8 +2017,8 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 			if (reqId != null) {
 				hQuery.setParameter("reqId", reqId);
 			}
-			List<String> statusList = hQuery.list();
-			status=statusList.get(0);
+			HashMap resultMap =(HashMap) hQuery.uniqueResult();
+			status = resultMap.get("STATUS").toString();
 			session.getTransaction().commit();
 		} catch (RuntimeException re) {
 			logger.info("Find by example failed :::", re);
