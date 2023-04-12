@@ -347,7 +347,7 @@
 
 $(document).ready(function() { 
 
-	var radioValue=$("#claimAppliedFor input:radio:checked").val();
+	var radioValue=$("#claimAppliedFor input:radio:checked").val() || '';
 	var purpose = $
 	var urlVar = '${pageContext.request.contextPath}/claim/getPurposeOfCPF?radioValue='+radioValue.trim();
 	$.ajax({

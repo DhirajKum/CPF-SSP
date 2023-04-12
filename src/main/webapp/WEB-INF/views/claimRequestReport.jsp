@@ -176,7 +176,7 @@ if($table.length){
 	$table.dataTable({
 		//lengthMenu:[[5,10,15,-1],['5','10','15','ALL']],
 		pageLength:10,
-		dom: 'Bfrtip',
+		/*dom: 'Bfrtip',
 		buttons: ['excel'/*, 'copy', {
 	      extend: 'pdf',
 	      text: '<i class="fa fa-file-pdf-o"></i> PDF',
@@ -187,7 +187,8 @@ if($table.length){
           orientation : 'landscape',
           pageSize : 'A3',
 	      footer: true
-	    },'print' */],
+	    },'print' */
+	    //],
 	    //order: [[5, 'desc']],
 		ajax:{
 			url:urlVar,

@@ -63,7 +63,7 @@ public class ActClaimDto implements Serializable{
 	public String CASTE_DISPUTE_CERT;
 	public String AMOUNT_SANCTION;
 	//@NotNull
-	@NotBlank
+	//@NotBlank
 	//@SafeHtml
 	public String remarks;
 	public String locId;
