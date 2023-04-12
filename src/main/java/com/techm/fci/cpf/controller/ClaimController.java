@@ -203,39 +203,39 @@ public class ClaimController {
 			 * cpfClaimReq.getCLAIM_COUNT()>=1) { recordFound=true; } } } } }
 			 */
 			List<CpfClaimRequest> cpfClaimReqList = new ArrayList<CpfClaimRequest>();
-			// List<ClaimSaveConditionCheckDto> claimConditionCheck = new ArrayList<>();
-			// Map<String, List<ClaimSaveConditionCheckDto>> checkMap = new HashMap<>();
-
+			Map<String, Long> claimPurposeCount = null;
 			cpfClaimReqList = userService.empClaimLookup(uModel.getEmpNum());
 
 			Map<String, Integer> map = cpfClaimReqList.stream()
 					.collect(Collectors.groupingBy(CpfClaimRequest::getCLAIM_APPLIED_FOR, Collectors.collectingAndThen(
 							Collectors.mapping(CpfClaimRequest::getPURPOSE, Collectors.toList()), List::size)));
-			for (Entry<String, Integer> entry : map.entrySet()) {
-				System.out.println(entry.getKey() + " : " + entry.getValue());
-			}
 
-			// List<CpfClaimRequest> cpfClaimReqList1 =
-			// userService.empClaimLookup(uModel.getEmpNum());
-			Map<String, Long> map1 = cpfClaimReqList.stream().filter(p -> p.getPURPOSE() != null)
-					.collect(Collectors.groupingBy(CpfClaimRequest::getPURPOSE, Collectors.counting()));
-			for (Entry<String, Long> entry : map1.entrySet()) {
-				System.out.println(entry.getKey() + " : " + entry.getValue());
-			}
+			switch (cpfClaim.getCLAIM_APPLIED_FOR()) {
+			case "CpfFinalSettlement":
 
-			/*
-			 * for (CpfClaimRequest cpfClaimRequest : cpfClaimReqList) {
-			 * ClaimSaveConditionCheckDto claimSaveConditionCheckDto = new
-			 * ClaimSaveConditionCheckDto(); status =
-			 * userService.getClaimStatus(cpfClaimRequest.getREQUEST_ID());
-			 * claimSaveConditionCheckDto.setClaimReqId(cpfClaimRequest.getREQUEST_ID());
-			 * claimSaveConditionCheckDto.setClaimType(cpfClaimRequest.getCLAIM_APPLIED_FOR(
-			 * )); claimSaveConditionCheckDto.setClaimPurpose(cpfClaimRequest.getPURPOSE());
-			 * claimSaveConditionCheckDto.setClaimCount(cpfClaimRequest.getCLAIM_COUNT());
-			 * claimSaveConditionCheckDto.setClaimStatus(status);
-			 * claimConditionCheck.add(claimSaveConditionCheckDto); }
-			 */
-			// checkMap.put(uModel.getEmpNum(), claimConditionCheck);
+				break;
+			case "CpfPartFinalWithdrawal":
+				claimPurposeCount = cpfClaimReqList.stream().filter(p -> p.getPURPOSE() != null)
+						.collect(Collectors.groupingBy(CpfClaimRequest::getPURPOSE, Collectors.counting()));
+				int cpfwCount = map.get("CpfPartFinalWithdrawal") - claimPurposeCount.get("COVID-19").intValue();
+				
+				if (!cpfClaim.getPURPOSE().equals("COVID-19") && cpfwCount >= 6) {
+					recordFound = true;
+				}
+
+				if (cpfClaim.getPURPOSE().equals("COVID-19") && claimPurposeCount.get("COVID-19") >= 2) {
+					recordFound = true;
+				}
+				break;
+			case "90%Withdrawal":
+
+				break;
+			case "TempAdv":
+
+				break;
+			default:
+				break;
+			}
 
 			if (!recordFound) {
 				String locCode = session.getAttribute("locCode").toString();
@@ -265,7 +265,7 @@ public class ClaimController {
 					}
 				}
 			} else {
-				if (covidCount >= 2)
+				if (claimPurposeCount.get("COVID-19") >= 2)
 					return "redirect:/claim/raiseClaimReq?operation=covidDuplicate";
 				else
 					return "redirect:/claim/raiseClaimReq?operation=duplicate";
