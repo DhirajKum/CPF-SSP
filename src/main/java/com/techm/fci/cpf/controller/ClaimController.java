@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -57,6 +58,7 @@ import com.techm.fci.cpf.model.CpfClaimRequest;
 import com.techm.fci.cpf.model.EmpMaster;
 import com.techm.fci.cpf.model.UserModel;
 import com.techm.fci.cpf.service.UserService;
+import com.techm.fci.cpf.util.DateUtils;
 
 @Controller
 @RequestMapping(value = "/claim")
@@ -205,6 +207,11 @@ public class ClaimController {
 			List<CpfClaimRequest> cpfClaimReqList = new ArrayList<CpfClaimRequest>();
 			Map<String, Long> claimPurposeCount = null;
 			cpfClaimReqList = userService.empClaimLookup(uModel.getEmpNum());
+			EmpMaster empMaster = userService.getEmpDetailsByEmpNum(uModel.getEmpNum());
+			String empStatus = empMaster.getEMP_STATUS() != null ? empMaster.getEMP_STATUS().substring(10): "";
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+			
+			Long totalDays = DateUtils.dateDiffByDays(LocalDate.parse(sdf.format(empMaster.getRETIREMENT_DATE())));
 
 			Map<String, Integer> map = cpfClaimReqList.stream()
 					.collect(Collectors.groupingBy(CpfClaimRequest::getCLAIM_APPLIED_FOR, Collectors.collectingAndThen(
@@ -212,7 +219,11 @@ public class ClaimController {
 
 			switch (cpfClaim.getCLAIM_APPLIED_FOR()) {
 			case "CpfFinalSettlement":
-
+				if (map.get("CpfFinalSettlement")>=1) {
+					recordFound = true;
+				}else if (empStatus.equals("RESG") && totalDays <= 60) {
+					recordFound = true;
+				}
 				break;
 			case "CpfPartFinalWithdrawal":
 				claimPurposeCount = cpfClaimReqList.stream().filter(p -> p.getPURPOSE() != null)
