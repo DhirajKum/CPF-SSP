@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -405,9 +406,14 @@ public class DateUtils {
 		return noOfDays;
 	}
 
-	public static Long dateDiffByDays(LocalDate toDate) {
-		LocalDate fromDate = LocalDate.now();
-		Long range = ChronoUnit.DAYS.between(fromDate, toDate);
+	public static Long dateDiffByDays(String toDate) {
+ 
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDate toDt = LocalDate.parse(toDate, formatter);
+
+ 		LocalDate fromDate = LocalDate.now();
+		
+		Long range = ChronoUnit.DAYS.between(toDt,fromDate);
 		return range;
 	}
 
@@ -419,7 +425,7 @@ public class DateUtils {
 		Date startDate = DateUtils.convertStringToDate("2015-03-01", DateUtils.YyyyMmDd);
 		Date endDate = DateUtils.convertStringToDate("2023-03-15", DateUtils.YyyyMmDd);
 
-		System.out.println("Days calculate between two dates :::: "+ dateDiffByDays(LocalDate.parse("2024-03-01")));
+		System.out.println("Days calculate between two dates :::: "+ dateDiffByDays("2024-03-01"));
 
 		System.out.println("Days between from date and to date======>>>> " + daysBetweenDates(startDate, endDate));
 

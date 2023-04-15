@@ -1940,7 +1940,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 		String query = "";
 		
 		if(radioValue.equals("CpfPartFinalWithdrawal"))
-			query = "select CODE_SDESC as \"codeSdesc\", CODE_DESC as \"codeDesc\" from com_gbl_dtl where gbl_type = 'CPFPARTRSN'";
+			query = "select CODE_SDESC as \"codeSdesc\", CODE_DESC as \"codeDesc\" from com_gbl_dtl where gbl_type = 'CPFPARTRSN' and CODE_SDESC<>'BFRRETR'";
 		else if(radioValue.equals("TempAdv"))
 			query ="select CODE_SDESC as \"codeSdesc\", CODE_DESC as \"codeDesc\" from com_gbl_dtl where gbl_type = 'CPFADVRSN'";
 		
@@ -1949,8 +1949,8 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 		
 		List<Map<String, Object>> list = hQuery.list();
 		
-		for (Map<String,Object> map : list) {
-			DropdownDto cpfPurpose=new DropdownDto();
+		for (Map<String, Object> map : list) {
+			DropdownDto cpfPurpose = new DropdownDto();
 			cpfPurpose.setCpfPurposeKey(map.get("codeSdesc").toString());
 			cpfPurpose.setCpfPurposeValue(map.get("codeDesc").toString());
 			cpfPurposeList.add(cpfPurpose);

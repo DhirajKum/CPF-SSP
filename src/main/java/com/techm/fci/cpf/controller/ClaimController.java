@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -151,14 +152,16 @@ public class ClaimController {
 				mv.addObject("message", "Claim submission failed ...!");
 			}
 			if (operation.equals("covidDuplicate")) {
-				mv.addObject("message", "You have exceed the limit for COVID-19 Claim apply ...!");
+				mv.addObject("message", "You have exceeded the limit for COVID-19 claim apply ...!");
+			}
+			if (operation.equals("limitExceed")) {
+				mv.addObject("message", "You have exceeded the limit for Part Final Withdrawal claim apply ...!");
 			}
 			if (operation.equals("duplicate")) {
 				mv.addObject("message", "Claim already submitted ...!");
 			}
 			if (operation.equals("NOADMIN")) {
-				mv.addObject("message",
-						"Claim submission failed. As of now, admin/s not found for this location to approve your request ...!!!");
+				mv.addObject("message",	"Claim submission failed. As of now, admin/s not found for this location for approval your claim request ...!!!");
 			}
 		}
 		return mv;
@@ -169,73 +172,54 @@ public class ClaimController {
 			@RequestParam String js_enabled) {
 		logger.info("::::: In side save claim request method :::::");
 		boolean recordFound = false;
-		int covidCount = 0;
-		String status = null;
+		boolean covidFlag=false;
+		boolean cpfwFlag=false;
+		//int covidCount = 0;
+		//String status = null;
+		Long totalDays=0L;
 		UserModel uModel = getUserModel();
-		/* List<CpfClaimRequest> cpfClaimReqList = new ArrayList<CpfClaimRequest>(); */
 
 		if (uModel != null && js_enabled.equals("1")) {
-			/*
-			 * cpfClaimReqList = userService.empClaimLookup(uModel.getEmpNum());
-			 * for(CpfClaimRequest cpfClaimReq :cpfClaimReqList){
-			 * 
-			 * List<ClaimRequestStatusDto> claimRequestStatusList =
-			 * userService.getClaimReqStatus(cpfClaimReq.getREQUEST_ID());
-			 * for(ClaimRequestStatusDto claimRequestStatusDto : claimRequestStatusList){
-			 * if(!claimRequestStatusDto.getStatus().equals("-1")){
-			 * if(!claimRequestStatusDto.getStatus().equals("0") &&
-			 * cpfClaimReq.getCLAIM_APPLIED_FOR().equals(cpfClaim.getCLAIM_APPLIED_FOR())){
-			 * if(cpfClaim.getPURPOSE()!=null && cpfClaim.getPURPOSE().equals("COVID-19") &&
-			 * cpfClaimReq.getPURPOSE().equals(cpfClaim.getPURPOSE())){
-			 * if(cpfClaimReq.getCLAIM_COUNT()>=2){ recordFound=true;
-			 * covidCount=cpfClaimReq.getCLAIM_COUNT(); }else{
-			 * cpfClaim.setCLAIM_COUNT(cpfClaimReq.getCLAIM_COUNT()); } }else
-			 * if(cpfClaim.getPURPOSE().equals("")){ recordFound=true; }else
-			 * if(!cpfClaim.getPURPOSE().equals("COVID-19") &&
-			 * !cpfClaimReq.getPURPOSE().equals("COVID-19") &&
-			 * cpfClaimReq.getCLAIM_COUNT()>=1) { recordFound=true; } }else
-			 * if(claimRequestStatusDto.getStatus().equals("0") &&
-			 * cpfClaimReq.getCLAIM_APPLIED_FOR().equals(cpfClaim.getCLAIM_APPLIED_FOR())){
-			 * if(cpfClaim.getPURPOSE()!=null && cpfClaim.getPURPOSE().equals("COVID-19") &&
-			 * cpfClaimReq.getPURPOSE().equals(cpfClaim.getPURPOSE())){
-			 * cpfClaim.setCLAIM_COUNT(cpfClaimReq.getCLAIM_COUNT()); }else
-			 * if(cpfClaim.getPURPOSE().equals("")){ recordFound=true; }else
-			 * if(!cpfClaim.getPURPOSE().equals("COVID-19") &&
-			 * !cpfClaimReq.getPURPOSE().equals("COVID-19") &&
-			 * cpfClaimReq.getCLAIM_COUNT()>=1) { recordFound=true; } } } } }
-			 */
+
 			List<CpfClaimRequest> cpfClaimReqList = new ArrayList<CpfClaimRequest>();
 			Map<String, Long> claimPurposeCount = null;
 			cpfClaimReqList = userService.empClaimLookup(uModel.getEmpNum());
 			EmpMaster empMaster = userService.getEmpDetailsByEmpNum(uModel.getEmpNum());
 			String empStatus = empMaster.getEMP_STATUS() != null ? empMaster.getEMP_STATUS().substring(10): "";
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 			
-			Long totalDays = DateUtils.dateDiffByDays(LocalDate.parse(sdf.format(empMaster.getRETIREMENT_DATE())));
-
 			Map<String, Integer> map = cpfClaimReqList.stream()
 					.collect(Collectors.groupingBy(CpfClaimRequest::getCLAIM_APPLIED_FOR, Collectors.collectingAndThen(
 							Collectors.mapping(CpfClaimRequest::getPURPOSE, Collectors.toList()), List::size)));
 
 			switch (cpfClaim.getCLAIM_APPLIED_FOR()) {
 			case "CpfFinalSettlement":
-				if (map.get("CpfFinalSettlement")>=1) {
-					recordFound = true;
-				}else if (empStatus.equals("RESG") && totalDays <= 60) {
-					recordFound = true;
+				if (empMaster.getRETIREMENT_DATE() != null) {
+					totalDays = DateUtils.dateDiffByDays(empMaster.getRETIREMENT_DATE());
+
+					if (!map.isEmpty() && map.get("CpfFinalSettlement") != null && map.get("CpfFinalSettlement") >= 1) {
+						recordFound = true;
+					} else if (empStatus.equals("RESG")	&& LocalDate.now().isAfter(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))
+							&& totalDays <= 60) {
+						recordFound = true;
+					}
 				}
 				break;
 			case "CpfPartFinalWithdrawal":
 				claimPurposeCount = cpfClaimReqList.stream().filter(p -> p.getPURPOSE() != null)
 						.collect(Collectors.groupingBy(CpfClaimRequest::getPURPOSE, Collectors.counting()));
-				int cpfwCount = map.get("CpfPartFinalWithdrawal") - claimPurposeCount.get("COVID-19").intValue();
-				
-				if (!cpfClaim.getPURPOSE().equals("COVID-19") && cpfwCount >= 6) {
-					recordFound = true;
-				}
+				if (!map.isEmpty() && map.get("CpfPartFinalWithdrawal") != null) {
+					int cpfwCount = map.get("CpfPartFinalWithdrawal") - (claimPurposeCount.get("COVID-19") != null?claimPurposeCount.get("COVID-19").intValue():0);
 
-				if (cpfClaim.getPURPOSE().equals("COVID-19") && claimPurposeCount.get("COVID-19") >= 2) {
-					recordFound = true;
+					if (!cpfClaim.getPURPOSE().equals("COVID-19") && cpfwCount >= 6) {
+						recordFound = true;
+						cpfwFlag = true;
+					}
+
+					if (cpfClaim.getPURPOSE().equals("COVID-19") && claimPurposeCount.get("COVID-19")!= null && claimPurposeCount.get("COVID-19") >= 2) {
+						recordFound = true;
+						covidFlag=true;
+					}
 				}
 				break;
 			case "90%Withdrawal":
@@ -245,6 +229,7 @@ public class ClaimController {
 
 				break;
 			default:
+				recordFound = false;
 				break;
 			}
 
@@ -276,8 +261,11 @@ public class ClaimController {
 					}
 				}
 			} else {
-				if (claimPurposeCount.get("COVID-19") >= 2)
+				//claimPurposeCount!=null && claimPurposeCount.get("COVID-19") != null && claimPurposeCount.get("COVID-19") >= 2
+				if (covidFlag)
 					return "redirect:/claim/raiseClaimReq?operation=covidDuplicate";
+				else if(cpfwFlag)
+					return "redirect:/claim/raiseClaimReq?operation=limitExceed";
 				else
 					return "redirect:/claim/raiseClaimReq?operation=duplicate";
 			}
