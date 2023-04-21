@@ -11,6 +11,7 @@ import com.techm.fci.cpf.dto.ActClaimDto;
 import com.techm.fci.cpf.dto.AssignToClaimDto;
 import com.techm.fci.cpf.dto.ClaimHistoryTrailDto;
 import com.techm.fci.cpf.dto.ClaimRequestStatusDto;
+import com.techm.fci.cpf.dto.SavedClaimConditionCheckDto;
 import com.techm.fci.cpf.dto.DropdownDto;
 import com.techm.fci.cpf.model.CpfClaimRequest;
 
@@ -47,4 +48,6 @@ public interface ClaimRequestDao {
 	public boolean saveCpfClaimHistory(ClaimHistoryTrailDto claimHistoryTrailData, String empNum, String roleName);
 	
 	public String getMaxPermAmount(String empId, String sancType);
+	public Boolean checkTempAdvApplyAbility(String empNum);
+	public List<SavedClaimConditionCheckDto> checkSavedClaimStatus(String empNum, String claimType);
 }

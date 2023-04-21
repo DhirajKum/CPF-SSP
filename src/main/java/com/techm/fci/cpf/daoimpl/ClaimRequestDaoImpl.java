@@ -39,6 +39,7 @@ import com.techm.fci.cpf.dto.ActClaimDto;
 import com.techm.fci.cpf.dto.AssignToClaimDto;
 import com.techm.fci.cpf.dto.ClaimHistoryTrailDto;
 import com.techm.fci.cpf.dto.ClaimRequestStatusDto;
+import com.techm.fci.cpf.dto.SavedClaimConditionCheckDto;
 import com.techm.fci.cpf.dto.DropdownDto;
 import com.techm.fci.cpf.model.AuditCpfClaimRequestStatus;
 import com.techm.fci.cpf.model.CpfClaimHistoryTrail;
@@ -2158,7 +2159,88 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 	}
 
 
-	
+	@Override
+	public Boolean checkTempAdvApplyAbility(String empNum) {
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		try {
+			String query = "Select count(*) as claimAllow From cpf_registered_users c left outer join pay_emp_mast b on b.EMP_NUM = c.emp_num where b.emp_num = :empNum" + 
+					"       And b.EMP_STATUS Not In ('EMPSTATUS$RETD',\r\n" + 
+					"                            'EMPSTATUS$EXP',\r\n" + 
+					"                            'EMPSTATUS$RELVD',\r\n" + 
+					"                            'EMPSTATUS$REPATR',\r\n" + 
+					"                            'EMPSTATUS$DISMISS',\r\n" + 
+					"                            'EMPSTATUS$COMRETD',\r\n" + 
+					"                            'EMPSTATUS$RESGL',\r\n" + 
+					"                            'EMPSTATUS$VOLRET',\r\n" + 
+					"                            'EMPSTATUS$RESG',\r\n" + 
+					"                            'EMPSTATUS$TERM',\r\n" + 
+					"                            'EMPSTATUS$TRANS',\r\n" + 
+					"                            'EMPSTATUS$DEPU')\r\n" + 
+					"  And Not Exists\r\n" + 
+					" (Select dt.EMP_NUM\r\n" + 
+					"          From pay_emp_cpf_sanc_dtl dt\r\n" + 
+					"         Where dt.EMP_NUM = :empNum" + 
+					"           And dt.CANCEL_FLAG <> 'Y'\r\n" + 
+					"           And Not Exists (Select ht.EMP_NUM\r\n" + 
+					"                  From pay_loan_hdr ht\r\n" + 
+					"                 Where ht.EMP_NUM = dt.EMP_NUM))\r\n" + 
+					"  And Not Exists (Select dp.EMP_NUM\r\n" + 
+					"          From pay_emp_cpf_sanc_dtl dp, pay_loan_hdr hd\r\n" + 
+					"         Where dp.EMP_NUM = hd.EMP_NUM\r\n" + 
+					"           And dp.EMP_NUM = :empNum" + 
+					"           And hd.LOAN_TYPE = '87'\r\n" + 
+					"           And hd.LOAN_STATUS = 'A')";
+			
+			Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+			if (empNum != null) {
+				hQuery.setParameter("empNum", empNum);
+			}
+			List<Map<String, Object>> list = hQuery.list();
+			for(Map<String, Object> map : list) {
+				if(map.get("CLAIMALLOW").toString().equals("1")) {
+					return true;
+				}
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public List<SavedClaimConditionCheckDto> checkSavedClaimStatus(String empNum, String claimType) {
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		List<SavedClaimConditionCheckDto> savedClaimStatusList = new ArrayList<>();
+		try {
+			String query = "SELECT d.claim_submitted_by, d.request_id,d.claim_applied_for, d.purpose, s.status \r\n" + 
+					"FROM cpf_claim_form_details d LEFT OUTER JOIN cpf_claim_form_status s \r\n" + 
+					"ON d.request_id=s.request_id \r\n" + 
+					"WHERE d.claim_applied_for=:claimType\r\n" + 
+					"AND d.claim_submitted_by=:empNum\r\n" + 
+					"GROUP BY d.claim_submitted_by, d.request_id,d.claim_applied_for, d.purpose, s.status";
+			Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+			if (empNum != null) {
+				hQuery.setParameter("claimType", claimType);
+				hQuery.setParameter("empNum", empNum);
+			}
+			List<Map<String, Object>> list = hQuery.list();
+			for(Map<String, Object> map : list) {
+				SavedClaimConditionCheckDto savedClaimConditionCheck = new SavedClaimConditionCheckDto();
+				savedClaimConditionCheck.setClaimSubmittedBy(map.get("CLAIM_SUBMITTED_BY").toString());
+				savedClaimConditionCheck.setClaimReqId(map.get("REQUEST_ID").toString());
+				savedClaimConditionCheck.setClaimType(map.get("CLAIM_APPLIED_FOR").toString());
+				savedClaimConditionCheck.setClaimPurpose(map.get("PURPOSE").toString());
+				savedClaimConditionCheck.setClaimStatus(Integer.parseInt(map.get("STATUS").toString()));
+				savedClaimStatusList.add(savedClaimConditionCheck);
+			}
+		}catch(RuntimeException re) {
+			re.printStackTrace();
+		}
+		return savedClaimStatusList;
+	}
 
 	
 }

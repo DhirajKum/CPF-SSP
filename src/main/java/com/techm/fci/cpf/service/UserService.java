@@ -5,12 +5,12 @@ package com.techm.fci.cpf.service;
  * @since 01/03/2021
  */
 import java.util.List;
-import java.util.Map;
 
 import com.techm.fci.cpf.dto.ActClaimDto;
 import com.techm.fci.cpf.dto.AssignToClaimDto;
 import com.techm.fci.cpf.dto.ClaimHistoryTrailDto;
 import com.techm.fci.cpf.dto.ClaimRequestStatusDto;
+import com.techm.fci.cpf.dto.SavedClaimConditionCheckDto;
 import com.techm.fci.cpf.dto.DropdownDto;
 import com.techm.fci.cpf.dto.HomeDto;
 import com.techm.fci.cpf.model.CpfClaimRequest;
@@ -87,4 +87,6 @@ public interface UserService {
 	public String getMaxPermAmount(String empId, String sancType);
 	
 	public String getUploadedPath(String pathId, String fileType);
+	public Boolean checkTempAdvApplyAbility(String empNum);
+	public List<SavedClaimConditionCheckDto> checkSavedClaimStatus(String empNum, String claimType);
 }

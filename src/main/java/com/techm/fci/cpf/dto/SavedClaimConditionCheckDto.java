@@ -2,23 +2,25 @@ package com.techm.fci.cpf.dto;
 
 import java.util.Date;
 
-public class ClaimSaveConditionCheckDto {
+public class SavedClaimConditionCheckDto {
 	
+	public String claimSubmittedBy;
 	public String claimReqId;
 	public String claimType;
 	public String claimPurpose;
-	public String claimStatus;
+	public int claimStatus;
 	public int claimCount;
 	public Date empRegDate;
 	public Date empRetirementDate;
 
-	public ClaimSaveConditionCheckDto() {
+	public SavedClaimConditionCheckDto() {
 
 	}
 
-	public ClaimSaveConditionCheckDto(String claimReqId, String claimType, String claimPurpose, String claimStatus,
-			int claimCount, Date empRegDate, Date empRetirementDate) {
+	public SavedClaimConditionCheckDto(String claimSubmittedBy, String claimReqId, String claimType,
+			String claimPurpose, int claimStatus, int claimCount, Date empRegDate, Date empRetirementDate) {
 		super();
+		this.claimSubmittedBy = claimSubmittedBy;
 		this.claimReqId = claimReqId;
 		this.claimType = claimType;
 		this.claimPurpose = claimPurpose;
@@ -28,6 +30,13 @@ public class ClaimSaveConditionCheckDto {
 		this.empRetirementDate = empRetirementDate;
 	}
 
+	public String getClaimSubmittedBy() {
+		return claimSubmittedBy;
+	}
+
+	public void setClaimSubmittedBy(String claimSubmittedBy) {
+		this.claimSubmittedBy = claimSubmittedBy;
+	}
 
 	public String getClaimReqId() {
 		return claimReqId;
@@ -53,11 +62,11 @@ public class ClaimSaveConditionCheckDto {
 		this.claimPurpose = claimPurpose;
 	}
 
-	public String getClaimStatus() {
+	public int getClaimStatus() {
 		return claimStatus;
 	}
 
-	public void setClaimStatus(String claimStatus) {
+	public void setClaimStatus(int claimStatus) {
 		this.claimStatus = claimStatus;
 	}
 
@@ -87,9 +96,9 @@ public class ClaimSaveConditionCheckDto {
 
 	@Override
 	public String toString() {
-		return "ClaimSaveConditionCheckDto [claimReqId=" + claimReqId + ", claimType=" + claimType + ", claimPurpose="
-				+ claimPurpose + ", claimStatus=" + claimStatus + ", claimCount=" + claimCount + ", empRegDate="
-				+ empRegDate + ", empRetirementDate=" + empRetirementDate + "]";
+		return "SavedClaimConditionCheckDto [claimSubmittedBy=" + claimSubmittedBy + ", claimReqId=" + claimReqId
+				+ ", claimType=" + claimType + ", claimPurpose=" + claimPurpose + ", claimStatus=" + claimStatus
+				+ ", claimCount=" + claimCount + ", empRegDate=" + empRegDate + ", empRetirementDate="
+				+ empRetirementDate + "]";
 	}
-
 }

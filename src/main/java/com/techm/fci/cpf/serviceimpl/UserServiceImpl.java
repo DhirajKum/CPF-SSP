@@ -17,6 +17,7 @@ import com.techm.fci.cpf.dto.ActClaimDto;
 import com.techm.fci.cpf.dto.AssignToClaimDto;
 import com.techm.fci.cpf.dto.ClaimHistoryTrailDto;
 import com.techm.fci.cpf.dto.ClaimRequestStatusDto;
+import com.techm.fci.cpf.dto.SavedClaimConditionCheckDto;
 import com.techm.fci.cpf.dto.DropdownDto;
 import com.techm.fci.cpf.dto.HomeDto;
 import com.techm.fci.cpf.model.CpfClaimRequest;
@@ -223,6 +224,16 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public Boolean updateEmpOtherDoc(UserModel uModel, CpfClaimRequest cpfClaimReq) {
 		return empDao.updateOtherDoc(uModel, cpfClaimReq);
+	}
+	
+	@Override
+	public Boolean checkTempAdvApplyAbility(String empNum) {
+		return claimReqDao.checkTempAdvApplyAbility(empNum);
+	}
+
+	@Override
+	public List<SavedClaimConditionCheckDto> checkSavedClaimStatus(String empNum, String claimType) {
+		return claimReqDao.checkSavedClaimStatus(empNum, claimType);
 	}
 
 }

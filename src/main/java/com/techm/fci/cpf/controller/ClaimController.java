@@ -53,7 +53,7 @@ import com.techm.fci.cpf.dto.ActClaimDto;
 import com.techm.fci.cpf.dto.AssignToClaimDto;
 import com.techm.fci.cpf.dto.ClaimHistoryTrailDto;
 import com.techm.fci.cpf.dto.ClaimRequestStatusDto;
-import com.techm.fci.cpf.dto.ClaimSaveConditionCheckDto;
+import com.techm.fci.cpf.dto.SavedClaimConditionCheckDto;
 import com.techm.fci.cpf.dto.DropdownDto;
 import com.techm.fci.cpf.model.CpfClaimRequest;
 import com.techm.fci.cpf.model.EmpMaster;
@@ -151,11 +151,26 @@ public class ClaimController {
 			if (operation.equals("failed")) {
 				mv.addObject("message", "Claim submission failed ...!");
 			}
+			if (operation.equals("cfWDuplicate")) {
+				mv.addObject("message", "You have exceeded the limit for Final Withdrawal claim apply ...!");
+			}
+			if (operation.equals("cfWTimeLimit")) {
+				mv.addObject("message", "You are not eligible for Final Withdrawal claim apply at this time ...!");
+			}
 			if (operation.equals("covidDuplicate")) {
 				mv.addObject("message", "You have exceeded the limit for COVID-19 claim apply ...!");
 			}
 			if (operation.equals("limitExceed")) {
 				mv.addObject("message", "You have exceeded the limit for Part Final Withdrawal claim apply ...!");
+			}
+			if (operation.equals("nintyPWDuplicate")) {
+				mv.addObject("message", "You have exceeded the limit for 90% Withdrawal claim apply ...!");
+			}
+			if (operation.equals("nintyPWTimeLimit")) {
+				mv.addObject("message", "You are not eligible for 90% Withdrawal claim apply at this time ...!");
+			}
+			if (operation.equals("tempAdvDuplicate")) {
+				mv.addObject("message", "You are not eligible for Temp Adv. claim apply at this time ...!");
 			}
 			if (operation.equals("duplicate")) {
 				mv.addObject("message", "Claim already submitted ...!");
@@ -172,11 +187,14 @@ public class ClaimController {
 			@RequestParam String js_enabled) {
 		logger.info("::::: In side save claim request method :::::");
 		boolean recordFound = false;
-		boolean covidFlag=false;
-		boolean cpfwFlag=false;
-		//int covidCount = 0;
-		//String status = null;
-		Long totalDays=0L;
+		boolean covidFlag = false;
+		boolean cpfwFlag = false;
+		boolean cfwLimitFlag = false;
+		boolean cfwTimeFlag = false;
+		boolean nintyPWLimitFlage = false;
+		boolean nintyPWTimeFlage = false;
+		boolean tempAdvFlage = false;
+		Long totalDays = 0L;
 		UserModel uModel = getUserModel();
 
 		if (uModel != null && js_enabled.equals("1")) {
@@ -185,9 +203,9 @@ public class ClaimController {
 			Map<String, Long> claimPurposeCount = null;
 			cpfClaimReqList = userService.empClaimLookup(uModel.getEmpNum());
 			EmpMaster empMaster = userService.getEmpDetailsByEmpNum(uModel.getEmpNum());
-			String empStatus = empMaster.getEMP_STATUS() != null ? empMaster.getEMP_STATUS().substring(10): "";
+			String empStatus = empMaster.getEMP_STATUS() != null ? empMaster.getEMP_STATUS().substring(10) : "";
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-			
+
 			Map<String, Integer> map = cpfClaimReqList.stream()
 					.collect(Collectors.groupingBy(CpfClaimRequest::getCLAIM_APPLIED_FOR, Collectors.collectingAndThen(
 							Collectors.mapping(CpfClaimRequest::getPURPOSE, Collectors.toList()), List::size)));
@@ -199,9 +217,12 @@ public class ClaimController {
 
 					if (!map.isEmpty() && map.get("CpfFinalSettlement") != null && map.get("CpfFinalSettlement") >= 1) {
 						recordFound = true;
-					} else if (empStatus.equals("RESG")	&& LocalDate.now().isAfter(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))
+						cfwLimitFlag = true;
+					} else if (empStatus.equals("RESG")
+							&& LocalDate.now().isAfter(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))
 							&& totalDays <= 60) {
 						recordFound = true;
+						cfwTimeFlag = true;
 					}
 				}
 				break;
@@ -209,24 +230,46 @@ public class ClaimController {
 				claimPurposeCount = cpfClaimReqList.stream().filter(p -> p.getPURPOSE() != null)
 						.collect(Collectors.groupingBy(CpfClaimRequest::getPURPOSE, Collectors.counting()));
 				if (!map.isEmpty() && map.get("CpfPartFinalWithdrawal") != null) {
-					int cpfwCount = map.get("CpfPartFinalWithdrawal") - (claimPurposeCount.get("COVID-19") != null?claimPurposeCount.get("COVID-19").intValue():0);
+					int cpfwCount = map.get("CpfPartFinalWithdrawal")
+							- (claimPurposeCount.get("COVID-19") != null ? claimPurposeCount.get("COVID-19").intValue()
+									: 0);
 
 					if (!cpfClaim.getPURPOSE().equals("COVID-19") && cpfwCount >= 6) {
 						recordFound = true;
 						cpfwFlag = true;
 					}
-
-					if (cpfClaim.getPURPOSE().equals("COVID-19") && claimPurposeCount.get("COVID-19")!= null && claimPurposeCount.get("COVID-19") >= 2) {
+					if (cpfClaim.getPURPOSE().equals("COVID-19") && claimPurposeCount.get("COVID-19") != null
+							&& claimPurposeCount.get("COVID-19") >= 2) {
 						recordFound = true;
-						covidFlag=true;
+						covidFlag = true;
 					}
 				}
 				break;
 			case "90%Withdrawal":
+				if (empMaster.getRETIREMENT_DATE() != null) {
+					totalDays = DateUtils.dateDiffByDays(empMaster.getRETIREMENT_DATE()) * -1;
 
+					if (!map.isEmpty() && map.get("90%Withdrawal") != null && map.get("90%Withdrawal") >= 1) {
+						recordFound = true;
+						nintyPWLimitFlage = true;
+					} else if (empStatus.equals("PERM")
+							&& LocalDate.now().isBefore(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))
+							&& totalDays <= 365) {
+						recordFound = true;
+						nintyPWTimeFlage = true;
+					}
+				}
 				break;
 			case "TempAdv":
-
+				List<SavedClaimConditionCheckDto> savedClaimStatusList = userService.checkSavedClaimStatus(uModel.getEmpNum(), cpfClaim.getCLAIM_APPLIED_FOR());
+				for (SavedClaimConditionCheckDto savedClaimCondition : savedClaimStatusList) {
+					if (!userService.checkTempAdvApplyAbility(uModel.getEmpNum())) {
+						if(savedClaimCondition.getClaimStatus()<4) {
+							recordFound = true;
+							tempAdvFlage = true;
+						}
+					}
+				}
 				break;
 			default:
 				recordFound = false;
@@ -261,11 +304,20 @@ public class ClaimController {
 					}
 				}
 			} else {
-				//claimPurposeCount!=null && claimPurposeCount.get("COVID-19") != null && claimPurposeCount.get("COVID-19") >= 2
-				if (covidFlag)
+				if (cfwLimitFlag)
+					return "redirect:/claim/raiseClaimReq?operation=cfWDuplicate";
+				else if (cfwTimeFlag)
+					return "redirect:/claim/raiseClaimReq?operation=cfWTimeLimit";
+				else if (covidFlag)
 					return "redirect:/claim/raiseClaimReq?operation=covidDuplicate";
-				else if(cpfwFlag)
+				else if (cpfwFlag)
 					return "redirect:/claim/raiseClaimReq?operation=limitExceed";
+				else if (nintyPWLimitFlage)
+					return "redirect:/claim/raiseClaimReq?operation=nintyPWDuplicate";
+				else if (nintyPWTimeFlage)
+					return "redirect:/claim/raiseClaimReq?operation=nintyPWTimeLimit";
+				else if (tempAdvFlage)
+					return "redirect:/claim/raiseClaimReq?operation=tempAdvDuplicate";
 				else
 					return "redirect:/claim/raiseClaimReq?operation=duplicate";
 			}
