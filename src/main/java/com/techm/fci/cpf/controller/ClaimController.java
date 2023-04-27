@@ -218,11 +218,19 @@ public class ClaimController {
 					if (!map.isEmpty() && map.get("CpfFinalSettlement") != null && map.get("CpfFinalSettlement") >= 1) {
 						recordFound = true;
 						cfwLimitFlag = true;
-					} else if (empStatus.equals("RESG")
-							&& LocalDate.now().isAfter(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))
-							&& totalDays <= 60) {
-						recordFound = true;
-						cfwTimeFlag = true;
+					} else {
+						if (!(empStatus.equals("RESG") || empStatus.equals("RETD"))) {
+							recordFound = true;
+							cfwTimeFlag = true;
+						} else {
+							if (LocalDate.now().isBefore(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))) {
+								recordFound = true;
+								cfwTimeFlag = true;
+							}else if (LocalDate.now().isAfter(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter)) && totalDays >= 60) {
+								recordFound = true;
+								cfwTimeFlag = true;
+							}
+						}
 					}
 				}
 				break;
@@ -252,11 +260,19 @@ public class ClaimController {
 					if (!map.isEmpty() && map.get("90%Withdrawal") != null && map.get("90%Withdrawal") >= 1) {
 						recordFound = true;
 						nintyPWLimitFlage = true;
-					} else if (empStatus.equals("PERM")
-							&& LocalDate.now().isBefore(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))
-							&& totalDays <= 365) {
-						recordFound = true;
-						nintyPWTimeFlage = true;
+					} else {
+						if (!empStatus.equals("PERM")) {
+							recordFound = true;
+							nintyPWLimitFlage = true;
+						} else {
+							if(LocalDate.now().isAfter(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))) {
+								recordFound = true;
+								nintyPWTimeFlage = true;
+							}else if (LocalDate.now().isBefore(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter)) && totalDays >= 365) {
+								recordFound = true;
+								nintyPWTimeFlage = true;
+							}
+						}
 					}
 				}
 				break;
