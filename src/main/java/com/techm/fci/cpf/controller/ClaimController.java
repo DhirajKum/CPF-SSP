@@ -219,14 +219,21 @@ public class ClaimController {
 						recordFound = true;
 						cfwLimitFlag = true;
 					} else {
-						if (!(empStatus.equals("RESG") || empStatus.equals("RETD"))) {
-							recordFound = true;
-							cfwTimeFlag = true;
+						if (!empStatus.equals("RESG")) {
+							if (LocalDate.now().isAfter(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))) {
+								recordFound = true;
+								cfwTimeFlag = true;
+							} else if (LocalDate.now().isBefore(
+									LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter)) && totalDays >= 45) {
+								recordFound = true;
+								cfwTimeFlag = true;
+							}
 						} else {
 							if (LocalDate.now().isBefore(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))) {
 								recordFound = true;
 								cfwTimeFlag = true;
-							}else if (LocalDate.now().isAfter(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter)) && totalDays >= 60) {
+							} else if (LocalDate.now().isAfter(
+									LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter)) && totalDays >= 60) {
 								recordFound = true;
 								cfwTimeFlag = true;
 							}
@@ -265,10 +272,11 @@ public class ClaimController {
 							recordFound = true;
 							nintyPWLimitFlage = true;
 						} else {
-							if(LocalDate.now().isAfter(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))) {
+							if (LocalDate.now().isAfter(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))) {
 								recordFound = true;
 								nintyPWTimeFlage = true;
-							}else if (LocalDate.now().isBefore(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter)) && totalDays >= 365) {
+							} else if (LocalDate.now().isBefore(
+									LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter)) && totalDays >= 365) {
 								recordFound = true;
 								nintyPWTimeFlage = true;
 							}
@@ -277,12 +285,14 @@ public class ClaimController {
 				}
 				break;
 			case "TempAdv":
-				List<SavedClaimConditionCheckDto> savedClaimStatusList = userService.checkSavedClaimStatus(uModel.getEmpNum(), cpfClaim.getCLAIM_APPLIED_FOR());
+				List<SavedClaimConditionCheckDto> savedClaimStatusList = userService
+						.checkSavedClaimStatus(uModel.getEmpNum(), cpfClaim.getCLAIM_APPLIED_FOR());
 				for (SavedClaimConditionCheckDto savedClaimCondition : savedClaimStatusList) {
-					if (userService.checkTempAdvApplyAbility(uModel.getEmpNum()) && savedClaimCondition.getClaimStatus()<4) {
-							recordFound = true;
-							tempAdvFlage = true;
-					}else if(!userService.checkTempAdvApplyAbility(uModel.getEmpNum())){
+					if (userService.checkTempAdvApplyAbility(uModel.getEmpNum())
+							&& savedClaimCondition.getClaimStatus() < 4) {
+						recordFound = true;
+						tempAdvFlage = true;
+					} else if (!userService.checkTempAdvApplyAbility(uModel.getEmpNum())) {
 						recordFound = true;
 						tempAdvFlage = true;
 					}
