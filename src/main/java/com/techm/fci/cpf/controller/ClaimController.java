@@ -155,7 +155,7 @@ public class ClaimController {
 				mv.addObject("message", "You have exceeded the limit for Final Withdrawal claim apply ...!");
 			}
 			if (operation.equals("cfWTimeLimit")) {
-				mv.addObject("message", "You are not eligible for Final Withdrawal claim apply at this time ...!");
+				mv.addObject("message", "You are not eligible for Final Withdrawal claim apply ...!");
 			}
 			if (operation.equals("covidDuplicate")) {
 				mv.addObject("message", "You have exceeded the limit for COVID-19 claim apply ...!");
@@ -167,10 +167,10 @@ public class ClaimController {
 				mv.addObject("message", "You have exceeded the limit for 90% Withdrawal claim apply ...!");
 			}
 			if (operation.equals("nintyPWTimeLimit")) {
-				mv.addObject("message", "You are not eligible for 90% Withdrawal claim apply at this time ...!");
+				mv.addObject("message", "You are not eligible for 90% Withdrawal claim apply ...!");
 			}
 			if (operation.equals("tempAdvDuplicate")) {
-				mv.addObject("message", "You are not eligible for Temp Adv. claim apply at this time ...!");
+				mv.addObject("message", "You are not eligible for Temp Adv. claim apply ...!");
 			}
 			if (operation.equals("duplicate")) {
 				mv.addObject("message", "Claim already submitted ...!");
@@ -223,10 +223,13 @@ public class ClaimController {
 							if (LocalDate.now().isAfter(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))) {
 								recordFound = true;
 								cfwTimeFlag = true;
-							} else if (LocalDate.now().isBefore(
-									LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter)) && totalDays >= 45) {
-								recordFound = true;
-								cfwTimeFlag = true;
+							} else if (LocalDate.now()
+									.isBefore(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))) {
+								totalDays = DateUtils.dateDiffByDays(empMaster.getRETIREMENT_DATE()) * -1;
+								if (totalDays >= 45) {
+									recordFound = true;
+									cfwTimeFlag = true;
+								}
 							}
 						} else {
 							if (LocalDate.now().isBefore(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))) {
@@ -275,8 +278,7 @@ public class ClaimController {
 							if (LocalDate.now().isAfter(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))) {
 								recordFound = true;
 								nintyPWTimeFlage = true;
-							} else if (LocalDate.now().isBefore(
-									LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter)) && totalDays >= 365) {
+							} else if (LocalDate.now().isBefore(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter)) && totalDays >= 365) {
 								recordFound = true;
 								nintyPWTimeFlage = true;
 							}
