@@ -8,10 +8,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
-//import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotBlank;
-
 public class ActClaimDto implements Serializable{
 
 	private static final long serialVersionUID = 1L;

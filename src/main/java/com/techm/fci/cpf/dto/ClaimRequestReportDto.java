@@ -6,6 +6,7 @@ package com.techm.fci.cpf.dto;
  */
 public class ClaimRequestReportDto {
 
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -4608210626045556909L;
 
 	private String empNum;

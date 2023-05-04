@@ -28,6 +28,7 @@ public class CPFRegistrationProcess {
 	static private List<String> passUpdateEmpNo=null;
 	static private List<String> noMobileEmailEmpNo=null;
 
+	@SuppressWarnings("deprecation")
 	public static void main(String[] args) throws SQLException {
 		Connection con = null;
 		try {
@@ -146,6 +147,7 @@ public class CPFRegistrationProcess {
 				}
 				
 			}
+			wb.close();
 			con.close();
 			System.out.println("connection closed");
 			System.out.println("Password Update Employee Number :"+passUpdateEmpNo);

@@ -119,9 +119,9 @@ public class OTPServiceImpl implements OTPService {
 	        String[] cmd = new String[args.length + 1];
 	        cmd[0] = path;
 	        int count = 0;
-	        for (String s : args) {
+	        //for (String s : args) {
 	            cmd[++count] = args[count - 1];
-	        }
+	        //}
 	        Process process = Runtime.getRuntime().exec(cmd);
 	        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 	        try {
