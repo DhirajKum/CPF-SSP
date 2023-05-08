@@ -30,7 +30,7 @@
 	font-size: 14px;
 }
 </style>
-	<div class="container">
+	<div class="container" style="max-width: 100%; padding-top: 10px; padding-bottom: 20px;">
 		
 		<div class="row row-fluid">
 		<div class="col-md-12">

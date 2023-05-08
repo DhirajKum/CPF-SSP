@@ -313,6 +313,7 @@ public class LoginController {
 		model.addObject("title", "Change Password");
 		model.addObject("clickChangePass", true);
 		model.addObject("changePassword", changePassword);
+		model.addObject("showNavBar",true);
 		//return "changePassword";
 		return model;
 	}

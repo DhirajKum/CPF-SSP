@@ -313,7 +313,7 @@
 					</div>
 				</div>
 				
-				<div style="text-align: center;">
+				<div style="text-align: center;  padding-top: 10px; padding-bottom: 10px;">
 				<button type="submit" id="saveClaim" class="btn btn-primary btn-sm" onclick="return finalSubmit()">Submit</button>&nbsp;<a href="" class="btn btn-primary btn-sm reset-form">Cancel</a>
 				</div>
 				<input type="hidden" name="js_enabled" value="0">

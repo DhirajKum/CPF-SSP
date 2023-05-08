@@ -43,7 +43,7 @@
 							</div>
 						</div>
 
-						<div style="text-align: center;">
+						<div style="text-align: center; padding-top: 10px; padding-bottom: 10px;">
 							<button type="submit" id="update" class="btn btn-primary btn-sm" onclick="return finalSubmit()">Update</button>
 							&nbsp;<button type="button" id="cancel" class="btn btn-primary btn-sm reset-form">Cancel</button>
 						</div>
