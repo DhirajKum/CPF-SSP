@@ -383,7 +383,7 @@ document.onkeydown = function(e) {
 $('#claimForm').submit(function (){
 	var radioValue=$("#claimAppliedFor input:radio:checked").val();
 	if(radioValue==='CpfFinalSettlement'){
-	if('${empStatus}'==='RESG' || '${empStatus}'==='RETD'){
+	if('${empStatus}'==='RESG'){
 		if($('#decNotEmpTwoMonth').is(":checked")){
 			if($('#empDec').is(":checked")){
 				$("#saveClaim").prop("disabled",true);
