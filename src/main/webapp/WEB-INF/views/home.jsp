@@ -102,7 +102,7 @@
 			</div>
 		</div>
 
-	<div class="col-md-12 content-pad-0 box-icon-body">
+	<div class="col-md-12 content-pad-0 box-icon-body" style="min-height: 110px;">
 		<sf:form id="docUploadForm" action="claim/uplodCpfDoc?${_csrf.parameterName}=${_csrf.token}" method="POST" enctype="multipart/form-data">  
 			<div class="row col-md-12" style="text-align: center;">
 			<!-- <div class="col-md-2">

@@ -4,22 +4,21 @@
 <h3>
 	<b><div id='msg' style="text-align: center; font-weight: bold; color: green"></div>
 </h3>
-<hr class="solid">
-<div class="container-fluid">
+<!-- <hr class="solid"> -->
+
+<div class="container-fluid" style="margin-bottom: 18%;">
 	<div class="row profile profile-card">
 		<div class="col-md-12">
-			<h5 class="main-heading">
-				<svg width="1em" height="1em" viewBox="0 0 16 16"
-					class="bi bi-person-fill" fill="currentColor"
-					xmlns="http://www.w3.org/2000/svg">
-			<path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+			<h5 class="main-heading" style="margin-bottom: 2%;">
+				<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+				<path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
 			</svg>
 				Change Password
 			</h5>
 			<div class="row marginT20">
 				<div class="col-md-12">
 					<sf:form id="changePasswordForm" action='${pageContext.request.contextPath}/changePasswordSubmit' method="POST" modelAttribute="changePassword">
-						<div class="row" style="margin-left: -5px">
+						<div class="row" style="margin-left: 0px; margin-bottom: 5%;">
 							
 							<div class="col-md-6">
 								<div class="form-group row">
@@ -34,11 +33,9 @@
 									<label for="confirmnewpassword"	cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Confirm New Password <span class="red">*</span>
 									</b></label>
 									<div class="col-sm-7">
-										<input type="password" path="confNewPass" cssclass="form-control  form-control-sm" id="confNewPassword" maxlength="20" />
-										<h5>
-											<b><span id='message'></span>
-										</h5>
+										<sf:input type="password" path="confNewPass" cssclass="form-control  form-control-sm" id="confNewPassword" maxlength="20" />
 									</div>
+									<h6><b><span id='message'></span></b></h6>
 								</div>
 							</div>
 						</div>

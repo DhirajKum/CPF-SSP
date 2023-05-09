@@ -1,6 +1,6 @@
 <link href="${pageContext.request.contextPath}/resources/static/css/epfo-style.css" rel="stylesheet" />
 <footer id="footer" class="row" style="min-height: 40px; padding-top: 10px;">
-	<div class="container" style="weight:100px">
+	<div class="container">
 		<div class="row">
 			<div class="col-md-12 text-center">
 				<div class="footer-btm">
