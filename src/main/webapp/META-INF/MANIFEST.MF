@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Built-By: techm
-Created-By: 1.7.0_71 (Oracle Corporation)
+Created-By: 1.8.0_211 (Oracle Corporation)
 Created-By: Maven Integration for Eclipse
 Main-Class: com.techm.fci.cpf.util.CPFSendSMSUtility
-Class-Path: lib/ojdbc6.jar
+Class-Path: lib/ojdbc8.jar
 X-COMMENT: Main-Class will be added automatically by build
