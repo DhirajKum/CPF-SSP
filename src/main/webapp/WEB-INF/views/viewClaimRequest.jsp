@@ -12,7 +12,7 @@
 <div class="container-fluid">
 	<div class="row profile profile-card">
 		<div class="col-md-12">
-		<div class="row">
+		<div class="row" style="margin-left:-5px">
 			<h5 class="main-heading">
 				<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="https://www.w3.org/TR/SVG/">
 				<path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
@@ -26,8 +26,8 @@
 		<div class="row marginT20" style="margin-left:-5px">
 			<div class="col-md-12">
 			  <sf:form action='${pageContext.request.contextPath}/claim/saveClaimRequest' method='POST' modelAttribute="claimData">
-			  	<div class="row">	
-				<div class="col-md-3">
+			  	<div class="row" style="margin-left:-16px">	
+				<div class="col-md-3" style="max-width: 19%;">
 				<div class="form-group row">
 					<label for="oldpassword" class="col-form-label"><b>Claim applied for  <span class="red">*</span></b></label>
 				</div>

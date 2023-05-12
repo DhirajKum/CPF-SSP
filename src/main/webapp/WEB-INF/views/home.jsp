@@ -12,7 +12,10 @@
 
 </head>
 <body>
- <td class="w-25"><b>Employer Contribution</b></td><div class="col-md-12" style="padding-left: 5px">
+<div style="">
+ <!-- <td class="w-25"><b>Employer Contribution</b></td> -->
+</div>
+ <div class="col-md-12" style="padding-left: 5px">
 
 		<c:if test="${not empty message}">
 			<div class="col-md-12" id="message">

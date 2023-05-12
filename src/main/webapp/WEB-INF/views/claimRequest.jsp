@@ -20,7 +20,7 @@
 	</c:if>
 	<div class="row profile profile-card">
 		<div class="col-md-12">
-		<h5 class="main-heading">
+		<h5 class="main-heading" style="margin-left:-5px">
 			<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="https://www.w3.org/TR/SVG/">
 			<path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
 			</svg> 
@@ -33,8 +33,8 @@
 			 	<noscript>
 					<div id="noJS" class="alert alert-danger" style="padding-left: 20px; padding-right: 0px; margin-left: 0px;">Please enable JavaScript in your browser</div>
 				</noscript>
-			 	<div class="form-group row">
-					<label for="oldpassword" class="col-sm-3 col-form-label"><b>Claim applied for  <span class="red">*</span></b></label>
+			 	<div class="form-group row" style="margin-left:-30px">
+					<label class="col-sm-3 col-form-label" style="max-width: 20%;"><b>Claim applied for  <span class="red">*</span></b></label>
 					<div class="col-sm-9" id="claimAppliedFor">
 					<div class="form-check-inline">
 					  <label cssclass="form-check-label">
