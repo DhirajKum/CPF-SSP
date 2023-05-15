@@ -9,7 +9,6 @@
 <link href="${pageContext.request.contextPath}/resources/COMMON/images/fci.jpg" rel="shortcut icon">
 <link href="${pageContext.request.contextPath}/resources/COMMON/JS/jquery-3.5.1.min.js" rel="STYLESHEET" type="text/css" >
 <link href="${pageContext.request.contextPath}/resources/COMMON/JS/bootstrap.min.js" rel="STYLESHEET" type="text/css">
-
 </head>
 <body>
 <div style="">
@@ -112,8 +111,11 @@
 			</div> -->
 			<!-- <div class="col-md-6"> -->
 				<!-- <div class="form-group row"> -->
-				<label class="col-sm-4 col-form-label" style="text-align: center;"><b>Upload UAN Document <span class="red">*</span></b><!-- <small class="form-text text-muted" style="text-align: center;">Upload "UAN" document</small> --></label>
-				
+				<!-- <label class="col-sm-4 col-form-label" style="text-align: center;"><b>Upload UAN Document <span class="red">*</span></b> --><!-- <small class="form-text text-muted" style="text-align: center;">Upload "UAN" document</small></label>-->
+				<label class="col-sm-4 col-form-label" style="text-align: center;"><b>Upload KYC Document <span class="red">*</span></b>
+					<small class="form-text text-muted" style="text-align: center;">Upload "UAN" document</small>
+				</label>
+								
 				<div class="col-sm-4">
 					<span id="uploadSupptDoc"></span>
 					<input type="file" name="file" id="kycDoc" data-validation="ckeckFileFormat ckeckFileSize required"/>

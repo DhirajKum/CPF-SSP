@@ -43,7 +43,15 @@
 	window.menu = '${title}';
 </script>
 </head>
-
+<style>
+.red{
+	color: #e32;
+	position: absolute; 
+	margin: 0px 0px 0px 0px; 
+	font-size: small; 
+	padding: 0 0px 0 0; 
+	}
+</style>
 <body>
 	<!-- Header -->
 	<%@include file="./shared/appheader.jsp"%>

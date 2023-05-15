@@ -72,7 +72,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group row">
-									<label for="remarks" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Remarks</b></label>
+									<label for="remarks" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Remarks<span class="red">*</span></b></label>
 									<div class="col-sm-7">
 										<sf:textarea path="remarks" cssclass="form-control"	id="remarks"></sf:textarea>
 									</div>
