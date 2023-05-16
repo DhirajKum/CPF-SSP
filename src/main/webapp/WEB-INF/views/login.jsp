@@ -21,33 +21,40 @@
 
 <div class="limiter">
 	<c:if test="${not empty message}">
-		<div class = "alert alert-danger" style="text-align: center;">
-			${message}
-		</div>	
+		<div class="alert alert-danger" style="text-align: center;">
+			${message}</div>
 	</c:if>
 	<div class="container-login100">
 		<div class="wrap-login100" style="padding-top: 50px;">
 			<div class="login100-pic js-tilt" data-tilt>
-				<img src="${pageContext.request.contextPath}/resources/COMMON/images/fci.jpg" alt="IMG"> 
-					<a class="navbar-brand navbar-right" href="#" style="margin-top: -10px; margin-left: 58px; text-align: center;"> 
-						<span class="header-text">CPF Self Service Portal </span> 
-					</a>
+				<img
+					src="${pageContext.request.contextPath}/resources/COMMON/images/fci.jpg"
+					alt="IMG"> <a class="navbar-brand navbar-right" href="#"
+					style="margin-top: -10px; margin-left: 58px; text-align: center;">
+					<span class="header-text">CPF Self Service Portal </span>
+				</a>
 			</div>
 
-			<form class="login100-form validate-form" action="<c:url value='/j_spring_security_check' />" method='POST' name="loginForm" autocomplete="off" id="loginform">
+			<form class="login100-form validate-form"
+				action="<c:url value='/j_spring_security_check' />" method='POST'
+				name="loginForm" autocomplete="off" id="loginform">
 				<span class="login100-form-title"> Member Login </span>
 
-				<div class="wrap-input100 validate-input" data-validate="Employee number is required">
-					<input class="input100" type="text" name="username" id="username" placeholder="Employee Number">
-					<span class="symbol-input100"> 
-					<i class="fa fa-pencil"	aria-hidden="true"></i>
+				<div class="wrap-input100 validate-input"
+					data-validate="Employee number is required">
+					<input class="input100" type="text" name="username" id="username"
+						placeholder="Employee Number"> <span
+						class="symbol-input100"> <i class="fa fa-pencil"
+						aria-hidden="true"></i>
 					</span>
 				</div>
 
-				<div class="wrap-input100 validate-input" data-validate="Password is required">
-					<input class="input100" type="password" name="password" id="password" placeholder="Password"> 
-					<span class="symbol-input100">
-						<i class="fa fa-lock" aria-hidden="true"></i>
+				<div class="wrap-input100 validate-input"
+					data-validate="Password is required">
+					<input class="input100" type="password" name="password"
+						id="password" placeholder="Password"> <span
+						class="symbol-input100"> <i class="fa fa-lock"
+						aria-hidden="true"></i>
 					</span>
 				</div>
 
@@ -56,20 +63,28 @@
 				</div>
 
 				<div class="text-center p-t-12">
-					<span class="txt1"> </span> <a class="txt2" href="${pageContext.request.contextPath}/forgotPassword"> Forgot Password? </a>
+					<span class="txt1"> </span> <a class="txt2"
+						href="${pageContext.request.contextPath}/forgotPassword">
+						Forgot Password? </a>
 				</div>
 
 				<div class="text-center">
-					<a class="txt2" href="${pageContext.request.contextPath}/userRegistration"> Create your Account <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+					<a class="txt2"
+						href="${pageContext.request.contextPath}/userRegistration">
+						Create your Account <i class="fa fa-long-arrow-right m-l-5"
+						aria-hidden="true"></i>
 					</a>
 				</div>
-				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
 			</form>
-		<div class="col-sm-12" style="text-align: center; margin-top: 30px; margin-bottom: -30px;">
-			 <small class="form-text text-muted smallText">For any discrepancy email to fci.cssp@gmail.com or contact to help desk no. 011-43527367</small>
+			<div class="col-sm-12"
+				style="text-align: center; margin-top: 30px; margin-bottom: -30px;">
+				<small class="form-text text-muted smallText">For any
+					discrepancy email to fci.cssp@gmail.com or contact to help desk
+					no. 011-43527367</small>
+			</div>
 		</div>
-		</div>
-		
 	</div>
 </div>
 

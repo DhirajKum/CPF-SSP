@@ -121,10 +121,10 @@ label {
 
 					<div class="form-group input-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text"> <i class="fa fa-user"></i>
+							<span class="input-group-text"> <i class="fa fa-user"> Employee number</i>
 							</span>
 						</div>
-						<label>Employee number</label>		
+						<!-- <label>Employee number</label> -->		
 		    			<sf:input path="empNum" id="empNum" cssClass="form-control" onkeypress="return isNumber(event)"/>
 						<a href="javascript:void(0)" id="empdetails" style="background-color:#007bff;color: #fff;padding-top: 4px;padding-left: 25px;padding-right: 25px;" class="btn btn-default">Get Details</a>
 						<div class="invalid-feedback">Please enter a valid employee number</div>
@@ -132,35 +132,35 @@ label {
 	
 					<div class="form-group input-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text"> <i class="fa fa-users"></i>
+							<span class="input-group-text"> <i class="fa fa-users"> Employee name</i>
 							</span>
 						</div>
-						<label>Employee name</label>		
-								  <sf:input path="empName" id="empName" cssClass="form-control" />
+						<!-- <label>Employee name</label> -->		
+						<sf:input path="empName" id="empName" cssClass="form-control" />
 					</div>
 
 					<div class="form-group input-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text"> <i class="fa fa-list-ol"></i>
+							<span class="input-group-text"> <i class="fa fa-list-ol"> UAN number</i>
 							</span>
 						</div>
-						<label>UAN number</label>		
+						<!-- <label>UAN number</label> -->		
 						    <sf:input path="uan" id="uan" cssClass="form-control" />
 					</div>
 					<div class="form-group input-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text"> <i class="fa fa-users"></i>
+							<span class="input-group-text"> <i class="fa fa-users"> Employee Email</i>
 							</span>
 						</div>
-						<label>Employee Email</label>		
+						<!-- <label>Employee Email</label> -->		
 						    <sf:input path="empEmail" id="empEmail" cssClass="form-control" />
 					</div>
 					<!-- form-group// -->
 					<div class="form-group input-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text"> <i class="fa fa-phone"></i>	</span>
+							<span class="input-group-text"> <i class="fa fa-phone"> Phone number</i></span>
 						</div>
-						<label>Phone number</label>		
+						<!-- <label>Phone number</label> -->		
 						    <sf:input path="empPhone" id="phone" maxLength="10" size="10" cssClass="form-control"  onChange="activeSendOTP();" onkeypress="return isNumber(event)"/><br/>
 							<a style="background-color:#007bff;color: #fff;padding-top: 3px;padding-left: 25px;padding-right: 25px;"
 							href="javascript:void(0)" class="btn btn-default" id="sendOtp">Send Otp</a>
@@ -172,17 +172,17 @@ label {
 			
 					<div class="form-group input-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text"> <i class="fa fa-lock"></i></span>
+							<span class="input-group-text"> <i class="fa fa-lock"> Create password</i></span>
 						</div>
-						<label>Create password</label>		
+						<!-- <label>Create password</label> -->		
 						    <sf:input path="password" id="pass" cssClass="form-control" />
 					</div>
 					<!-- form-group// -->
 					<div class="form-group input-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text"> <i class="fa fa-lock"></i></span>
+							<span class="input-group-text"> <i class="fa fa-lock"> Repeat password</i></span>
 						</div>
-						<label>Repeat password</label>	
+						<!-- <label>Repeat password</label> -->	
 							<input type="password" id="repass" class="form-control" >
 							<h6><b><span id='passMessage'></span></b></h6>
 					</div>
