@@ -30,9 +30,8 @@
 			<div class="login100-pic js-tilt" data-tilt>
 				<img src="${pageContext.request.contextPath}/resources/COMMON/images/fci.jpg" alt="IMG"> 
 					<a class="navbar-brand navbar-right" href="#" style="margin-top: -10px; margin-left: 58px; text-align: center;"> 
-						<span class="header-text">CPF Self Service Portal </span><!-- <br> 
-						<span class="hidden-xs header-sub-text"> Food Corporation Of India</span> -->
-				</a>
+						<span class="header-text">CPF Self Service Portal </span> 
+					</a>
 			</div>
 
 			<form class="login100-form validate-form" action="<c:url value='/j_spring_security_check' />" method='POST' name="loginForm" autocomplete="off" id="loginform">
@@ -66,7 +65,11 @@
 				</div>
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 			</form>
+		<div class="col-sm-12" style="text-align: center; margin-top: 30px; margin-bottom: -30px;">
+			 <small class="form-text text-muted smallText">For any discrepancy email to fci.cssp@gmail.com or contact to help desk no. 011-43527367</small>
 		</div>
+		</div>
+		
 	</div>
 </div>
 
