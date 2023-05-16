@@ -6,7 +6,7 @@
 </h3>
 <!-- <hr class="solid"> -->
 
-<div class="container-fluid" style="margin-bottom: 18%;">
+<div class="container-fluid" style="margin-bottom: 16%;">
 	<div class="row profile profile-card">
 		<div class="col-md-12">
 			<h5 class="main-heading" style="margin-bottom: 2%;">
@@ -22,7 +22,7 @@
 							
 							<div class="col-md-6">
 								<div class="form-group row">
-									<label for="newpassword" cssclass="col-sm-5 col-form-label"	class="labelwidth"><b>New Password <span class="red">*</span></b></label>
+									<label for="newPassword" cssclass="col-sm-5 col-form-label"	class="labelwidth"><b>New Password <span class="red">*</span></b></label>
 									<div class="col-sm-7">
 										<sf:input path="newPassword" id="newPassword" cssclass="form-control" maxlength="20"/>
 									</div>
@@ -30,7 +30,7 @@
 							</div>
 							<div class="col-md-6">
 								<div class="form-group row">
-									<label for="confirmnewpassword"	cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Confirm New Password <span class="red">*</span>
+									<label for="confNewPassword" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Confirm New Password <span class="red">*</span>
 									</b></label>
 									<div class="col-sm-7">
 										<sf:input type="password" path="confNewPass" cssclass="form-control  form-control-sm" id="confNewPassword" maxlength="20" />

@@ -66,7 +66,7 @@
 				<div class="row">	
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="EMP_NAME" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Name of the member <span class="red">*</span></b></label>
+							<label for="empName" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Name of the member <span class="red">*</span></b></label>
 							<div class="col-sm-7">
 								<sf:input path="EMP_NAME" cssclass="form-control" id="empName" maxlength="20"/>
 							</div>
@@ -74,7 +74,7 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="DESIGNATION" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Designation <span class="red">*</span></b></label>
+							<label for="designation" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Designation <span class="red">*</span></b></label>
 							<div class="col-sm-7">
 								<sf:input path="DESIGNATION" cssclass="form-control  form-control-sm" id="designation"  maxlength="20"/>
 							</div>
@@ -84,7 +84,7 @@
 				<div class="row">	
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="FATHER_HUSBAND_NAME" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Father's Name/Husband's Name <span class="red">*</span></b></label>
+							<label for="fatherName" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Father's Name/Husband's Name <span class="red">*</span></b></label>
 							<div class="col-sm-7">
 								<sf:input path="FATHER_HUSBAND_NAME" cssclass="form-control" id="fatherName"  maxlength="20"/>
 							</div>
@@ -92,7 +92,7 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="DATE_OF_BIRTH" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Date of Birth  <span class="red">*</span></b></label>
+							<label for="dob" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Date of Birth  <span class="red">*</span></b></label>
 							<div class="col-sm-7">
 								<input type="text" name="DATE_OF_BIRTH" cssclass="form-control" id="dob" value="${dob}" maxlength="30" style="font-size:small; "  />
 							</div>
@@ -102,7 +102,7 @@
 				<div class="row">	
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="BASIC" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Basic pay <span class="red">*</span></b></label>
+							<label for="basic" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Basic pay <span class="red">*</span></b></label>
 							<div class="col-sm-7">
 								<sf:input path="BASIC" cssclass="form-control" id="basic" maxlength="20"/>
 							</div>
@@ -110,7 +110,7 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="CPF_ACCOUNT_NUMBER" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>C.P.F Account No.  <span class="red">*</span></b></label>
+							<label for="cpfAccountNumber" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>C.P.F Account No.  <span class="red">*</span></b></label>
 							<div class="col-sm-7">
 								<sf:input path="CPF_ACCOUNT_NUMBER" cssclass="form-control  form-control-sm" id="cpfAccountNumber"  maxlength="20"/>
 							</div>
@@ -120,7 +120,7 @@
 				<div class="row">	
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="UAN" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Universal Account Number(UAN)</b></label>
+							<label for="uan" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Universal Account Number(UAN)</b></label>
 							<div class="col-sm-7">
 								<sf:input path="UAN" cssclass="form-control" id="uan"  maxlength="20"/>
 							</div>
@@ -128,7 +128,7 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="STAFF_CODE" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Staff Code  <span class="red">*</span></b></label>
+							<label for="staffCode" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Staff Code  <span class="red">*</span></b></label>
 							<div class="col-sm-7">
 								<sf:input path="STAFF_CODE" cssclass="form-control  form-control-sm" id="staffCode"  maxlength="20"/>
 							</div>
@@ -138,7 +138,7 @@
 				<div class="row">	
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="DOJ_FCI" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Date of joining the FCI <span class="red">*</span></b></label>
+							<label for="dojFci" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Date of joining the FCI <span class="red">*</span></b></label>
 							<div class="col-sm-7">
 								<input type="text" name="DOJ_FCI" cssclass="form-control" id="dojFci" placeholder="" value="${dojFci}" maxlength="30"/>
 							</div>
@@ -146,7 +146,7 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="RETIREMENT_DATE" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Retirement/Date of leaving service<span class="red">*</span></b></label>
+							<label for="retirementDate" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Retirement/Date of leaving service<span class="red">*</span></b></label>
 							<div class="col-sm-7">
 								<input type="text" name="RETIREMENT_DATE" cssclass="form-control  form-control-sm" id="retirementDate" placeholder="" value="${retirementDate}" maxlength="30"/>
 							</div>
@@ -156,7 +156,7 @@
 				<div class="row">	
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="PAN" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Permanent Account NO.(PAN)</b><small class="form-text text-muted paddingL40">(Only in case of service less than 5 years)</small></label>
+							<label for="pan" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Permanent Account NO.(PAN)</b><small class="form-text text-muted paddingL40">(Only in case of service less than 5 years)</small></label>
 							<div class="col-sm-7">
 								<sf:input  path="PAN" cssclass="form-control" id="pan"  maxlength="20"/>
 							</div>
@@ -164,7 +164,7 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="PRESENT_LOCATION" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Place of posting  <span class="red">*</span></b></label>
+							<label for="placepost" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Place of posting  <span class="red">*</span></b></label>
 							<div class="col-sm-7">
 								<sf:input  path="PRESENT_LOCATION" cssclass="form-control  form-control-sm" id="placepost" maxlength="20"/>
 							</div>
@@ -174,7 +174,7 @@
 				<div class="row">	
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="oldpassword" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Purpose of CPF Part withdrawal/Temporary Advance <span class="red">*</span></b></label>
+							<label for="purpose" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Purpose of CPF Part withdrawal/Temporary Advance <span class="red">*</span></b></label>
 							<div class="col-sm-7">
 								<sf:select cssclass="form-control" path="PURPOSE" id="purpose">
 									<option value="" label="---Select---"/>
@@ -184,7 +184,7 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="AMOUNT" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Amount(in RS.) <span class="red">*</span></b></label>
+							<label for="amount" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Amount(in RS.) <span class="red">*</span></b></label>
 							<div class="col-sm-7">
 								<sf:input path="AMOUNT" cssclass="form-control" id="amount" maxlength="10" onkeypress="return isNumber(event)"/>
 								<label><sf:checkbox path="PERMISSIBLE_AMOUNT" id="perAmount"/>&nbsp; Max Permissible Amount(in RS.)</label>
@@ -195,7 +195,7 @@
 				<div class="row marginT10">	
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="INSTALLMENT_NUMBER" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>No. of installments in which advance is to be recovered <span class="red">*</span></b></label>
+							<label for="installmentNo" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>No. of installments in which advance is to be recovered <span class="red">*</span></b></label>
 							<div class="col-sm-7">
 								<sf:input path="INSTALLMENT_NUMBER" cssclass="form-control  form-control-sm" id="installmentNo"  maxlength="3" onkeypress="return isNumber(event)"/>
 							</div>
@@ -203,7 +203,7 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="MOBILE_NUMBER" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Mobile Number  <span class="red">*</span></b></label>
+							<label for="mobileNo" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Mobile Number  <span class="red">*</span></b></label>
 							<div class="col-sm-7">
 								<sf:input path="MOBILE_NUMBER" cssclass="form-control  form-control-sm" id="mobileNo"  maxlength="20"/>
 							</div>
@@ -214,13 +214,13 @@
 				<div class="row marginT10">	
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Uploaded UAN Document</b></label>
+							<label cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Uploaded UAN Document</b></label>
 							<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${claimData.kycFilePath}&fileType=1" class="col-sm-7" target="_blank">${claimData.kycFileName}</a>
 						</div>
 					</div>
 					<%-- <div class="col-md-6">
 						<div class="form-group row">
-							<label for="" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>User Uploaded Other Documents</b></label>
+							<label cssclass="col-sm-5 col-form-label" class="labelwidth"><b>User Uploaded Other Documents</b></label>
 							<div class="col-sm-7">
 							<c:forEach var="userOtherFile" items="${claimData.userOtherFiles}">
 								<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${userOtherFile.value}&fileType=3" target="_blank">${userOtherFile.key}</a></br>
@@ -257,7 +257,7 @@
 					<div class="row">	
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="ADVANCE_AMOUNT" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Amount of advance</b></label>
+							<label for="advanceAmount" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Amount of advance</b></label>
 							<div class="col-sm-7">
 								<sf:input path="ADVANCE_AMOUNT" cssclass="form-control  form-control-sm" id="advanceAmount"  maxlength="20"/>
 							</div>
@@ -265,7 +265,7 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="OUTSTANDING_BAL" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Balance outstanding</b></label>
+							<label for="outstandingBal" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Balance outstanding</b></label>
 							<div class="col-sm-7">
 								<sf:input path="OUTSTANDING_BAL" cssclass="form-control  form-control-sm" id="outstandingBal"  maxlength="20"/>
 							</div>
@@ -275,7 +275,7 @@
 				<div class="row">	
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="AMOUNT_REPAID" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Amount Re-paid</b></label>
+							<label for="amountRepaid" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Amount Re-paid</b></label>
 							<div class="col-sm-7">
 								<sf:input path="AMOUNT_REPAID" cssclass="form-control" id="amountRepaid"  maxlength="20"/>
 							</div>
@@ -283,7 +283,7 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label for="AMOUNT_90PARTFINAL_BEF_RETR" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Amount of 90% Part Final drawn previously before retirement, if  any</b></label>
+							<label for="amount90Partfinal" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Amount of 90% Part Final drawn previously before retirement, if  any</b></label>
 							<div class="col-sm-7">
 								<sf:input path="AMOUNT_90PARTFINAL_BEF_RETR" cssclass="form-control" id="amount90Partfinal"  maxlength="20"/>
 							</div>
