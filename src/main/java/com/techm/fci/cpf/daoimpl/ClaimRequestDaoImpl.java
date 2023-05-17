@@ -1684,7 +1684,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					if(map.get("CPFSEC_ACTION_DATE")!=null)
 					cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("CPFSEC_ACTION_DATE").toString().trim())));
 					cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("CPFSEC_ACTION_TAKEN_BY").toString());
-					cpfClaimRequestStatusDto.setRemarks(map.get("cpfRemarks").toString());
+					cpfClaimRequestStatusDto.setRemarks(map.get("cpfRemarks")!=null?map.get("cpfRemarks").toString():"");
 					cpfClaimRequestStatusDto.setStatus("Request Completed");
 					
 					listCpfClaimStatusDto.add(cpfClaimRequestStatusDto);
