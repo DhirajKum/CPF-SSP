@@ -121,8 +121,7 @@ label {
 
 					<div class="form-group input-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text"> <i class="fa fa-user"> Employee number</i>
-							</span>
+							<span class="input-group-text"><i class="fa fa-id-card"> Employee number</i></span>
 						</div>
 						<!-- <label>Employee number</label> -->		
 		    			<sf:input path="empNum" id="empNum" cssClass="form-control" onkeypress="return isNumber(event)"/>
@@ -132,8 +131,7 @@ label {
 	
 					<div class="form-group input-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text"> <i class="fa fa-users"> Employee name</i>
-							</span>
+							<span class="input-group-text"> <i class="fa fa-user"> Employee name</i></span>
 						</div>
 						<!-- <label>Employee name</label> -->		
 						<sf:input path="empName" id="empName" cssClass="form-control" />
@@ -141,35 +139,27 @@ label {
 
 					<div class="form-group input-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text"> <i class="fa fa-list-ol"> UAN number</i>
-							</span>
+							<span class="input-group-text"> <i class="fa fa-list-ol"> UAN number</i></span>
 						</div>
 						<!-- <label>UAN number</label> -->		
-						    <sf:input path="uan" id="uan" cssClass="form-control" />
+						<sf:input path="uan" id="uan" cssClass="form-control" />
 					</div>
 					<div class="form-group input-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text"> <i class="fa fa-users"> Employee Email</i>
-							</span>
+							<span class="input-group-text"> <i class="fa fa-envelope"> Employee Email</i></span>
 						</div>
 						<!-- <label>Employee Email</label> -->		
-						    <sf:input path="empEmail" id="empEmail" cssClass="form-control" />
+						<sf:input path="empEmail" id="empEmail" cssClass="form-control" />
 					</div>
-					<!-- form-group// -->
 					<div class="form-group input-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text"> <i class="fa fa-phone"> Phone number</i></span>
 						</div>
 						<!-- <label>Phone number</label> -->		
-						    <sf:input path="empPhone" id="phone" maxLength="10" size="10" cssClass="form-control"  onChange="activeSendOTP();" onkeypress="return isNumber(event)"/><br/>
-							<a style="background-color:#007bff;color: #fff;padding-top: 3px;padding-left: 25px;padding-right: 25px;"
-							href="javascript:void(0)" class="btn btn-default" id="sendOtp">Send Otp</a>
+						<sf:input path="empPhone" id="phone" maxLength="10" size="10" cssClass="form-control"  onChange="activeSendOTP();" onkeypress="return isNumber(event)"/><br/>
+						<a style="background-color:#007bff;color: #fff;padding-top: 3px;padding-left: 25px;padding-right: 25px;" href="javascript:void(0)" class="btn btn-default" id="sendOtp">Send Otp</a>
 					</div>
-                   <!-- data-toggle="modal"
-                   	<a href="#" onClick="MyWindow=window.open('http://www.google.com',
-                       'MyWindow','width=600,height=300'); 
-                       return false;">verify</a> -->
-			
+
 					<div class="form-group input-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text"> <i class="fa fa-lock"> Create password</i></span>
@@ -177,7 +167,6 @@ label {
 						<!-- <label>Create password</label> -->		
 						    <sf:input path="password" id="pass" cssClass="form-control" />
 					</div>
-					<!-- form-group// -->
 					<div class="form-group input-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text"> <i class="fa fa-lock"> Repeat password</i></span>
@@ -186,11 +175,9 @@ label {
 							<input type="password" id="repass" class="form-control" >
 							<h6><b><span id='passMessage'></span></b></h6>
 					</div>
-					<!-- form-group// -->
 					<div class="form-group">
 						<button type="submit" id="createAcc" class="btn btn-primary btn-block">Create Account</button>
 					</div>
-					<!-- form-group// -->
 					<p class="text-center">
 						Have an account? <a href="${pageContext.request.contextPath}/login">Log In</a>
 					</p>
@@ -260,7 +247,7 @@ $(document).ready(function() {
 		$("#empEmail").val(empEmail);
 		$("#phone").val(regMobileNo);
 		$("#uan").val(uan);
-				
+		
 		$("#pass").prop('readonly', true);
 		$("#repass").prop('readonly', true);
 		$('#sendOtp').removeClass('disabled');
