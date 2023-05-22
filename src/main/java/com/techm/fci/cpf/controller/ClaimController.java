@@ -215,29 +215,32 @@ public class ClaimController {
 					if (!map.isEmpty() && map.get("CpfFinalSettlement") != null && map.get("CpfFinalSettlement") >= 1) {
 						recordFound = true;
 						cfwLimitFlag = true;
-					} /*
-						 * else { if (!empStatus.equals("RESG")) { if
-						 * (LocalDate.now().isAfter(LocalDate.parse(empMaster.getRETIREMENT_DATE(),
-						 * formatter))) { recordFound = true; cfwTimeFlag = true; } else if
-						 * (LocalDate.now() .isBefore(LocalDate.parse(empMaster.getRETIREMENT_DATE(),
-						 * formatter))) { totalDays =
-						 * DateUtils.dateDiffByDays(empMaster.getRETIREMENT_DATE()) * -1; if (totalDays
-						 * >= 45) { recordFound = true; cfwTimeFlag = true; } } } else { if
-						 * (LocalDate.now().isBefore(LocalDate.parse(empMaster.getRETIREMENT_DATE(),
-						 * formatter))) { recordFound = true; cfwTimeFlag = true; } else if
-						 * (LocalDate.now().isAfter( LocalDate.parse(empMaster.getRETIREMENT_DATE(),
-						 * formatter)) && totalDays >= 60) { recordFound = true; cfwTimeFlag = true; } }
-						 * }
-						 */
+					} else {
+						if (!empStatus.equals("RESG")) {
+							//isBefore() return true -- local date (01-01-2022) and retirement date (01-01-2023)
+							if (LocalDate.now().isBefore(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))) {
+								totalDays = DateUtils.dateDiffByDays(empMaster.getRETIREMENT_DATE()) * -1;
+								if (totalDays > 60) {
+									recordFound = true;
+									cfwTimeFlag = true;
+								}
+							}
+						} else {
+							//isBefore() return true -- local date (01-01-2022) and retirement date (01-01-2023)
+							if (LocalDate.now().isBefore(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))) {
+								recordFound = true;
+								cfwTimeFlag = true;
+							}
+						}
+					}
 				}
 				break;
 			case "CpfPartFinalWithdrawal":
-				claimPurposeCount = cpfClaimReqList.stream().filter(p -> p.getPURPOSE() != null)
-						.collect(Collectors.groupingBy(CpfClaimRequest::getPURPOSE, Collectors.counting()));
+				claimPurposeCount = cpfClaimReqList.stream().filter(p -> p.getPURPOSE() != null).collect(Collectors.groupingBy(CpfClaimRequest::getPURPOSE, Collectors.counting()));
 				if (!map.isEmpty() && map.get("CpfPartFinalWithdrawal") != null) {
 					int cpfwCount = map.get("CpfPartFinalWithdrawal") - (claimPurposeCount.get("COVID-19") != null ? claimPurposeCount.get("COVID-19").intValue() : 0);
 
-					if (!cpfClaim.getPURPOSE().equals("COVID-19") && cpfwCount >= 1) {
+					if (!cpfClaim.getPURPOSE().equals("COVID-19") && cpfwCount >= 6) {
 						recordFound = true;
 						cpfwFlag = true;
 					}
@@ -260,7 +263,7 @@ public class ClaimController {
 							recordFound = true;
 							nintyPWLimitFlage = true;
 						} else {
-							//isAfter() return true -- local date (01-01-2023) > retirement date (01-01-2022)
+							//isAfter() return true -- local date (01-01-2023) and retirement date (01-01-2022)
 							if (LocalDate.now().isAfter(LocalDate.parse(empMaster.getRETIREMENT_DATE(), formatter))) {
 								recordFound = true;
 								nintyPWTimeFlage = true;
@@ -273,17 +276,20 @@ public class ClaimController {
 				}
 				break;
 			case "TempAdv":
-				//List<SavedClaimConditionCheckDto> savedClaimStatusList = userService.checkSavedClaimStatus(uModel.getEmpNum(), cpfClaim.getCLAIM_APPLIED_FOR());
-				if (!map.isEmpty() && map.get("TempAdv") != null && map.get("TempAdv") >= 1) {
-					recordFound = true;
-					cfwLimitFlag = true;
+				List<SavedClaimConditionCheckDto> savedClaimStatusList = userService.checkSavedClaimStatus(uModel.getEmpNum(), cpfClaim.getCLAIM_APPLIED_FOR());
+
+				for (SavedClaimConditionCheckDto savedClaimCondition : savedClaimStatusList) {
+					if (userService.checkTempAdvApplyAbility(uModel.getEmpNum()) && savedClaimCondition.getClaimStatus() < 4) {
+						recordFound = true;
+						tempAdvFlage = true;
+					} else if (!userService.checkTempAdvApplyAbility(uModel.getEmpNum())) {
+						recordFound = true;
+						tempAdvFlage = true;
+					}
 				}
 				/*
-				 * for (SavedClaimConditionCheckDto savedClaimCondition : savedClaimStatusList)
-				 * { if (userService.checkTempAdvApplyAbility(uModel.getEmpNum()) &&
-				 * savedClaimCondition.getClaimStatus() < 4) { recordFound = true; tempAdvFlage
-				 * = true; } else if (!userService.checkTempAdvApplyAbility(uModel.getEmpNum()))
-				 * { recordFound = true; tempAdvFlage = true; } }
+				 * if (!map.isEmpty() && map.get("TempAdv") != null && map.get("TempAdv") >= 1)
+				 * { recordFound = true; cfwLimitFlag = true; }
 				 */
 				break;
 			default:

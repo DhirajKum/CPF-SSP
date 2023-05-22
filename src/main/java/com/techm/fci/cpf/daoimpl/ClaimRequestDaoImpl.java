@@ -917,11 +917,12 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 		ActClaimDto claimDataForForm = new ActClaimDto();
 		
 		try{
-		String query = "select CLAIM_SUBMITTED_BY, CLAIM_SUBMITTED_DATE, CLAIM_APPLIED_FOR, EMP_NAME, FATHER_HUSBAND_NAME, BASIC, UAN, DOJ_FCI, a.PAN, b.dsgn_desc, c.loc_id, "
-				+ "c.loc_desc, PARENT_ZONE, DATE_OF_BIRTH, CPF_ACCOUNT_NUMBER, MOBILE_NUMBER, RETIREMENT_DATE, PURPOSE, AMOUNT, INSTALLMENT_NUMBER, LAST_DRAWN_ADVANCE, ADVANCE_AMOUNT, "
-				+ "AMOUNT_REPAID, OUTSTANDING_BAL, AMOUNT_90PARTFINAL_BEF_RETR, PERMISSIBLE_AMOUNT, DEC_NOT_EMP_TWOMONTH, EMP_DECLARATION,STAFF_CODE,CASTE_DISPUTE_CERT,AMOUNT_SANCTION "
-				+ "from cpf_claim_form_details a,pay_dsgn_mst b,com_loc_mst c "
-				+ "where a.designation=b.dsgn_id and c.loc_id=present_location and REQUEST_ID = :reqId";
+		String query ="select CLAIM_SUBMITTED_BY, CLAIM_SUBMITTED_DATE, CLAIM_APPLIED_FOR, EMP_NAME, FATHER_HUSBAND_NAME, a.BASIC, a.UAN, DOJ_FCI, a.PAN, b.dsgn_desc, "
+				+ "c.loc_id, c.loc_desc, a.PARENT_ZONE, DATE_OF_BIRTH, CPF_ACCOUNT_NUMBER, MOBILE_NUMBER, a.RETIREMENT_DATE, PURPOSE, AMOUNT, INSTALLMENT_NUMBER, "
+				+ "LAST_DRAWN_ADVANCE, ADVANCE_AMOUNT, AMOUNT_REPAID, OUTSTANDING_BAL, AMOUNT_90PARTFINAL_BEF_RETR, PERMISSIBLE_AMOUNT, DEC_NOT_EMP_TWOMONTH, "
+				+ "EMP_DECLARATION,a.STAFF_CODE,CASTE_DISPUTE_CERT,AMOUNT_SANCTION "
+				+ "from cpf_claim_form_details a,pay_dsgn_mst b,com_loc_mst c, pay_emp_mast d "
+				+ "where a.claim_submitted_by=d.emp_num and a.designation=b.dsgn_id and c.loc_id=d.pres_location_code and REQUEST_ID = :reqId";
 		
 		Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 		if (reqId != null) {
