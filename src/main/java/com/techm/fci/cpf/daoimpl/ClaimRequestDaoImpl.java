@@ -493,7 +493,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						}else{
 							if(map.get("ADMIN_ACTION_DATE")!=null)
 								cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
-								cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
+							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
 						}
 						
 					}else if(map.get("STATUS").toString().equals("1")){
@@ -501,14 +501,14 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						cpfClaimRequestStatusDto.setStatusCode(map.get("STATUS").toString());
 						if(map.get("ADMIN_ACTION_DATE")!=null)
 							cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
-							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY")!=null?map.get("ADMIN_ACTION_TAKEN_BY").toString():"Admin Not Yet Register");
+						cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY")!=null?map.get("ADMIN_ACTION_TAKEN_BY").toString():"Admin Not Yet Register");
 					}else if(map.get("STATUS").toString().equals("2")){
 						cpfClaimRequestStatusDto.setStatus("Request pending at CPF-Admin Section");
 						cpfClaimRequestStatusDto.setStatusCode(map.get("STATUS").toString());
 						cpfClaimRequestStatusDto.setRemarks(map.get("adminRemarks").toString());
 						if(map.get("cpfsecActionDate")!=null)
 							cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
-							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy")!=null?map.get("cpfsecActionTakenBy").toString():"CPF Admin Not Yet Register");
+						cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy")!=null?map.get("cpfsecActionTakenBy").toString():"CPF Admin Not Yet Register");
 					}else if(map.get("STATUS").toString().equals("3")){
 						cpfClaimRequestStatusDto.setStatus("Request approved by CPF-Admin Section and pending for sanction");
 						cpfClaimRequestStatusDto.setStatusCode(map.get("STATUS").toString());
@@ -530,7 +530,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						cpfClaimRequestStatusDto.setRemarks(map.get("cpfsecRemarks").toString());
 						if(map.get("cpfsecActionDate")!=null)
 							cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
-							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
+						cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
 					}
 					listCpfClaimStatusDto.add(cpfClaimRequestStatusDto);
 				}
@@ -595,6 +595,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						
 						if(map.get("STATUS").toString().equals("0")){
 							cpfClaimRequestStatusDto.setStatus("Request Rejected");
+							cpfClaimRequestStatusDto.setStatusCode(map.get("STATUS").toString());
 							if(map.get("cpfsecRemarks")!=null){
 								cpfClaimRequestStatusDto.setRemarks(map.get("cpfsecRemarks").toString());
 							}else{
@@ -607,40 +608,40 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 							}else{
 								if(map.get("ADMIN_ACTION_DATE")!=null)
 									cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
-									cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
+								cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
 							}
 							
 						}else if(map.get("STATUS").toString().equals("1")){
 							cpfClaimRequestStatusDto.setStatus("Request Pending At Admin Section");
 							if(map.get("ADMIN_ACTION_DATE")!=null)
 								cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
-								cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY")!=null?map.get("ADMIN_ACTION_TAKEN_BY").toString():"Admin Not Yet Register");
+							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY")!=null?map.get("ADMIN_ACTION_TAKEN_BY").toString():"Admin Not Yet Register");
 						}else if(map.get("STATUS").toString().equals("2")){
 							cpfClaimRequestStatusDto.setStatus("Request pending at CPF-Admin Section");
 							cpfClaimRequestStatusDto.setRemarks(map.get("adminRemarks").toString());
 							if(map.get("cpfsecActionDate")!=null)
 								cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
-								cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy")!=null?map.get("cpfsecActionTakenBy").toString():"CPF Admin Not Yet Register");
+							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy")!=null?map.get("cpfsecActionTakenBy").toString():"CPF Admin Not Yet Register");
 						}else if(map.get("STATUS").toString().equals("3")){
 							cpfClaimRequestStatusDto.setStatus("Request approved by CPF-Admin Section and pending for sanction");
 							if(map.get("cpfsecActionDate")==null)
-							cpfClaimRequestStatusDto.setRemarks("");
+								cpfClaimRequestStatusDto.setRemarks("");
 							else
-							cpfClaimRequestStatusDto.setRemarks(map.get("cpfsecRemarks")!=null?map.get("cpfsecRemarks").toString().trim():"");
+								cpfClaimRequestStatusDto.setRemarks(map.get("cpfsecRemarks")!=null?map.get("cpfsecRemarks").toString().trim():"");
 								
 							if(map.get("cpfsecActionDate")!=null)
 								cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
 							if(map.get("cpfsecActionTakenBy")==null)	
-							cpfClaimRequestStatusDto.setAdminActionTakenBy("");
+								cpfClaimRequestStatusDto.setAdminActionTakenBy("");
 							else
-							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
+								cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
 								
 						}else if(map.get("STATUS").toString().equals("4")){
 							cpfClaimRequestStatusDto.setStatus("Amount sanctioned and request completed");
 							cpfClaimRequestStatusDto.setRemarks(map.get("cpfsecRemarks").toString());
 							if(map.get("cpfsecActionDate")!=null)
 								cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
-								cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
+							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
 						}
 						listCpfClaimStatusDto.add(cpfClaimRequestStatusDto);
 					}
@@ -775,6 +776,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					
 					if(map.get("STATUS").toString().equals("0")){
 						cpfClaimRequestStatusDto.setStatus("Request Rejected");
+						cpfClaimRequestStatusDto.setStatusCode(map.get("STATUS").toString());
 						if(map.get("cpfsecRemarks")!=null){
 							cpfClaimRequestStatusDto.setRemarks(map.get("cpfsecRemarks").toString());
 						}else{
@@ -787,40 +789,40 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						}else{
 							if(map.get("ADMIN_ACTION_DATE")!=null)
 								cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
-								cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
+							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
 						}
 						
 					}else if(map.get("STATUS").toString().equals("1")){
 						cpfClaimRequestStatusDto.setStatus("Request Pending At Admin Section");
 						if(map.get("ADMIN_ACTION_DATE")!=null)
 							cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
-							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY")!=null?map.get("ADMIN_ACTION_TAKEN_BY").toString():"Admin Not Yet Register");
+						cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY")!=null?map.get("ADMIN_ACTION_TAKEN_BY").toString():"Admin Not Yet Register");
 					}else if(map.get("STATUS").toString().equals("2")){
 						cpfClaimRequestStatusDto.setStatus("Request pending at CPF-Admin Section");
 						cpfClaimRequestStatusDto.setRemarks(map.get("adminRemarks").toString());
 						if(map.get("cpfsecActionDate")!=null)
 							cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
-							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy")!=null?map.get("cpfsecActionTakenBy").toString():"CPF Admin Not Yet Register");
+						cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy")!=null?map.get("cpfsecActionTakenBy").toString():"CPF Admin Not Yet Register");
 					}else if(map.get("STATUS").toString().equals("3")){
 						cpfClaimRequestStatusDto.setStatus("Request approved by CPF-Admin Section and pending for sanction");
 						if(map.get("cpfsecActionDate")==null)
-						cpfClaimRequestStatusDto.setRemarks("");
+							cpfClaimRequestStatusDto.setRemarks("");
 						else
-						cpfClaimRequestStatusDto.setRemarks(map.get("cpfsecRemarks")!=null?map.get("cpfsecRemarks").toString().trim():"");
+							cpfClaimRequestStatusDto.setRemarks(map.get("cpfsecRemarks")!=null?map.get("cpfsecRemarks").toString().trim():"");
 							
 						if(map.get("cpfsecActionDate")!=null)
 							cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
 						if(map.get("cpfsecActionTakenBy")==null)	
-						cpfClaimRequestStatusDto.setAdminActionTakenBy("");
+							cpfClaimRequestStatusDto.setAdminActionTakenBy("");
 						else
-						cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
+							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
 							
 					}else if(map.get("STATUS").toString().equals("4")){
 						cpfClaimRequestStatusDto.setStatus("Amount sanctioned and request completed");
 						cpfClaimRequestStatusDto.setRemarks(map.get("cpfsecRemarks").toString());
 						if(map.get("cpfsecActionDate")!=null)
 							cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
-							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
+						cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
 					}
 					listCpfClaimStatusDto.add(cpfClaimRequestStatusDto);
 				}
