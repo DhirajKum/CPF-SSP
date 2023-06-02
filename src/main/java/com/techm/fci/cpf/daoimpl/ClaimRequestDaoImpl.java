@@ -1284,7 +1284,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 			
 			Query hQuery1 = session.createSQLQuery(query1);
 			if (reqId != null) {
-				hQuery1.setParameter("amountSanc", actClaimDto.getAMOUNT_SANCTION());
+				hQuery1.setParameter("amountSanc", actClaimDto.getAMOUNT_SANCTION()!=null?actClaimDto.getAMOUNT_SANCTION():"0");
 				hQuery1.setParameter("requestId", reqId);
 				hQuery1.setParameter("claimSubmittedBy", actClaimDto.getCLAIM_SUBMITTED_BY());
 			}

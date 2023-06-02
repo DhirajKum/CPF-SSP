@@ -10,6 +10,7 @@
 </style>
 
 <div class="container-fluid">
+	<div class="row profile profile-card">
 	<c:if test="${not empty message}">
 		<div class="col-md-12" style= "float:none">
 			<div class="alert alert-danger alert-dismissible" style="text-align: center;">
@@ -18,15 +19,18 @@
 			</div>
 		</div>
 	</c:if>
-	<div class="row profile profile-card">
 		<div class="col-md-12">
+		<div class="row" style="margin-left:-5px">
 		<h5 class="main-heading" style="margin-left:-5px">
 			<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="https://www.w3.org/TR/SVG/">
 			<path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
 			</svg> 
 			Update Claim Request
 		</h5>
-		
+		<div class="row col-sm-12">
+				<small class="form-text text-muted paddingL40 main-heading"><b>Claim Request Id : ${actClaimDto.REQUEST_ID}</b></small>
+		</div>
+		</div>		
 		<div class="row marginT20" style="margin-left:-5px">
 			<div class="col-md-12">
 			 <sf:form action='${pageContext.request.contextPath}/claim/updateClaimRequest?reqType=${reqType}&claimReq=resubmit&reqId=${reqId}' method='POST' modelAttribute="actClaimDto" id="reClaimForm" onsubmit="this.js_enabled.value=1;return true;">
