@@ -82,7 +82,7 @@ public interface UserService {
 	public void insertOtpToSmsTable(String empNum,String mobile);
 	
 	public String getClaimStatus(String requestId);
-	public List<ClaimRequestStatusDto> getClaimReqStatus(String requestId);
+	public ClaimRequestStatusDto getClaimReqStatus(String requestId);
 	public Boolean saveCpfClaimHistoryTrail(ClaimHistoryTrailDto claimHistoryTrailData, String empNum, String roleName);
 	public String getMaxPermAmount(String empId, String sancType);
 	

@@ -42,7 +42,7 @@ public interface ClaimRequestDao {
 	public List<DropdownDto> getPurposeOfCPFList(String radioValue);
 	public Map<String, Object> getCustomeRequestId();
 	
-	public List<ClaimRequestStatusDto> getClaimReqStatus(String reqId);
+	public ClaimRequestStatusDto getClaimReqStatus(String reqId);
 	public String getClaimStatus(String reqId);
 	
 	public boolean saveCpfClaimHistory(ClaimHistoryTrailDto claimHistoryTrailData, String empNum, String roleName);

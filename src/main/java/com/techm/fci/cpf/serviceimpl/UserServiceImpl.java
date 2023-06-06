@@ -207,7 +207,7 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	@Override
-	public List<ClaimRequestStatusDto> getClaimReqStatus(String requestId) {
+	public ClaimRequestStatusDto getClaimReqStatus(String requestId) {
 		return claimReqDao.getClaimReqStatus(requestId);
 	}
 
