@@ -1082,7 +1082,6 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 		List<String> cpfAdminIdList = new ArrayList<String>();
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",Locale.ENGLISH);
 		try{
-			// Here empRole check as USER type for Re-Apply process for Rejected claim; Other empRole check like ADMIN and CPF_ADMIN type is for only Approval Process
 			if(empRole.equals("USER")){
 				
 				List<String> adminId = getAdminToAssign(locCode, "ADMIN");
@@ -2039,7 +2038,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 		List<ClaimRequestStatusDto> claimRequestStatusList = new ArrayList<>();
 		
 		try{
-		String query = "select CLAIM_SUBMITTED_BY, CLAIM_SUBMITTED_DATE, ADMIN_ACTION_TAKEN_BY, ADMIN_REMARKS, ADMIN_ACTION, CPFSEC_ACTION_TAKEN_BY, CPFSEC_REMARKS, STATUS "
+		String query = "select CLAIM_SUBMITTED_BY, CLAIM_SUBMITTED_DATE, ADMIN_ACTION_TAKEN_BY, ADMIN_ACTION_DATE, ADMIN_REMARKS, ADMIN_ACTION, CPFSEC_ACTION_TAKEN_BY, CPFSEC_ACTION_DATE, CPFSEC_REMARKS, CPFSEC_ACTION, STATUS "
 				+ "from cpf_claim_form_status s "
 				+ "where s.REQUEST_ID = :reqId";
 		
@@ -2050,16 +2049,25 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 		List<Map<String, Object>> list = hQuery.list();
 
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",Locale.ENGLISH);
-		
+		DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+		try {
 		for (Map<String, Object> map : list) {
 			ClaimRequestStatusDto claimRequestStatus = new ClaimRequestStatusDto();
 			claimRequestStatus.setClaimSubmittedBy(map.get("CLAIM_SUBMITTED_BY").toString().trim());
+			claimRequestStatus.setClaimSubmittedDate(myFormat.format(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString().trim())));
 			claimRequestStatus.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY")!=null?map.get("ADMIN_ACTION_TAKEN_BY").toString().trim():"");
-			claimRequestStatus.setAdminActionTakenBy(map.get("CPFSEC_ACTION_TAKEN_BY")!=null?map.get("CPFSEC_ACTION_TAKEN_BY").toString().trim():"");
-			claimRequestStatus.setAdminAction(map.get("ADMIN_ACTION")!=null?map.get("ADMIN_ACTION").toString():"");
+			claimRequestStatus.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
+			claimRequestStatus.setAdminAction(map.get("ADMIN_ACTION")!=null?map.get("ADMIN_ACTION").toString().trim():"");
+			claimRequestStatus.setCpfActionTakenBy(map.get("CPFSEC_ACTION_TAKEN_BY")!=null?map.get("CPFSEC_ACTION_TAKEN_BY").toString().trim():"");
+			claimRequestStatus.setCpfActionDate(myFormat.format(format.parse(map.get("CPFSEC_ACTION_DATE").toString().trim())));
+			claimRequestStatus.setCpfAction(map.get("CPFSEC_ACTION").toString().trim());
+			//claimRequestStatus.setRemarks(map.get("ADMIN_REMARKS").toString().trim());
 			claimRequestStatus.setStatus(map.get("STATUS").toString().trim());
 		
 			claimRequestStatusList.add(claimRequestStatus);
+		}
+		}catch(ParseException e) {
+			e.printStackTrace();
 		}
 		session.getTransaction().commit();
 		} catch (RuntimeException re) {

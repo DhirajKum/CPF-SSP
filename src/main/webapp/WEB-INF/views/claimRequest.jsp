@@ -214,7 +214,7 @@
 				<div class="row marginT10">	
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Uploaded UAN Document</b></label>
+							<label cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Uploaded UAN Document with KYC</b></label>
 							<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${claimData.kycFilePath}&fileType=1" class="col-sm-7" target="_blank">${claimData.kycFileName}</a>
 						</div>
 					</div>
@@ -294,14 +294,14 @@
 				<div class="form-group row">
 					<div class="col-sm-10">
 						<div class="checkbox">
-							<label><sf:checkbox path="DEC_NOT_EMP_TWOMONTH" id="decNotEmpTwoMonth"/> The member here by declares that he has not been employed for two month</label>
+							<label><sf:checkbox path="DEC_NOT_EMP_TWOMONTH" id="decNotEmpTwoMonth"/> The member here by declares that he has not been employed for two months <b>(In Case of Final Payment only).</b></label>
 						</div>
 					</div>
 				</div>
 				<div class="form-group row">
 					<div class="col-sm-12">
 						<div class="checkbox">
-							<label><sf:checkbox path="EMP_DECLARATION" id="empDec"/> Certified that the particulars are true to the best of my knowledge</label>
+							<label><sf:checkbox path="EMP_DECLARATION" id="empDec"/> Certified that the particulars are true to the best of my knowledge and as per the provision of the Employees Provident Fund Scheme,1952.</label>
 						</div>
 					</div>
 				</div>						
