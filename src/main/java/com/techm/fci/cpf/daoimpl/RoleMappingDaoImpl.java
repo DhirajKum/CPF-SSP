@@ -268,7 +268,8 @@ public class RoleMappingDaoImpl implements RoleMappingDao {
 		try {
 			
 			Set<String> finalLocCode = new HashSet<>();
-			String query0="Select loc_desc as \"locDesc\", loc_type_gbl as \"locType\", loc_id as \"locId\" from com_loc_mst where parent_loc_id=:locCode";
+			String query0="Select loc_desc as \"locDesc\", loc_type_gbl as \"locType\", loc_id as \"locId\" from com_loc_mst "
+					+ "where parent_loc_id=:locCode";
 			
 			Query hQuery0 = session.createSQLQuery(query0).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 			if (presentLoc != null) {
@@ -284,6 +285,8 @@ public class RoleMappingDaoImpl implements RoleMappingDao {
 				}
 			}
 			finalLocCode.add(presentLoc.trim());
+			} else {
+				finalLocCode.add(presentLoc.trim());
 			}
 
 			String query =null;
@@ -299,8 +302,10 @@ public class RoleMappingDaoImpl implements RoleMappingDao {
 					hQuery.setParameterList("presentLoc", finalLocCode);
 				}
 			}else if(null!=roleName && roleName.equalsIgnoreCase("CPF_ADMIN")){
-				query = "select distinct cd.request_id as \"reqId\", cd.claim_submitted_by as \"claimSubBy\",cd.claim_submitted_date as \"claimSubDate\",cs.admin_action as \"adminAction\","
-						+ "cs.admin_action_taken_by as \"adminActionTakenBy\", cs.admin_action_date as \"adminActionDate\", cs.admin_remarks as \"adminRemarks\""
+				query = "select distinct cd.request_id as \"reqId\", cd.claim_submitted_by as \"claimSubBy\",cd.claim_submitted_date as \"claimSubDate\","
+						+ "cs.admin_action as \"adminAction\","
+						+ "cs.admin_action_taken_by as \"adminActionTakenBy\", cs.admin_action_date as \"adminActionDate\", "
+						+ "cs.admin_remarks as \"adminRemarks\""
 						+ " from cpf_claim_form_details cd, cpf_claim_form_status cs" 
 						+ " where cd.request_id=cs.request_id"
 						+ " and cd.parent_zone=:parentZone" 
