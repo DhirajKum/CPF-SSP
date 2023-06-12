@@ -559,16 +559,10 @@ public class ClaimController {
 				claimHistoryTrailDto.setClaimCreatedBy(actClaimDto.getCLAIM_SUBMITTED_BY());
 				claimHistoryTrailDto.setActionTakenBy(uModel.getEmpNum());
 				claimHistoryTrailDto.setRemarks(actClaimDto.getRemarks());
-				claimHistoryTrailDto.setAction("Approve");
-				if (uModel.getRoleName().equals("USER")) {
-					claimHistoryTrailDto.setStatus("1");
-					claimHistoryTrailDto.setAction("Re-Create");
-					claimHistoryTrailDto.setRemarks("Claim has been created.");
-				} else if (uModel.getRoleName().equals("ADMIN")) {
-					claimHistoryTrailDto.setStatus("2");
-				} else if (uModel.getRoleName().equals("CPF_ADMIN")) {
-					claimHistoryTrailDto.setStatus("3");
-				}
+				claimHistoryTrailDto.setStatus("1");
+				claimHistoryTrailDto.setAction("Re-Create");
+				claimHistoryTrailDto.setRemarks("Claim has been created.");
+				
 				userService.saveCpfClaimHistoryTrail(claimHistoryTrailDto, uModel.getEmpNum(), uModel.getRoleName());
 			} else {
 				return "redirect:/claim/actClaimReq?reqType=" + rqType + "&reqId=" + reqId
