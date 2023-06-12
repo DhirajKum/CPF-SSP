@@ -33,7 +33,7 @@
 		</div>		
 		<div class="row marginT20" style="margin-left:-5px">
 			<div class="col-md-12">
-			 <sf:form action='${pageContext.request.contextPath}/claim/updateClaimRequest?reqType=${reqType}&claimReq=resubmit&reqId=${reqId}' method='POST' modelAttribute="actClaimDto" id="reClaimForm" onsubmit="this.js_enabled.value=1;return true;">
+			 <sf:form action='${pageContext.request.contextPath}/claim/reApplyClaimRequest?reqType=${reqType}&claimReq=resubmit&reqId=${reqId}' method='POST' modelAttribute="actClaimDto" id="reClaimForm" onsubmit="this.js_enabled.value=1;return true;">
 			 <noscript>
 				<div id="noJS" class="alert alert-danger" style="padding-left: 20px; padding-right: 0px; margin-left: 0px;">Please enable JavaScript in your browser</div>
 			 </noscript>

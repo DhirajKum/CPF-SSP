@@ -131,6 +131,11 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+	public Boolean reApplyClaimReq(ActClaimDto actClaimDto, String reqType, String reqId, String empNum, String empRole, String locCode, String parentZone) {
+		return claimReqDao.reApplyClaimReq(actClaimDto,reqType,reqId,empNum,empRole,locCode,parentZone);
+	}
+	
+	@Override
 	public Boolean rejectClaimReq(String remarks, String reqType, String reqId, String empNum, String empRole, String casteDisp) {
 		return claimReqDao.rejectClaimReq(remarks,reqType,reqId,empNum,empRole,casteDisp);
 	}

@@ -542,6 +542,52 @@ public class ClaimController {
 		}
 	}
 
+	@RequestMapping(value = { "/reApplyClaimRequest" }, method = { RequestMethod.POST })
+	public String reApplyClaimRequest(@Valid @ModelAttribute("actClaimDto") ActClaimDto actClaimDto,
+			@RequestParam(name = "reqType") String rqType, @RequestParam(name = "claimReq") String reqType,
+			@RequestParam(name = "reqId") String reqId, @RequestParam(required = true) String js_enabled) {
+
+		UserModel uModel = getUserModel();
+		boolean result = false;
+		if (uModel != null && js_enabled.equals("1")) {
+			if (!userService.checkInputData(actClaimDto)) {
+				result = userService.reApplyClaimReq(actClaimDto, reqType, reqId, uModel.getEmpNum(),
+						uModel.getRoleName(), actClaimDto.getLocId(), actClaimDto.getParentZone());
+
+				ClaimHistoryTrailDto claimHistoryTrailDto = new ClaimHistoryTrailDto();
+				claimHistoryTrailDto.setRequestId(reqId);
+				claimHistoryTrailDto.setClaimCreatedBy(actClaimDto.getCLAIM_SUBMITTED_BY());
+				claimHistoryTrailDto.setActionTakenBy(uModel.getEmpNum());
+				claimHistoryTrailDto.setRemarks(actClaimDto.getRemarks());
+				claimHistoryTrailDto.setAction("Approve");
+				if (uModel.getRoleName().equals("USER")) {
+					claimHistoryTrailDto.setStatus("1");
+					claimHistoryTrailDto.setAction("Re-Create");
+					claimHistoryTrailDto.setRemarks("Claim has been created.");
+				} else if (uModel.getRoleName().equals("ADMIN")) {
+					claimHistoryTrailDto.setStatus("2");
+				} else if (uModel.getRoleName().equals("CPF_ADMIN")) {
+					claimHistoryTrailDto.setStatus("3");
+				}
+				userService.saveCpfClaimHistoryTrail(claimHistoryTrailDto, uModel.getEmpNum(), uModel.getRoleName());
+			} else {
+				return "redirect:/claim/actClaimReq?reqType=" + rqType + "&reqId=" + reqId
+						+ "&validationMessage=htmltagvalidation";
+			}
+			if (result) {
+				return "redirect:/claim/pendingReq?reqType=" + rqType + "&operation=updateSuccessfully";
+			} else {
+				return "redirect:/claim/pendingReq?reqType=" + rqType + "&operation=updateFail";
+			}
+
+		} else if (js_enabled.equals("0")) {
+			session.setAttribute("regInfo", "Your javascript is disabled. Kindly enable it, before take any action.");
+			return "redirect:/claim/pendingReq?reqType=" + rqType + "&operation=updateFail";
+		} else {
+			return "redirect:/login";
+		}
+	}
+		
 	@RequestMapping(value = { "/rejectClaimRequest" })
 	public String rejectClaimRequest(@RequestParam(name = "claimType") String reqType,
 			@RequestParam(name = "reqId") String reqId, @RequestParam(name = "remark") String remarks,

@@ -1082,230 +1082,83 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 		List<String> cpfAdminIdList = new ArrayList<String>();
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",Locale.ENGLISH);
 		try{
-			ClaimRequestStatusDto claimRequestStatus =  getClaimReqStatus(reqId);
-			if(empRole.equals("USER")){
-				
-				List<String> adminId = getAdminToAssign(locCode, "ADMIN");
+			if(empRole.equals("ADMIN")){	
+				if(!parentZone.equals("0") && !parentZone.equals("")){	
+					cpfAdminIdList = getCpfAdminToAssign(parentZone, "CPF_ADMIN");
+				}else{
+					cpfAdminIdList = getCpfAdminToAssign("243", "CPF_ADMIN");
+				}
+				if(cpfAdminIdList.size()>0){
+					Date currentDate = new Date();
 					
-					if(adminId.size()>0){
-						String query = "update cpf_claim_form_details set CLAIM_APPLIED_FOR = :claimAppliedFor, PURPOSE=:purpose, AMOUNT=:amount, INSTALLMENT_NUMBER=:installmentNo, "
-								+ "DEC_NOT_EMP_TWOMONTH=:decNotEmpTwoMonth, EMP_DECLARATION=:empDeclaration, RE_CLAIM_SUBMITTED_DATE=:reClaimDate "
-								+ "where request_id=:requestId";
-						logger.info("Act Claim Data :::: "+actClaimDto.toString());
-						Query hQuery = session.createSQLQuery(query);
-						if (reqId != null) {
-							hQuery.setParameter("claimAppliedFor", actClaimDto.getCLAIM_APPLIED_FOR());
-							hQuery.setParameter("purpose", actClaimDto.getPURPOSE());
-							hQuery.setParameter("amount", actClaimDto.getAMOUNT());
-							hQuery.setParameter("installmentNo", actClaimDto.getINSTALLMENT_NUMBER()!=null?actClaimDto.getINSTALLMENT_NUMBER().toString():"");
-
-							if(actClaimDto.isDEC_NOT_EMP_TWOMONTH()){
-								hQuery.setParameter("decNotEmpTwoMonth",1);
-							}else{
-								hQuery.setParameter("decNotEmpTwoMonth",0);
-							}
-							
-							if(actClaimDto.isEMP_DECLARATION()){
-								hQuery.setParameter("empDeclaration",1);
-							}else{
-								hQuery.setParameter("empDeclaration",0);
-							}
-							
-							hQuery.setParameter("reClaimDate", new Date());
-							hQuery.setParameter("requestId", reqId);
-						}
-						hQuery.executeUpdate();
-
-						for(String admId : adminId){
-						CpfClaimRequestStatus claimStatus = new CpfClaimRequestStatus();
-						
-						claimStatus.setREQUEST_ID(reqId);
-						claimStatus.setCLAIM_SUBMITTED_BY(empNum);
-						
-						try {
-							claimStatus.setCLAIM_SUBMITTED_DATE(format.parse(actClaimDto.getClaimSubmittedDate()));
-						} catch (ParseException e1) {
-							e1.printStackTrace();
-						}
-						claimStatus.setRE_CLAIM_SUBMITTED_DATE(new Date());
-						claimStatus.setADMIN_ACTION_TAKEN_BY(admId);//admin employee number for a particular location  
-						claimStatus.setSTATUS("1");
-						
-						session.persist(claimStatus);
-						}
-						
-						String query1 = "select status_id,request_id,claim_submitted_by,claim_submitted_date from cpf_claim_form_status "
-								+ "where request_id=:requestId and status=0";
-						
-						Query hQuery1 = session.createSQLQuery(query1).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-						if (reqId != null) {
-							hQuery1.setParameter("requestId", reqId);
-						}
-						List<Map<String, Object>> list = hQuery1.list();
-						for(Map<String, Object> map : list){
-							AuditCpfClaimRequestStatus auditCpfClaimRequestStatus = new AuditCpfClaimRequestStatus();
-							
-							auditCpfClaimRequestStatus.setSTATUS_ID(Integer.parseInt(map.get("STATUS_ID").toString()));
-							auditCpfClaimRequestStatus.setREQUEST_ID(map.get("REQUEST_ID").toString()); 	
-							auditCpfClaimRequestStatus.setCLAIM_SUBMITTED_BY(map.get("CLAIM_SUBMITTED_BY").toString());
-							try {
-								auditCpfClaimRequestStatus.setCLAIM_SUBMITTED_DATE(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString()));
-							} catch (ParseException e) {
-								e.printStackTrace();
-							}
-							auditCpfClaimRequestStatus.setSTATUS("0");
-							
-							session.persist(auditCpfClaimRequestStatus);
-							
-							Object object = session.load(CpfClaimRequestStatus.class,Integer.parseInt(map.get("STATUS_ID").toString()));
-							session.delete(object);
-						}
-						
-					}else{
-						httpSession.setAttribute("adminfound", "N");
-						session.getTransaction().rollback();
-						return null;
+					String query = "update cpf_claim_form_details set caste_dispute_cert = :castDisputeCert "
+							+ "where request_id=:requestId and claim_submitted_by=:claimSubmittedBy";
+					
+					Query hQuery = session.createSQLQuery(query);
+					if (reqId != null) {
+						hQuery.setParameter("castDisputeCert", actClaimDto.getCASTE_DISPUTE_CERT());
+						hQuery.setParameter("requestId", reqId);
+						hQuery.setParameter("claimSubmittedBy", actClaimDto.getCLAIM_SUBMITTED_BY());
 					}
-					session.getTransaction().commit();
-			return true;
-			}else if(empRole.equals("ADMIN")){	
-				
-				if (claimRequestStatus.getAdminAction() != null	&& claimRequestStatus.getAdminAction().equalsIgnoreCase("reject")) {
-					List<String> adminId = getAdminToAssign(locCode, "ADMIN");
-					if (adminId.size() > 0) {
-						Date currentDate = new Date();
-
-						String query = "update cpf_claim_form_details set caste_dispute_cert = :castDisputeCert "
-								+ "where request_id=:requestId and claim_submitted_by=:claimSubmittedBy";
-
-						Query hQuery = session.createSQLQuery(query);
-						if (reqId != null) {
-							hQuery.setParameter("castDisputeCert", actClaimDto.getCASTE_DISPUTE_CERT());
-							hQuery.setParameter("requestId", reqId);
-							hQuery.setParameter("claimSubmittedBy", actClaimDto.getCLAIM_SUBMITTED_BY());
-						}
-						hQuery.executeUpdate();
-
-						for (String admId : adminId) {
-
-							CpfClaimRequestStatus claimStatus = new CpfClaimRequestStatus();
-
-							claimStatus.setREQUEST_ID(reqId);
-							claimStatus.setCLAIM_SUBMITTED_BY(empNum);
-
-							try {
-								claimStatus.setCLAIM_SUBMITTED_DATE(format.parse(actClaimDto.getClaimSubmittedDate()));
-							} catch (ParseException e1) {
-								e1.printStackTrace();
-							}
-							claimStatus.setRE_CLAIM_SUBMITTED_DATE(new Date());
-							claimStatus.setADMIN_ACTION_TAKEN_BY(admId);// admin employee number for a particular
-																		// location
-							claimStatus.setSTATUS("1");
-
-							session.persist(claimStatus);
-						}
-
-						String query1 = "select status_id,request_id,claim_submitted_by,claim_submitted_date from cpf_claim_form_status "
-								+ "where request_id=:requestId and status=0";
-
-						Query hQuery1 = session.createSQLQuery(query1)
-								.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-						if (reqId != null) {
-							hQuery1.setParameter("requestId", reqId);
-							// hQuery1.setParameter("adminActionTakenBy", empNum);
-						}
-						List<Map<String, Object>> list = hQuery1.list();
-						for (Map<String, Object> map : list) {
-							AuditCpfClaimRequestStatus auditCpfClaimRequestStatus = new AuditCpfClaimRequestStatus();
-
-							auditCpfClaimRequestStatus.setSTATUS_ID(Integer.parseInt(map.get("STATUS_ID").toString()));
-							auditCpfClaimRequestStatus.setREQUEST_ID(map.get("REQUEST_ID").toString());
-							auditCpfClaimRequestStatus.setCLAIM_SUBMITTED_BY(map.get("CLAIM_SUBMITTED_BY").toString());
-							try {
-								auditCpfClaimRequestStatus.setCLAIM_SUBMITTED_DATE(
-										format.parse(map.get("CLAIM_SUBMITTED_DATE").toString()));
-							} catch (ParseException e) {
-								e.printStackTrace();
-							}
-							auditCpfClaimRequestStatus.setSTATUS("-1");
-
-							session.persist(auditCpfClaimRequestStatus);
-
-							Object object = session.load(CpfClaimRequestStatus.class,
-									Integer.parseInt(map.get("STATUS_ID").toString()));
-							session.delete(object);
-						}
-
+					hQuery.executeUpdate();
+					
+					for(String cpfAdmId : cpfAdminIdList){
+						
+					/*String query = "update cpf_claim_form_status set admin_action = :reqType, admin_remarks = :remarks, admin_action_date =:adminActionDate, "
+							+ "status =:status, admin_claim_submitted_to =:adminClaimSubmittedTo,cpfsec_action_taken_by =:cpfSecActionTakenBy "
+							+ "where request_id=:requestId and admin_action_taken_by=:adminActionTakenBy";
+					
+					Query hQuery = session.createSQLQuery(query);
+					if (reqId != null) {
+						hQuery.setParameter("reqType", reqType);
+						//hQuery.setParameter("remarks", actClaimDto.getRemarks());
+						//hQuery.setParameter("adminActionDate", new Date());
+						//hQuery.setParameter("status", "2");
+						//hQuery.setParameter("requestId", reqId);
+						//hQuery.setParameter("adminActionTakenBy", empNum);
+						//hQuery.setParameter("adminClaimSubmittedTo", admId);  //CPF Admin ID
+						hQuery.setParameter("cpfSecActionTakenBy", admId);    //CPF Admin ID
 					}
-
-				} else if (claimRequestStatus.getCpfAction() != null && claimRequestStatus.getCpfAction().equalsIgnoreCase("reject")) {
-
-					if (!parentZone.equals("0") && !parentZone.equals("")) {
-						cpfAdminIdList = getCpfAdminToAssign(parentZone, "CPF_ADMIN");
-					} else {
-						cpfAdminIdList = getCpfAdminToAssign("243", "CPF_ADMIN");
+					int result = hQuery.executeUpdate();*/
+					
+					CpfClaimRequestStatus claimStatus = new CpfClaimRequestStatus();
+					
+					claimStatus.setREQUEST_ID(reqId);
+					claimStatus.setCLAIM_SUBMITTED_BY(actClaimDto.getCLAIM_SUBMITTED_BY());
+					try {
+						claimStatus.setCLAIM_SUBMITTED_DATE(format.parse(actClaimDto.getClaimSubmittedDate()));
+					} catch (ParseException e) {
+						e.printStackTrace();
 					}
-
-					if (cpfAdminIdList.size() > 0) {
-						Date currentDate = new Date();
-
-						String query = "update cpf_claim_form_details set caste_dispute_cert = :castDisputeCert "
-								+ "where request_id=:requestId and claim_submitted_by=:claimSubmittedBy";
-
-						Query hQuery = session.createSQLQuery(query);
-						if (reqId != null) {
-							hQuery.setParameter("castDisputeCert", actClaimDto.getCASTE_DISPUTE_CERT());
-							hQuery.setParameter("requestId", reqId);
-							hQuery.setParameter("claimSubmittedBy", actClaimDto.getCLAIM_SUBMITTED_BY());
-						}
-						hQuery.executeUpdate();
-
-						for (String cpfAdmId : cpfAdminIdList) {
-
-							CpfClaimRequestStatus claimStatus = new CpfClaimRequestStatus();
-
-							claimStatus.setREQUEST_ID(reqId);
-							claimStatus.setCLAIM_SUBMITTED_BY(actClaimDto.getCLAIM_SUBMITTED_BY());
-							try {
-								claimStatus.setCLAIM_SUBMITTED_DATE(format.parse(actClaimDto.getClaimSubmittedDate()));
-							} catch (ParseException e) {
-								e.printStackTrace();
-							}
-							claimStatus.setADMIN_CLAIM_SUBMITTED_TO(cpfAdmId);
-							// claimStatus.setADMIN_ACTION(reqType);
-							claimStatus.setADMIN_ACTION(claimRequestStatus.getAdminAction());
-							// claimStatus.setADMIN_ACTION_DATE(currentDate);
-							try {
-								claimStatus.setADMIN_ACTION_DATE(format.parse(claimRequestStatus.getAdminActionDate()));
-							} catch (ParseException e1) {
-								e1.printStackTrace();
-							}
-							// claimStatus.setADMIN_ACTION_TAKEN_BY(empNum);
-							claimStatus.setADMIN_ACTION_TAKEN_BY(claimRequestStatus.getAdminActionTakenBy());
-							claimStatus.setADMIN_REMARKS(actClaimDto.getRemarks());
-							claimStatus.setCPFSEC_ACTION_TAKEN_BY(cpfAdmId);
-							claimStatus.setSTATUS("2");
-
-							session.persist(claimStatus);
-							logger.info("claimStatus ::::: " + claimStatus.toString());
-						}
-					}
-
+					claimStatus.setADMIN_CLAIM_SUBMITTED_TO(cpfAdmId);
+					claimStatus.setADMIN_ACTION(reqType);
+					claimStatus.setADMIN_ACTION_DATE(currentDate);
+					claimStatus.setADMIN_ACTION_TAKEN_BY(empNum);  
+					claimStatus.setADMIN_REMARKS(actClaimDto.getRemarks());
+					claimStatus.setCPFSEC_ACTION_TAKEN_BY(cpfAdmId);
+					claimStatus.setSTATUS("2");
+					
+					session.persist(claimStatus);
+					logger.info("claimStatus ::::: "+ claimStatus.toString());
+					
+					
+					/*String query1 = "select status_id,request_id,claim_submitted_by,claim_submitted_date from cpf_claim_form_status "
+							+ "where request_id=:requestId and admin_action_taken_by<>:adminActionTakenBy";*/
+					
 					String query1 = "select status_id,request_id,claim_submitted_by,claim_submitted_date from cpf_claim_form_status "
 							+ "where request_id=:requestId and status=1";
-
+					
 					Query hQuery1 = session.createSQLQuery(query1).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 					if (reqId != null) {
 						hQuery1.setParameter("requestId", reqId);
-						// hQuery1.setParameter("adminActionTakenBy", empNum);
+						//hQuery1.setParameter("adminActionTakenBy", empNum);
 					}
 					List<Map<String, Object>> list = hQuery1.list();
-					for (Map<String, Object> map : list) {
+					for(Map<String, Object> map : list){
 						AuditCpfClaimRequestStatus auditCpfClaimRequestStatus = new AuditCpfClaimRequestStatus();
-
+						
 						auditCpfClaimRequestStatus.setSTATUS_ID(Integer.parseInt(map.get("STATUS_ID").toString()));
-						auditCpfClaimRequestStatus.setREQUEST_ID(map.get("REQUEST_ID").toString());
+						auditCpfClaimRequestStatus.setREQUEST_ID(map.get("REQUEST_ID").toString()); 	
 						auditCpfClaimRequestStatus.setCLAIM_SUBMITTED_BY(map.get("CLAIM_SUBMITTED_BY").toString());
 						try {
 							auditCpfClaimRequestStatus.setCLAIM_SUBMITTED_DATE(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString()));
@@ -1313,17 +1166,17 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 							e.printStackTrace();
 						}
 						auditCpfClaimRequestStatus.setSTATUS("-1");
-
+						
 						session.persist(auditCpfClaimRequestStatus);
-
-						Object object = session.load(CpfClaimRequestStatus.class, Integer.parseInt(map.get("STATUS_ID").toString()));
+						
+						Object object = session.load(CpfClaimRequestStatus.class,Integer.parseInt(map.get("STATUS_ID").toString()));
 						session.delete(object);
 					}
 				}
-
-				session.getTransaction().commit();
-				return true;
-			}else if(empRole.equals("CPF_ADMIN")){
+			}
+		session.getTransaction().commit();
+		return true;
+		}else if(empRole.equals("CPF_ADMIN")){
 			
 			String query = "update cpf_claim_form_status set cpfsec_action = :reqType, cpfsec_remarks = :remarks, cpfsec_action_date =:cpfsecActionDate, status =:status "
 				+ "where request_id=:requestId and cpfsec_action_taken_by=:cpfsecActionTakenBy";
@@ -1345,7 +1198,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 			
 			Query hQuery1 = session.createSQLQuery(query1);
 			if (reqId != null) {
-				hQuery1.setParameter("amountSanc", actClaimDto.getAMOUNT_SANCTION()!=null?actClaimDto.getAMOUNT_SANCTION():"0");
+				hQuery1.setParameter("amountSanc", actClaimDto.getAMOUNT_SANCTION());
 				hQuery1.setParameter("requestId", reqId);
 				hQuery1.setParameter("claimSubmittedBy", actClaimDto.getCLAIM_SUBMITTED_BY());
 			}
@@ -1394,6 +1247,101 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 			return true;
 		}
 		return false;
+		} catch (RuntimeException re) {
+			logger.info("Find by example failed :::", re);
+			throw re;
+		}
+	}
+	
+	
+	@Override
+	public Boolean reApplyClaimReq(ActClaimDto actClaimDto, String reqType, String reqId, String empNum, String empRole,
+			String locCode, String parentZone) {
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH);
+		try {
+			List<String> adminId = getAdminToAssign(locCode, "ADMIN");
+			if (adminId.size() > 0) {
+				String query = "update cpf_claim_form_details set CLAIM_APPLIED_FOR = :claimAppliedFor, PURPOSE=:purpose, AMOUNT=:amount, INSTALLMENT_NUMBER=:installmentNo, "
+						+ "DEC_NOT_EMP_TWOMONTH=:decNotEmpTwoMonth, EMP_DECLARATION=:empDeclaration, RE_CLAIM_SUBMITTED_DATE=:reClaimDate "
+						+ "where request_id=:requestId";
+				logger.info("Act Claim Data :::: " + actClaimDto.toString());
+				Query hQuery = session.createSQLQuery(query);
+				if (reqId != null) {
+					hQuery.setParameter("claimAppliedFor", actClaimDto.getCLAIM_APPLIED_FOR());
+					hQuery.setParameter("purpose", actClaimDto.getPURPOSE());
+					hQuery.setParameter("amount", actClaimDto.getAMOUNT());
+					hQuery.setParameter("installmentNo", actClaimDto.getINSTALLMENT_NUMBER() != null ? actClaimDto.getINSTALLMENT_NUMBER().toString() : "");
+
+					if (actClaimDto.isDEC_NOT_EMP_TWOMONTH()) {
+						hQuery.setParameter("decNotEmpTwoMonth", 1);
+					} else {
+						hQuery.setParameter("decNotEmpTwoMonth", 0);
+					}
+
+					if (actClaimDto.isEMP_DECLARATION()) {
+						hQuery.setParameter("empDeclaration", 1);
+					} else {
+						hQuery.setParameter("empDeclaration", 0);
+					}
+
+					hQuery.setParameter("reClaimDate", new Date());
+					hQuery.setParameter("requestId", reqId);
+				}
+				hQuery.executeUpdate();
+
+				for (String admId : adminId) {
+					CpfClaimRequestStatus claimStatus = new CpfClaimRequestStatus();
+
+					claimStatus.setREQUEST_ID(reqId);
+					claimStatus.setCLAIM_SUBMITTED_BY(empNum);
+
+					try {
+						claimStatus.setCLAIM_SUBMITTED_DATE(format.parse(actClaimDto.getClaimSubmittedDate()));
+					} catch (ParseException e1) {
+						e1.printStackTrace();
+					}
+					claimStatus.setRE_CLAIM_SUBMITTED_DATE(new Date());
+					claimStatus.setADMIN_ACTION_TAKEN_BY(admId);
+					claimStatus.setSTATUS("1");
+
+					session.persist(claimStatus);
+				}
+
+				String query1 = "select status_id,request_id,claim_submitted_by,claim_submitted_date from cpf_claim_form_status "
+						+ "where request_id=:requestId and status=0";
+
+				Query hQuery1 = session.createSQLQuery(query1).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+				if (reqId != null) {
+					hQuery1.setParameter("requestId", reqId);
+				}
+				List<Map<String, Object>> list = hQuery1.list();
+				for (Map<String, Object> map : list) {
+					AuditCpfClaimRequestStatus auditCpfClaimRequestStatus = new AuditCpfClaimRequestStatus();
+
+					auditCpfClaimRequestStatus.setSTATUS_ID(Integer.parseInt(map.get("STATUS_ID").toString()));
+					auditCpfClaimRequestStatus.setREQUEST_ID(map.get("REQUEST_ID").toString());
+					auditCpfClaimRequestStatus.setCLAIM_SUBMITTED_BY(map.get("CLAIM_SUBMITTED_BY").toString());
+					try {
+						auditCpfClaimRequestStatus.setCLAIM_SUBMITTED_DATE(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString()));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					auditCpfClaimRequestStatus.setSTATUS("0");
+
+					session.persist(auditCpfClaimRequestStatus);
+
+					Object object = session.load(CpfClaimRequestStatus.class, Integer.parseInt(map.get("STATUS_ID").toString()));
+					session.delete(object);
+				}
+				session.getTransaction().commit();
+				return true;
+			} else {
+				httpSession.setAttribute("adminfound", "N");
+				session.getTransaction().rollback();
+				return null;
+			}
 		} catch (RuntimeException re) {
 			logger.info("Find by example failed :::", re);
 			throw re;
