@@ -171,33 +171,32 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 		return null;
 	}
 	
-	public boolean saveCpfClaimHistory(ClaimHistoryTrailDto claimHistoryTrailData, String empNum, String roleName){
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",Locale.ENGLISH);
+	public boolean saveCpfClaimHistory(ClaimHistoryTrailDto claimHistoryTrailData, String empNum, String roleName) {
 		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
-		try{
-		CpfClaimHistoryTrail cpfClaimHistoryTrail = new CpfClaimHistoryTrail();
-		cpfClaimHistoryTrail.setREQUEST_ID(claimHistoryTrailData.getRequestId());
-		cpfClaimHistoryTrail.setCLAIM_SUBMITTED_BY(claimHistoryTrailData.getClaimCreatedBy());
-		cpfClaimHistoryTrail.setACTION_TAKEN_BY(claimHistoryTrailData.getActionTakenBy());
-		cpfClaimHistoryTrail.setACTION_DATE(new Date());
-		cpfClaimHistoryTrail.setACTION(claimHistoryTrailData.getAction());
-		cpfClaimHistoryTrail.setREMARKS(claimHistoryTrailData.getRemarks());
-		cpfClaimHistoryTrail.setSTATUS(claimHistoryTrailData.getStatus());
-		cpfClaimHistoryTrail.setCREATED_BY(empNum);
-		cpfClaimHistoryTrail.setCREATED_DATE(new Date());
-		cpfClaimHistoryTrail.setMODIFIED_BY(claimHistoryTrailData.getActionTakenBy());
-		cpfClaimHistoryTrail.setMODIFIED_DATE(new Date());
-		session.persist(cpfClaimHistoryTrail);
-		logger.info("CpfClaimHistoryTrail Saved :::: "+cpfClaimHistoryTrail.toString());
-		session.getTransaction().commit();
-		}catch(Exception ex){
+		try {
+			CpfClaimHistoryTrail cpfClaimHistoryTrail = new CpfClaimHistoryTrail();
+			cpfClaimHistoryTrail.setREQUEST_ID(claimHistoryTrailData.getRequestId());
+			cpfClaimHistoryTrail.setCLAIM_SUBMITTED_BY(claimHistoryTrailData.getClaimCreatedBy());
+			cpfClaimHistoryTrail.setACTION_TAKEN_BY(claimHistoryTrailData.getActionTakenBy());
+			cpfClaimHistoryTrail.setACTION_DATE(new Date());
+			cpfClaimHistoryTrail.setACTION(claimHistoryTrailData.getAction());
+			cpfClaimHistoryTrail.setREMARKS(claimHistoryTrailData.getRemarks());
+			cpfClaimHistoryTrail.setSTATUS(claimHistoryTrailData.getStatus());
+			cpfClaimHistoryTrail.setCREATED_BY(empNum);
+			cpfClaimHistoryTrail.setCREATED_DATE(new Date());
+			cpfClaimHistoryTrail.setMODIFIED_BY(claimHistoryTrailData.getActionTakenBy());
+			cpfClaimHistoryTrail.setMODIFIED_DATE(new Date());
+			session.persist(cpfClaimHistoryTrail);
+			logger.info("CpfClaimHistoryTrail Saved :::: " + cpfClaimHistoryTrail.toString());
+			session.getTransaction().commit();
+		} catch (Exception ex) {
 			logger.info("Claim History Trail not saved ......");
 			session.getTransaction().rollback();
 			ex.printStackTrace();
 			return false;
 		}
-		
+
 		return true;
 	}
 	
@@ -618,7 +617,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY")!=null?map.get("ADMIN_ACTION_TAKEN_BY").toString():"Admin Not Yet Register");
 						}else if(map.get("STATUS").toString().equals("2")){
 							cpfClaimRequestStatusDto.setStatus("Request pending at CPF-Admin Section");
-							cpfClaimRequestStatusDto.setRemarks(map.get("adminRemarks").toString());
+							cpfClaimRequestStatusDto.setRemarks(map.get("adminRemarks")!=null?map.get("adminRemarks").toString().trim():"");
 							if(map.get("cpfsecActionDate")!=null)
 								cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
 							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy")!=null?map.get("cpfsecActionTakenBy").toString():"CPF Admin Not Yet Register");
@@ -904,6 +903,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 		session.getTransaction().commit();
 		} catch (RuntimeException re) {
 		logger.info("Find by example failed :::", re);
+		re.printStackTrace();
 		throw re;
 	}catch (ParseException e) {
 		e.printStackTrace();
@@ -1198,7 +1198,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 			
 			Query hQuery1 = session.createSQLQuery(query1);
 			if (reqId != null) {
-				hQuery1.setParameter("amountSanc", actClaimDto.getAMOUNT_SANCTION());
+				hQuery1.setParameter("amountSanc", actClaimDto.getAMOUNT_SANCTION()!=null?actClaimDto.getAMOUNT_SANCTION():"0");
 				hQuery1.setParameter("requestId", reqId);
 				hQuery1.setParameter("claimSubmittedBy", actClaimDto.getCLAIM_SUBMITTED_BY());
 			}
@@ -1529,7 +1529,8 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				}
 				List<Map<String, Object>> list = hQuery.list();
 				DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",Locale.ENGLISH);
-				DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+				DateFormat myFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
+								
 				for (Map<String, Object> map : list) {
 					ClaimRequestStatusDto cpfClaimRequestStatusDto = new ClaimRequestStatusDto();
 					
@@ -1552,7 +1553,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					if(map.get("ADMIN_ACTION_DATE")!=null)
 					cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
 					cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("CPFSECACTIONTAKENBY").toString());
-					cpfClaimRequestStatusDto.setRemarks(map.get("adminRemarks").toString());
+					cpfClaimRequestStatusDto.setRemarks(map.get("adminRemarks")!=null?map.get("adminRemarks").toString().trim():"");
 					cpfClaimRequestStatusDto.setStatus("Approved By Admin");
 					
 					listCpfClaimStatusDto.add(cpfClaimRequestStatusDto);
@@ -1568,7 +1569,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				}
 				List<Map<String, Object>> list = hQuery.list();
 				DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",Locale.ENGLISH);
-				DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+				DateFormat myFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
 				for (Map<String, Object> map : list) {
 					ClaimRequestStatusDto cpfClaimRequestStatusDto = new ClaimRequestStatusDto();
 					
@@ -1591,7 +1592,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					if(map.get("CPFSEC_ACTION_DATE")!=null)
 					cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("CPFSEC_ACTION_DATE").toString().trim())));
 					cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("CPFSEC_ACTION_TAKEN_BY").toString());
-					cpfClaimRequestStatusDto.setRemarks(map.get("cpfRemarks")!=null?map.get("cpfRemarks").toString():"");
+					cpfClaimRequestStatusDto.setRemarks(map.get("cpfRemarks")!=null?map.get("cpfRemarks").toString().trim():"");
 					cpfClaimRequestStatusDto.setStatus("Approved By CPF Admin");
 					
 					listCpfClaimStatusDto.add(cpfClaimRequestStatusDto);
@@ -1601,6 +1602,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 			session.getTransaction().commit();
 		} catch (RuntimeException re) {
 		logger.info("Find by example failed :::", re);
+		re.printStackTrace();
 		throw re;
 	}catch (ParseException e) {
 		e.printStackTrace();
@@ -1627,7 +1629,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				}
 				List<Map<String, Object>> list = hQuery.list();
 				DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",Locale.ENGLISH);
-				DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+				DateFormat myFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
 				for (Map<String, Object> map : list) {
 					ClaimRequestStatusDto cpfClaimRequestStatusDto = new ClaimRequestStatusDto();
 					
@@ -1651,12 +1653,12 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					if(map.get("cpfsecActionDate")!=null){
 						cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
 						cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
-						cpfClaimRequestStatusDto.setRemarks(map.get("cpfsecRemarks").toString());
+						cpfClaimRequestStatusDto.setRemarks(map.get("cpfsecRemarks")!=null?map.get("cpfsecRemarks").toString().trim():"");
 					}else{
 						if(map.get("ADMIN_ACTION_DATE")!=null)
 							cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
 							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
-							cpfClaimRequestStatusDto.setRemarks(map.get("adminRemarks").toString());	
+							cpfClaimRequestStatusDto.setRemarks(map.get("adminRemarks")!=null?map.get("adminRemarks").toString().trim():"");	
 					}
 					cpfClaimRequestStatusDto.setStatus("Request Completed");
 					
@@ -1673,7 +1675,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				}
 				List<Map<String, Object>> list = hQuery.list();
 				DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",Locale.ENGLISH);
-				DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+				DateFormat myFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
 				for (Map<String, Object> map : list) {
 					ClaimRequestStatusDto cpfClaimRequestStatusDto = new ClaimRequestStatusDto();
 					
@@ -1696,7 +1698,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					if(map.get("CPFSEC_ACTION_DATE")!=null)
 					cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("CPFSEC_ACTION_DATE").toString().trim())));
 					cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("CPFSEC_ACTION_TAKEN_BY").toString());
-					cpfClaimRequestStatusDto.setRemarks(map.get("cpfRemarks")!=null?map.get("cpfRemarks").toString():"");
+					cpfClaimRequestStatusDto.setRemarks(map.get("cpfRemarks")!=null?map.get("cpfRemarks").toString().trim():"");
 					cpfClaimRequestStatusDto.setStatus("Request Completed");
 					
 					listCpfClaimStatusDto.add(cpfClaimRequestStatusDto);
