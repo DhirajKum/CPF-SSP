@@ -353,7 +353,7 @@ public static final Logger logger = LoggerFactory.getLogger(ReportDaoImpl.class)
 				}
 				query = query + " a.CLAIM_APPLIED_FOR= '" + claimType + "'";
 			}
-			query= query + " and st.status <> -1 order by a.CLAIM_SUBMITTED_BY asc";
+			query= query + " and st.status <> -1 order by a.CLAIM_SUBMITTED_DATE asc";
 
 			System.out.print(query);
 			Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
