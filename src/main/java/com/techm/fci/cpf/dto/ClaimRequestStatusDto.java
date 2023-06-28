@@ -26,6 +26,7 @@ public class ClaimRequestStatusDto implements Serializable {
 	private String sancAmount;
 	private String status;
 	private String statusCode;
+	private String cpfCode;
 
 	private String designation;
 	private String claimType;
@@ -37,7 +38,7 @@ public class ClaimRequestStatusDto implements Serializable {
 	public ClaimRequestStatusDto(String requestId, String claimSubmittedEmpId, String claimSubmittedBy,
 			String claimSubmittedDate, String adminActionDate, String adminActionTakenBy, String adminAction,
 			String cpfActionDate, String cpfActionTakenBy, String cpfAction, String remarks, String invoiceNo,
-			String sancAmount, String status, String statusCode, String designation, String claimType) {
+			String sancAmount, String status, String statusCode, String cpfCode, String designation, String claimType) {
 		super();
 		this.requestId = requestId;
 		this.claimSubmittedEmpId = claimSubmittedEmpId;
@@ -54,6 +55,7 @@ public class ClaimRequestStatusDto implements Serializable {
 		this.sancAmount = sancAmount;
 		this.status = status;
 		this.statusCode = statusCode;
+		this.cpfCode = cpfCode;
 		this.designation = designation;
 		this.claimType = claimType;
 	}
@@ -194,6 +196,14 @@ public class ClaimRequestStatusDto implements Serializable {
 		this.claimType = claimType;
 	}
 
+	public String getCpfCode() {
+		return cpfCode;
+	}
+
+	public void setCpfCode(String cpfCode) {
+		this.cpfCode = cpfCode;
+	}
+
 	@Override
 	public String toString() {
 		return "ClaimRequestStatusDto [requestId=" + requestId + ", claimSubmittedEmpId=" + claimSubmittedEmpId
@@ -201,8 +211,8 @@ public class ClaimRequestStatusDto implements Serializable {
 				+ ", adminActionDate=" + adminActionDate + ", adminActionTakenBy=" + adminActionTakenBy
 				+ ", adminAction=" + adminAction + ", cpfActionDate=" + cpfActionDate + ", cpfActionTakenBy="
 				+ cpfActionTakenBy + ", cpfAction=" + cpfAction + ", remarks=" + remarks + ", invoiceNo=" + invoiceNo
-				+ ", sancAmount=" + sancAmount + ", status=" + status + ", statusCode=" + statusCode + ", designation="
-				+ designation + ", claimType=" + claimType + "]";
+				+ ", sancAmount=" + sancAmount + ", status=" + status + ", statusCode=" + statusCode + ", cpfCode="
+				+ cpfCode + ", designation=" + designation + ", claimType=" + claimType + "]";
 	}
 
 }

@@ -45,17 +45,17 @@
     <tr>
       <th class="th-sm">Request Id</th>
       <th class="th-sm">Date of Submission (yyyy/mm/dd)</th>
-      <th class="th-sm">Submitted By</th>
+      <th class="th-sm">Submitted By (CPF Code)</th>
       <th class="th-sm">Designation</th>
       <th class="th-sm">Claim Received (yyyy/mm/dd)</th>
       <security:authorize access="isAuthenticated()">
       	<security:authorize access="hasRole('USER')">
-      		<th class="th-sm">Application Goes To</th>
+      		<th class="th-sm">Application Goes To (Name-CPF Code)</th>
       	</security:authorize>
       </security:authorize>
       <security:authorize access="isAuthenticated()">
       	<security:authorize access="hasAnyRole('ADMIN','CPF_ADMIN')">
-      		<th class="th-sm">Action Taken By</th>
+      		<th class="th-sm">Action Taken By (Name-CPF Code)</th>
       	</security:authorize>
       </security:authorize>
       <th class="th-sm">Remarks</th>

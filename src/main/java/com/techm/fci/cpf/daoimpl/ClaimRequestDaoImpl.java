@@ -409,6 +409,32 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 		return listCpfClaimStatusDto;
 	}
 	
+	private String getEmployeeWithCPFCode(String empNum) {
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		String empNameWithCPFCode = "";
+		try {
+			String query2 = "select distinct rg.emp_name ||'-'|| pem.cpf_code as \"empNameWithCpfCode\" "
+					+ "from cpf_registered_users rg, pay_emp_mast pem "
+					+ "where rg.emp_num=pem.emp_num "
+					+ "and rg.emp_num=:empNum";
+
+			Query hQuery2 = session.createSQLQuery(query2).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+			if (empNum != null) {
+				hQuery2.setParameter("empNum", empNum);
+			}
+			List<Map<String, Object>> list2 = hQuery2.list();
+			for (Map<String, Object> map2 : list2) {
+				empNameWithCPFCode = map2.get("empNameWithCpfCode") != null ? map2.get("empNameWithCpfCode").toString()	: "";
+			}
+			//session.getTransaction().commit();
+		} catch (RuntimeException re) {
+			logger.info("Find by example failed :::", re);
+			re.printStackTrace();
+			throw re;
+		} 
+		return empNameWithCPFCode;
+	}
 	
 	@Override
 	public List<ClaimRequestStatusDto> getAllPendingClaimReq(String reqType,String empNum,String roleName) {
@@ -419,11 +445,10 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 			if(roleName!=null && roleName.equals("USER")){
 				if(reqType.equals("myReq")){
 				String query = "select st.request_id, reg.emp_name as \"claim_submitted_by\", st.claim_submitted_date,"
-						+ "(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.admin_action_taken_by) "
-						+ "admin_action_taken_by, admin_action_date, status, admin_remarks as \"adminRemarks\","
-						+ "(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.cpfsec_action_taken_by) as \"cpfsecActionTakenBy\", "
-						+ "st.cpfsec_action_date as \"cpfsecActionDate\", st.cpfsec_remarks as \"cpfsecRemarks\", dsm.dsgn_desc as \"desig\", cfd.claim_applied_for, cfd.purpose "
-						+ "from cpf_claim_form_status st,cpf_registered_users reg,cpf_claim_form_details cfd,pay_dsgn_mst dsm "
+						+ "admin_action_date, st.admin_action_taken_by as \"adminActionTakenByID\", status, admin_remarks as \"adminRemarks\","
+						+ "st.cpfsec_action_taken_by as \"cpfActionTakenByID\", st.cpfsec_action_date as \"cpfsecActionDate\", st.cpfsec_remarks as \"cpfsecRemarks\", "
+						+ "dsm.dsgn_desc as \"desig\", cfd.claim_applied_for, cfd.purpose, cfd.cpf_account_number "
+						+ "from cpf_claim_form_status st, cpf_registered_users reg, cpf_claim_form_details cfd, pay_dsgn_mst dsm "
 						+ "where st.claim_submitted_by=reg.emp_num "
 						+ "and cfd.claim_submitted_by=reg.emp_num "
 						+ "and cfd.designation=dsm.dsgn_id "
@@ -455,7 +480,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					}
 					cpfClaimRequestStatusDto.setRequestId(map.get("REQUEST_ID").toString());
 					cpfClaimRequestStatusDto.setClaimSubmittedDate(myFormat.format(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString().trim())));
-					cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString());
+					cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString().trim()+" ("+map.get("CPF_ACCOUNT_NUMBER").toString().trim()+")");
 					cpfClaimRequestStatusDto.setDesignation(map.get("desig").toString());
 					//String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
 					String claimAppFor=null;
@@ -488,26 +513,30 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						
 						if(map.get("cpfsecActionDate")!=null){
 							cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
-							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
+							cpfClaimRequestStatusDto.setAdminActionTakenBy(getEmployeeWithCPFCode(map.get("cpfActionTakenByID").toString()));
 						}else{
 							if(map.get("ADMIN_ACTION_DATE")!=null)
 								cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
-							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
+							cpfClaimRequestStatusDto.setAdminActionTakenBy(getEmployeeWithCPFCode(map.get("adminActionTakenByID").toString()));
 						}
 						
 					}else if(map.get("STATUS").toString().equals("1")){
 						cpfClaimRequestStatusDto.setStatus("Request Pending At Admin Section");
 						cpfClaimRequestStatusDto.setStatusCode(map.get("STATUS").toString());
+
+						String adminNameWithCpfCode = getEmployeeWithCPFCode(map.get("adminActionTakenByID").toString().trim());
 						if(map.get("ADMIN_ACTION_DATE")!=null)
 							cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
-						cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY")!=null?map.get("ADMIN_ACTION_TAKEN_BY").toString():"Admin Not Yet Register");
+						cpfClaimRequestStatusDto.setAdminActionTakenBy(adminNameWithCpfCode!=""?adminNameWithCpfCode:"Admin Not Yet Register");
+						
 					}else if(map.get("STATUS").toString().equals("2")){
 						cpfClaimRequestStatusDto.setStatus("Request pending at CPF-Admin Section");
 						cpfClaimRequestStatusDto.setStatusCode(map.get("STATUS").toString());
 						cpfClaimRequestStatusDto.setRemarks(map.get("adminRemarks").toString());
+						String cpfAdminNameWithCpfCode = getEmployeeWithCPFCode(map.get("cpfActionTakenByID").toString().trim());
 						if(map.get("cpfsecActionDate")!=null)
 							cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
-						cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy")!=null?map.get("cpfsecActionTakenBy").toString():"CPF Admin Not Yet Register");
+						cpfClaimRequestStatusDto.setAdminActionTakenBy(cpfAdminNameWithCpfCode!=""?cpfAdminNameWithCpfCode:"CPF Admin Not Yet Register");
 					}else if(map.get("STATUS").toString().equals("3")){
 						cpfClaimRequestStatusDto.setStatus("Request approved by CPF-Admin Section and pending for sanction");
 						cpfClaimRequestStatusDto.setStatusCode(map.get("STATUS").toString());
@@ -518,10 +547,10 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 							
 						if(map.get("cpfsecActionDate")!=null)
 							cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
-						if(map.get("cpfsecActionTakenBy")==null)	
+						if(map.get("cpfActionTakenByID")==null)	
 						cpfClaimRequestStatusDto.setAdminActionTakenBy("");
 						else
-						cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
+						cpfClaimRequestStatusDto.setAdminActionTakenBy(getEmployeeWithCPFCode(map.get("cpfActionTakenByID").toString().trim()));
 							
 					}else if(map.get("STATUS").toString().equals("4")){
 						cpfClaimRequestStatusDto.setStatus("Amount sanctioned and request completed");
@@ -529,16 +558,17 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						cpfClaimRequestStatusDto.setRemarks(map.get("cpfsecRemarks").toString());
 						if(map.get("cpfsecActionDate")!=null)
 							cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
-						cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
+						cpfClaimRequestStatusDto.setAdminActionTakenBy(getEmployeeWithCPFCode(map.get("cpfActionTakenByID").toString()));
 					}
 					listCpfClaimStatusDto.add(cpfClaimRequestStatusDto);
 				}
 			}
 			}else if(roleName!=null && roleName.equals("ADMIN")){
 				if(reqType.equals("myReq")){
-					String query = "select st.request_id,reg.emp_name as \"claim_submitted_by\",st.claim_submitted_date,(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.admin_action_taken_by) "
-							+ "admin_action_taken_by, admin_action_date, status, admin_remarks as \"adminRemarks\",(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.cpfsec_action_taken_by) as \"cpfsecActionTakenBy\", "
-							+ "cpfsec_action_date as \"cpfsecActionDate\", cpfsec_remarks as \"cpfsecRemarks\", dsm.dsgn_desc as \"desig\", cfd.claim_applied_for, cfd.purpose "
+					String query = "select st.request_id,reg.emp_name as \"claim_submitted_by\",st.claim_submitted_date, "
+							+ "st.admin_action_taken_by as \"adminActionTakenByID\", admin_action_date, status, admin_remarks as \"adminRemarks\", "
+							+ "st.cpfsec_action_taken_by as \"cpfActionTakenByID\", cpfsec_action_date as \"cpfsecActionDate\", cpfsec_remarks as \"cpfsecRemarks\", "
+							+ "dsm.dsgn_desc as \"desig\", cfd.claim_applied_for, cfd.purpose, cfd.cpf_account_number "
 							+ "from cpf_claim_form_status st, cpf_registered_users reg, cpf_claim_form_details cfd, pay_dsgn_mst dsm "
 							+ "where st.claim_submitted_by=reg.emp_num "
 							+ "and cfd.claim_submitted_by=reg.emp_num "
@@ -570,7 +600,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						}
 						cpfClaimRequestStatusDto.setRequestId(map.get("REQUEST_ID").toString());
 						cpfClaimRequestStatusDto.setClaimSubmittedDate(myFormat.format(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString().trim())));
-						cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString());
+						cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString()+" ("+map.get("CPF_ACCOUNT_NUMBER").toString().trim()+")");
 						cpfClaimRequestStatusDto.setDesignation(map.get("desig").toString());
 						//String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
 						String claimAppFor=null;
@@ -603,24 +633,28 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 							
 							if(map.get("cpfsecActionDate")!=null){
 								cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
-								cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
+								cpfClaimRequestStatusDto.setAdminActionTakenBy(getEmployeeWithCPFCode(map.get("cpfActionTakenByID").toString()));
 							}else{
 								if(map.get("ADMIN_ACTION_DATE")!=null)
 									cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
-								cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
+								cpfClaimRequestStatusDto.setAdminActionTakenBy(getEmployeeWithCPFCode(map.get("adminActionTakenByID").toString()));
 							}
 							
 						}else if(map.get("STATUS").toString().equals("1")){
 							cpfClaimRequestStatusDto.setStatus("Request Pending At Admin Section");
 							if(map.get("ADMIN_ACTION_DATE")!=null)
 								cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
-							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY")!=null?map.get("ADMIN_ACTION_TAKEN_BY").toString():"Admin Not Yet Register");
+							String adminNameWithCPFCode = getEmployeeWithCPFCode(map.get("adminActionTakenByID").toString().trim());
+							cpfClaimRequestStatusDto.setAdminActionTakenBy(adminNameWithCPFCode!=""?adminNameWithCPFCode:"Admin Not Yet Register");
+							
 						}else if(map.get("STATUS").toString().equals("2")){
 							cpfClaimRequestStatusDto.setStatus("Request pending at CPF-Admin Section");
 							cpfClaimRequestStatusDto.setRemarks(map.get("adminRemarks")!=null?map.get("adminRemarks").toString().trim():"");
 							if(map.get("cpfsecActionDate")!=null)
 								cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
-							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy")!=null?map.get("cpfsecActionTakenBy").toString():"CPF Admin Not Yet Register");
+							String cpfAdminNameWithCPFCode = getEmployeeWithCPFCode(map.get("cpfActionTakenByID").toString().trim());
+							cpfClaimRequestStatusDto.setAdminActionTakenBy(cpfAdminNameWithCPFCode!=""?cpfAdminNameWithCPFCode:"CPF Admin Not Yet Register");
+							
 						}else if(map.get("STATUS").toString().equals("3")){
 							cpfClaimRequestStatusDto.setStatus("Request approved by CPF-Admin Section and pending for sanction");
 							if(map.get("cpfsecActionDate")==null)
@@ -633,14 +667,14 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 							if(map.get("cpfsecActionTakenBy")==null)	
 								cpfClaimRequestStatusDto.setAdminActionTakenBy("");
 							else
-								cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
+								cpfClaimRequestStatusDto.setAdminActionTakenBy(getEmployeeWithCPFCode(map.get("cpfActionTakenByID").toString().trim()));
 								
 						}else if(map.get("STATUS").toString().equals("4")){
 							cpfClaimRequestStatusDto.setStatus("Amount sanctioned and request completed");
 							cpfClaimRequestStatusDto.setRemarks(map.get("cpfsecRemarks").toString());
 							if(map.get("cpfsecActionDate")!=null)
 								cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
-							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
+							cpfClaimRequestStatusDto.setAdminActionTakenBy(getEmployeeWithCPFCode(map.get("cpfActionTakenByID").toString().trim()));
 						}
 						listCpfClaimStatusDto.add(cpfClaimRequestStatusDto);
 					}
@@ -657,8 +691,8 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						+ "and st.admin_action_taken_by=:empNum";*/
 				
 				String query = "select st.request_id,st.claim_submitted_by as \"empNum\", reg.emp_name as \"claim_submitted_by\",st.claim_submitted_date, "
-						+ "(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.admin_action_taken_by) admin_action_taken_by, dsm.dsgn_desc as \"desig\", "
-						+ "st.admin_action_date,st.status, st.admin_remarks, cfd.claim_applied_for, cfd.purpose  "
+						+ "st.admin_action_taken_by as \"adminActionTakenByID\", dsm.dsgn_desc as \"desig\", "
+						+ "st.admin_action_date,st.status, st.admin_remarks, cfd.claim_applied_for, cfd.purpose, cfd.cpf_account_number "
 						+ "FROM cpf_claim_form_status st, cpf_claim_form_details cfd, cpf_registered_users reg, pay_dsgn_mst dsm "
 						+ "WHERE st.claim_submitted_by=reg.emp_num "
 						+ "and cfd.claim_submitted_by in (select Claim_Submitted_By from cpf_claim_form_status where admin_action_taken_by=:empNum) "
@@ -679,14 +713,16 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					ClaimRequestStatusDto cpfClaimRequestStatusDto = new ClaimRequestStatusDto();
 					cpfClaimRequestStatusDto.setRequestId(map.get("REQUEST_ID").toString());
 					cpfClaimRequestStatusDto.setClaimSubmittedDate(myFormat.format(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString().trim())));
-					cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString());
+					
+					String claimSubmitted_CPFCode=map.get("CPF_ACCOUNT_NUMBER").toString().trim();
+					cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString().trim() +" ("+claimSubmitted_CPFCode+")");
 					
 					/*if(map.get("ADMIN_ACTION_DATE")!=null)
 					cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));*/
 					
 					cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString().trim())));
 					
-					cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
+					cpfClaimRequestStatusDto.setAdminActionTakenBy(getEmployeeWithCPFCode(map.get("adminActionTakenByID").toString().trim()));
 					//cpfClaimRequestStatusDto.setRemarks(map.get("admin_remarks").toString());
 					//String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
 					String claimAppFor=null;
@@ -708,7 +744,6 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					String claimPur=map.get("PURPOSE")!=null?map.get("PURPOSE").toString().trim():"";
 					cpfClaimRequestStatusDto.setClaimType(claimAppFor+" ("+claimPur+")");
 					
-					
 					cpfClaimRequestStatusDto.setStatus("Pending at admin");
 					cpfClaimRequestStatusDto.setDesignation(map.get("desig")!=null?map.get("desig").toString():"");
 					
@@ -717,10 +752,11 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 			}
 			}else if(roleName!=null && roleName.equals("CPF_ADMIN")){				
 				if(reqType.equals("myReq")){
-				String query = "select st.request_id,reg.emp_name as \"claim_submitted_by\",st.claim_submitted_date,(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.admin_action_taken_by) "
-						+ "admin_action_taken_by, st.admin_action_date, st.status, st.admin_remarks as \"adminRemarks\",(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.cpfsec_action_taken_by) as \"cpfsecActionTakenBy\", "
-						+ "st.cpfsec_action_date as \"cpfsecActionDate\", st.cpfsec_remarks as \"cpfsecRemarks\", dsm.dsgn_desc as \"desig\", cfd.claim_applied_for, cfd.purpose "
-						+ "from cpf_claim_form_status st,cpf_registered_users reg, cpf_claim_form_details cfd, pay_dsgn_mst dsm "
+				String query = "select st.request_id,reg.emp_name as \"claim_submitted_by\",st.claim_submitted_date,"
+						+ "st.admin_action_taken_by as \"adminActionTakenByID\", st.admin_action_date, st.status, st.admin_remarks as \"adminRemarks\", "
+						+ "st.cpfsec_action_taken_by as \"cpfActionTakenByID\", st.cpfsec_action_date as \"cpfsecActionDate\", st.cpfsec_remarks as \"cpfsecRemarks\", "
+						+ "dsm.dsgn_desc as \"desig\", cfd.claim_applied_for, cfd.purpose, cfd.cpf_account_number "
+						+ "from cpf_claim_form_status st, cpf_registered_users reg, cpf_claim_form_details cfd, pay_dsgn_mst dsm "
 						+ "where st.claim_submitted_by=reg.emp_num "
 						+ "and cfd.claim_submitted_by=reg.emp_num "
 						+ "and cfd.designation=dsm.dsgn_id "
@@ -751,7 +787,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					}
 					cpfClaimRequestStatusDto.setRequestId(map.get("REQUEST_ID").toString());
 					cpfClaimRequestStatusDto.setClaimSubmittedDate(myFormat.format(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString().trim())));
-					cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString());
+					cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString()+" ("+map.get("CPF_ACCOUNT_NUMBER").toString().trim()+")");
 					cpfClaimRequestStatusDto.setDesignation(map.get("desig").toString());
 					//String claimAppFor=map.get("CLAIM_APPLIED_FOR").toString().trim();
 					String claimAppFor=null;
@@ -784,24 +820,26 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						
 						if(map.get("cpfsecActionDate")!=null){
 							cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
-							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
+							cpfClaimRequestStatusDto.setAdminActionTakenBy(getEmployeeWithCPFCode(map.get("cpfActionTakenByID").toString()));
 						}else{
 							if(map.get("ADMIN_ACTION_DATE")!=null)
 								cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
-							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
+							cpfClaimRequestStatusDto.setAdminActionTakenBy(getEmployeeWithCPFCode(map.get("adminActionTakenByID").toString()));
 						}
 						
 					}else if(map.get("STATUS").toString().equals("1")){
 						cpfClaimRequestStatusDto.setStatus("Request Pending At Admin Section");
 						if(map.get("ADMIN_ACTION_DATE")!=null)
 							cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
-						cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY")!=null?map.get("ADMIN_ACTION_TAKEN_BY").toString():"Admin Not Yet Register");
+						String adminNameWithCPFCode = getEmployeeWithCPFCode(map.get("adminActionTakenByID").toString().trim());
+						cpfClaimRequestStatusDto.setAdminActionTakenBy(adminNameWithCPFCode!=""?adminNameWithCPFCode:"Admin Not Yet Register");
 					}else if(map.get("STATUS").toString().equals("2")){
 						cpfClaimRequestStatusDto.setStatus("Request pending at CPF-Admin Section");
 						cpfClaimRequestStatusDto.setRemarks(map.get("adminRemarks").toString());
 						if(map.get("cpfsecActionDate")!=null)
 							cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
-						cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy")!=null?map.get("cpfsecActionTakenBy").toString():"CPF Admin Not Yet Register");
+						String cpfAdminNameWithCPFCode = getEmployeeWithCPFCode(map.get("cpfActionTakenByID").toString().trim());
+						cpfClaimRequestStatusDto.setAdminActionTakenBy(cpfAdminNameWithCPFCode!=""?cpfAdminNameWithCPFCode:"CPF Admin Not Yet Register");
 					}else if(map.get("STATUS").toString().equals("3")){
 						cpfClaimRequestStatusDto.setStatus("Request approved by CPF-Admin Section and pending for sanction");
 						if(map.get("cpfsecActionDate")==null)
@@ -814,14 +852,14 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						if(map.get("cpfsecActionTakenBy")==null)	
 							cpfClaimRequestStatusDto.setAdminActionTakenBy("");
 						else
-							cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
+							cpfClaimRequestStatusDto.setAdminActionTakenBy(getEmployeeWithCPFCode(map.get("cpfActionTakenByID").toString()));
 							
 					}else if(map.get("STATUS").toString().equals("4")){
 						cpfClaimRequestStatusDto.setStatus("Amount sanctioned and request completed");
 						cpfClaimRequestStatusDto.setRemarks(map.get("cpfsecRemarks").toString());
 						if(map.get("cpfsecActionDate")!=null)
 							cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("cpfsecActionDate").toString().trim())));
-						cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("cpfsecActionTakenBy").toString());
+						cpfClaimRequestStatusDto.setAdminActionTakenBy(getEmployeeWithCPFCode(map.get("cpfActionTakenByID").toString()));
 					}
 					listCpfClaimStatusDto.add(cpfClaimRequestStatusDto);
 				}
@@ -839,9 +877,9 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						+ "and st.cpfsec_action_taken_by=:empNum";*/
 				
 				String query = "SELECT st.request_id,reg.emp_num as \"claimSubmitEmpNum\",reg.emp_name as \"claim_submitted_by\",st.claim_submitted_date, "
-						+ "st.cpfsec_action_date, st.status, st.cpfsec_remarks, st.ADMIN_ACTION_DATE, cfd.claim_applied_for, cfd.purpose, "
-						+ "(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.admin_action_taken_by) admin_action_taken_by, dsm.dsgn_desc as \"desig\" "
-						+ "FROM cpf_claim_form_status st,cpf_claim_form_details cfd,cpf_registered_users reg,pay_dsgn_mst dsm "
+						+ "st.cpfsec_action_date, st.status, st.cpfsec_remarks, st.ADMIN_ACTION_DATE, cfd.claim_applied_for, cfd.purpose, cfd.cpf_account_number, "
+						+ "st.admin_action_taken_by as \"adminActionTakenByID\", dsm.dsgn_desc as \"desig\" "
+						+ "FROM cpf_claim_form_status st, cpf_claim_form_details cfd, cpf_registered_users reg, pay_dsgn_mst dsm "
 						+ "WHERE reg.emp_num=st.claim_submitted_by "
 						+ "and cfd.claim_submitted_by in (select  Claim_Submitted_By from cpf_claim_form_status where cpfsec_action_taken_by=:empNum) "
 						+ "and cfd.designation=dsm.dsgn_id "
@@ -862,7 +900,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					cpfClaimRequestStatusDto.setRequestId(map.get("REQUEST_ID").toString());
 					cpfClaimRequestStatusDto.setClaimSubmittedDate(myFormat.format(format.parse(map.get("CLAIM_SUBMITTED_DATE").toString().trim())));
 					cpfClaimRequestStatusDto.setClaimSubmittedEmpId(map.get("claimSubmitEmpNum").toString());
-					cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString());
+					cpfClaimRequestStatusDto.setClaimSubmittedBy(map.get("claim_submitted_by").toString()+" ("+map.get("CPF_ACCOUNT_NUMBER").toString().trim()+")");
 					
 					/*if(map.get("CPFSEC_ACTION_DATE")!=null)
 					cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("CPFSEC_ACTION_DATE").toString().trim())));*/
@@ -870,7 +908,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					if(map.get("ADMIN_ACTION_DATE")!=null)
 					cpfClaimRequestStatusDto.setAdminActionDate(myFormat.format(format.parse(map.get("ADMIN_ACTION_DATE").toString().trim())));
 					
-					cpfClaimRequestStatusDto.setAdminActionTakenBy(map.get("ADMIN_ACTION_TAKEN_BY").toString());
+					cpfClaimRequestStatusDto.setAdminActionTakenBy(getEmployeeWithCPFCode(map.get("adminActionTakenByID").toString()));
 					//cpfClaimRequestStatusDto.setRemarks(map.get("admin_remarks").toString());
 					//map.get("CLAIM_APPLIED_FOR").toString().trim();
 					String claimAppFor=null;
@@ -1517,11 +1555,11 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 		session.beginTransaction();
 		try{
 			if(roleName!=null && roleName.equals("ADMIN")){
-				String query = "select request_id,reg.emp_name as \"claim_submitted_by\",claim_submitted_date,(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.cpfsec_action_taken_by) "
-						+ "cpfsecActionTakenBy, admin_action_date,status, admin_remarks as \"adminRemarks\""
-						+ "from cpf_claim_form_status st,cpf_registered_users reg where st.claim_submitted_by=reg.emp_num and status>1 and admin_action_taken_by=:empNum";
-				
-				
+				String query = "select request_id,reg.emp_name as \"claim_submitted_by\",claim_submitted_date,"
+						+ "(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.cpfsec_action_taken_by) "
+						+ "cpfsecActionTakenBy, admin_action_date, status, admin_remarks as \"adminRemarks\""
+						+ "from cpf_claim_form_status st,cpf_registered_users reg "
+						+ "where st.claim_submitted_by=reg.emp_num and status>1 and admin_action_taken_by=:empNum";
 				
 				Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 				if (empNum != null) {
@@ -1559,9 +1597,11 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					listCpfClaimStatusDto.add(cpfClaimRequestStatusDto);
 				}	
 			}else if(roleName!=null && roleName.equals("CPF_ADMIN")){
-				String query = "select request_id,reg.emp_name as \"claim_submitted_by\",claim_submitted_date,(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.cpfsec_action_taken_by) "
+				String query = "select request_id,reg.emp_name as \"claim_submitted_by\",claim_submitted_date,"
+						+ "(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.cpfsec_action_taken_by) "
 						+ "cpfsec_action_taken_by, cpfsec_action_date,status, cpfsec_remarks as \"cpfRemarks\""
-						+ "from cpf_claim_form_status st,cpf_registered_users reg where st.claim_submitted_by=reg.emp_num and status>2 and cpfsec_action_taken_by=:empNum";
+						+ "from cpf_claim_form_status st,cpf_registered_users reg "
+						+ "where st.claim_submitted_by=reg.emp_num and status>2 and cpfsec_action_taken_by=:empNum";
 				
 				Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 				if (empNum != null) {
@@ -1618,10 +1658,13 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 		session.beginTransaction();
 		try{
 			if(roleName!=null && roleName.equals("ADMIN")){
-				String query = "select request_id,reg.emp_name as \"claim_submitted_by\",claim_submitted_date,(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.admin_action_taken_by) "
-						+ "admin_action_taken_by, admin_action_date,status, admin_remarks as \"adminRemarks\",(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.cpfsec_action_taken_by) as \"cpfsecActionTakenBy\", "
+				String query = "select request_id,reg.emp_name as \"claim_submitted_by\",claim_submitted_date,"
+						+ "(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.admin_action_taken_by) "
+						+ "admin_action_taken_by, admin_action_date,status, admin_remarks as \"adminRemarks\","
+						+ "(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.cpfsec_action_taken_by) as \"cpfsecActionTakenBy\", "
 						+ "cpfsec_action_date as \"cpfsecActionDate\", cpfsec_remarks as \"cpfsecRemarks\" "
-						+ "from cpf_claim_form_status st,cpf_registered_users reg where st.claim_submitted_by=reg.emp_num and status in(0,4) and admin_action_taken_by=:empNum";
+						+ "from cpf_claim_form_status st, cpf_registered_users reg "
+						+ "where st.claim_submitted_by=reg.emp_num and status in(0,4) and admin_action_taken_by=:empNum";
 				
 				Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 				if (empNum != null) {
@@ -1665,9 +1708,11 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					listCpfClaimStatusDto.add(cpfClaimRequestStatusDto);
 				}	
 			}else if(roleName!=null && roleName.equals("CPF_ADMIN")){
-				String query = "select request_id,reg.emp_name as \"claim_submitted_by\",claim_submitted_date,(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.cpfsec_action_taken_by) "
+				String query = "select request_id,reg.emp_name as \"claim_submitted_by\",claim_submitted_date,"
+						+ "(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.cpfsec_action_taken_by) "
 						+ "cpfsec_action_taken_by, cpfsec_action_date,status, cpfsec_remarks as \"cpfRemarks\""
-						+ "from cpf_claim_form_status st,cpf_registered_users reg where st.claim_submitted_by=reg.emp_num and status in(0,4) and cpfsec_action_taken_by=:empNum";
+						+ "from cpf_claim_form_status st,cpf_registered_users reg "
+						+ "where st.claim_submitted_by=reg.emp_num and status in(0,4) and cpfsec_action_taken_by=:empNum";
 				
 				Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 				if (empNum != null) {
