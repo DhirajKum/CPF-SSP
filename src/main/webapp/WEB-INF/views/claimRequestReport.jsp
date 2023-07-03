@@ -39,11 +39,10 @@
 		<div class="form-group row">
 			<label class="col-sm-5 col-form-label"><b>To Date</b></label>
 			<div class="col-sm-5">
-				<input id="datepicker2" style="width: 180px;" cssClass="form-control" />
+				<input id="datepicker2" style="width: 200px;" cssClass="form-control" />
 			</div>
 		</div>
 	</div>
-	 
 </div>
 
 <div class="row" style="text-align: center;">	
@@ -55,27 +54,53 @@
 			</div>
 		</div>
 	</div>
-	
-</div>
-	
-	<div class="row" style="text-align: center;">	
 	<div class="col-md-6">
 		<div class="form-group row">
-			<label class="col-sm-5 col-form-label"><b>Claim Type </b></label>
+			<label class="col-sm-5 col-form-label"><b>Parent Zone </b></label>
 			<div class="col-sm-5">
-				<select cssclass="form-control" id="claimType">
-					<option value="" label="---Select---"/>
-					<option value="CpfFinalSettlement"> CPF Final Settlement </option>
-						<option value="CpfPartFinalWithdrawal"> CPF Part final Withdrawal </option>
-						<option value="90%Withdrawal"> 90% Withdrawal </option>
-						<option value="TempAdv"> Temp. Adv. </option>
-				</select>
+			<select cssclass="form-control" id="parentZone">
+				<option value="" label="---Select---"/>
+				<option value="182"> EA11 Zonal Office East </option>
+				<option value="188"> FA11 Zonal Office North East </option>
+				<option value="244"> SA11 Zonal Office South </option>
+				<option value="245"> WA11 Zonal Office MUMBAI </option>
+				<option value="246"> NA11 Zonal Office Noida </option>
+			</select>
 			</div>
 		</div>
 	</div>
-	
 </div>
-	 
+	
+<div class="row" style="text-align: center;">	
+<div class="col-md-6">
+	<div class="form-group row">
+		<label class="col-sm-5 col-form-label"><b>Claim Type</b></label>
+		<div class="col-sm-5">
+			<select cssclass="form-control" id="claimType">
+				<option value="" label="---Select---"/>
+				<option value="CpfFinalSettlement"> CPF Final Settlement </option>
+					<option value="CpfPartFinalWithdrawal"> CPF Part final Withdrawal </option>
+					<option value="90%Withdrawal"> 90% Withdrawal </option>
+					<option value="TempAdv"> Temp. Adv. </option>
+			</select>
+		</div>
+	</div>
+</div>
+<div class="col-md-6">
+	<div class="form-group row">
+		<label class="col-sm-5 col-form-label"><b>Claim Status Type</b></label>
+		<div class="col-sm-5">
+			<select cssclass="form-control" style="width: 200px;" id="claimStatusType">
+				<option value="" label="---Select---"/>
+				<option value=""> Final Approved </option>
+				<option value=""> Rejected </option>
+				<option value=""> Pending at Admin </option>
+				<option value=""> Pending at CPF Admin </option>
+			</select>
+		</div>
+	</div>
+</div>
+</div>
 
 <div class="row" style="text-align: center;">	
 		<div class="col-md-5">
@@ -152,15 +177,14 @@
 </html>
 
 <script>
-
 $(document).ready(function() {
-    $("#datepicker1").datepicker({dateFormat:"dd-mm-yy"});
-    $("#datepicker2").datepicker({dateFormat:"dd-mm-yy"});
-    $("#datepicker1").prop('readonly', true);
-    $("#datepicker2").prop('readonly', true);
-    
-  $('.numbers').keyup(function () { 
-    this.value = this.value.replace(/[^0-9\.]/g,'');
+	$("#datepicker1").datepicker({dateFormat:"dd-mm-yy"});
+	$("#datepicker2").datepicker({dateFormat:"dd-mm-yy"});
+	$("#datepicker1").prop('readonly', true);
+	$("#datepicker2").prop('readonly', true);
+	   
+	$('.numbers').keyup(function () { 
+	   this.value = this.value.replace(/[^0-9\.]/g,'');
 	});
 });
 
@@ -176,7 +200,7 @@ if($table.length){
 	$table.dataTable({
 		//lengthMenu:[[5,10,15,-1],['5','10','15','ALL']],
 		pageLength:10,
-		/*dom: 'Bfrtip',
+		dom: 'Bfrtip',
 		buttons: ['excel'/*, 'copy', {
 	      extend: 'pdf',
 	      text: '<i class="fa fa-file-pdf-o"></i> PDF',
@@ -188,7 +212,7 @@ if($table.length){
           pageSize : 'A3',
 	      footer: true
 	    },'print' */
-	    //],
+	    ],
 	    //order: [[5, 'desc']],
 		ajax:{
 			url:urlVar,
