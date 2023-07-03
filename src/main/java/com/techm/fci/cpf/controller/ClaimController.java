@@ -287,10 +287,7 @@ public class ClaimController {
 						tempAdvFlage = true;
 					}
 				}
-				/*
-				 * if (!map.isEmpty() && map.get("TempAdv") != null && map.get("TempAdv") >= 1)
-				 * { recordFound = true; cfwLimitFlag = true; }
-				 */
+			
 				break;
 			default:
 				recordFound = false;
