@@ -271,12 +271,14 @@ public class ReportController {
 			@RequestParam(name = "toDate", required = false) String toDate,
 			@RequestParam(name = "fromDate", required = false) String fromDate,
 			@RequestParam(name = "empNum", required = false) String empNum,
-			@RequestParam(name = "claimType", required = false) String claimType) {
+			@RequestParam(name = "claimType", required = false) String claimType,
+			@RequestParam(name = "claimStatusType", required = false) String claimStatusType,
+			@RequestParam(name = "parentZone", required = false) String parentZone) {
 	
 		List<ClaimRequestGenerateReportDto> claimReportList = new ArrayList<ClaimRequestGenerateReportDto>();
 		UserModel uModel = getUserModel();
 		if (uModel != null) {
-			claimReportList = reportService.getClaimReqReport(empNum, fromDate, toDate, claimType);
+			claimReportList = reportService.getClaimReqReport(empNum, fromDate, toDate, claimType, claimStatusType, parentZone);
 		}
 		return claimReportList;
 	}

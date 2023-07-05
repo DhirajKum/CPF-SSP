@@ -63,8 +63,8 @@ public class ReportServiceImpl implements ReportService {
 
 	
 	@Override
-	public List<ClaimRequestGenerateReportDto> getClaimReqReport(String empNum,String fromDate,String toDate,String claimType) {
-		List<ClaimRequestGenerateReportDto> claimRequestGenerateReportDtoList = reportDao.getClaimReqReport(empNum,fromDate,toDate,claimType);
+	public List<ClaimRequestGenerateReportDto> getClaimReqReport(String empNum,String fromDate,String toDate,String claimType,String claimStatusType,String parentZone) {
+		List<ClaimRequestGenerateReportDto> claimRequestGenerateReportDtoList = reportDao.getClaimReqReport(empNum,fromDate,toDate,claimType,claimStatusType,parentZone);
 		return claimRequestGenerateReportDtoList;
 	}
 	

@@ -92,10 +92,11 @@
 		<div class="col-sm-5">
 			<select cssclass="form-control" style="width: 200px;" id="claimStatusType">
 				<option value="" label="---Select---"/>
-				<option value=""> Final Approved </option>
-				<option value=""> Rejected </option>
-				<option value=""> Pending at Admin </option>
-				<option value=""> Pending at CPF Admin </option>
+				<option value="0"> Rejected </option>
+				<option value="1"> Pending at Admin </option>
+				<option value="2"> Pending at CPF Admin </option>
+				<option value="3"> Pending at Amount Sanction </option>
+				<option value="4"> Final Approved </option>
 			</select>
 		</div>
 	</div>
@@ -193,8 +194,10 @@ var fromDate = $('#datepicker1').val();
 var toDate = $('#datepicker2').val();
 var empNum = $('#empNum').val();
 var claimType = $('#claimType').val();
+var claimStatusType = $('#claimStatusType').val();
+var parentZone = $('#parentZone').val();
 
-var urlVar = '${pageContext.request.contextPath}/report/generateClaimRequestReport?toDate='+toDate+'&fromDate='+fromDate+'&empNum='+empNum+'&claimType='+claimType;
+var urlVar = '${pageContext.request.contextPath}/report/generateClaimRequestReport?toDate='+toDate+'&fromDate='+fromDate+'&empNum='+empNum+'&claimType='+claimType+'&claimStatusType='+claimStatusType+'&parentZone='+parentZone;
 var $table = $('#claimReqReportdatatable');
 if($table.length){
 	$table.dataTable({

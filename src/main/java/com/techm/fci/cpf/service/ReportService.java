@@ -27,6 +27,6 @@ public interface ReportService {
 	
 	public List<CpfSlipAdjustmentDataDto> getAdjustmentDtCpfSlipReport(String empNum,String fromYear);
 	
-	public List<ClaimRequestGenerateReportDto> getClaimReqReport(String empNum,String fromDate,String toDate,String claimType);
+	public List<ClaimRequestGenerateReportDto> getClaimReqReport(String empNum,String fromDate,String toDate,String claimType,String claimStatusType,String parentZone);
 	
 }

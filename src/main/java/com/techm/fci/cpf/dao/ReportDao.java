@@ -19,7 +19,7 @@ public interface ReportDao {
 	public CpfSlipIntOBCreditAsOnDataDto getOBDataCpfSlipReport(String empNum, String fromYear, String toYear);
 	public CpfSlipIntOBCreditAsOnDataDto getCreditAsOnCpfSlipReport(String empNum, String fromYear);
 	public List<CpfSlipAdjustmentDataDto> getAdjustmentDtCpfSlipReport(String empNum, String fromYear);
-	public List<ClaimRequestGenerateReportDto> getClaimReqReport(String empNum,String fromDate,String toDate,String claimType);
+	public List<ClaimRequestGenerateReportDto> getClaimReqReport(String empNum,String fromDate,String toDate,String claimType,String claimStatusType,String parentZone);
 	
 	
 }

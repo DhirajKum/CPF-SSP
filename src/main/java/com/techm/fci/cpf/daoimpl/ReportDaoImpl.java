@@ -300,7 +300,7 @@ public static final Logger logger = LoggerFactory.getLogger(ReportDaoImpl.class)
 	}
 
 	
-	public List<ClaimRequestGenerateReportDto> getClaimReqReport(String empNum,String fromDate,String toDate,String claimType){
+	public List<ClaimRequestGenerateReportDto> getClaimReqReport(String empNum,String fromDate,String toDate,String claimType,String claimStatusType,String parentZone){
 		
 		List<ClaimRequestGenerateReportDto> claimRequestGenerateReportDtoList = new ArrayList<ClaimRequestGenerateReportDto>();
 		Session session = sessionFactory.getCurrentSession();
@@ -332,7 +332,7 @@ public static final Logger logger = LoggerFactory.getLogger(ReportDaoImpl.class)
 					+ "LEFT JOIN com_loc_mst c2 ON  c2.loc_id=a.PARENT_ZONE "
 					+ "LEFT JOIN cpf_claim_form_status st ON  st.request_id=a.request_id");
 			
-			if (!StringUtils.isEmpty(empNum) || !StringUtils.isEmpty(fromDate) || !StringUtils.isEmpty(claimType)) {
+			if (!StringUtils.isEmpty(empNum) || !StringUtils.isEmpty(fromDate) || !StringUtils.isEmpty(claimType) || !StringUtils.isEmpty(claimStatusType) || !StringUtils.isEmpty(parentZone)) {
 				query = query + " WHERE";
 			}
 
@@ -352,6 +352,18 @@ public static final Logger logger = LoggerFactory.getLogger(ReportDaoImpl.class)
 					query = query + " AND ";
 				}
 				query = query + " a.CLAIM_APPLIED_FOR= '" + claimType + "'";
+			}
+			if (!StringUtils.isEmpty(claimStatusType)) {
+				if (!StringUtils.isEmpty(empNum) || !StringUtils.isEmpty(fromDate) || !StringUtils.isEmpty(claimType)) {
+					query = query + " AND ";
+				}
+				query = query + " st.status= '" + claimStatusType + "'";
+			}
+			if (!StringUtils.isEmpty(parentZone)) {
+				if (!StringUtils.isEmpty(empNum) || !StringUtils.isEmpty(fromDate) || !StringUtils.isEmpty(claimType) || !StringUtils.isEmpty(claimStatusType)) {
+					query = query + " AND ";
+				}
+				query = query + " a.PARENT_ZONE= '" + parentZone + "'";
 			}
 			query= query + " and st.status <> -1 order by a.CLAIM_SUBMITTED_DATE asc";
 
@@ -376,11 +388,10 @@ public static final Logger logger = LoggerFactory.getLogger(ReportDaoImpl.class)
 						
 					claimRequestGenerateReportDtoList.add(claimRequestGenerateReportDto);
 				}
-			}	
-			catch (RuntimeException re) {
+			} catch (RuntimeException re) {
 				logger.info("Find by example failed :::", re);
 				throw re;
-			}catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		return claimRequestGenerateReportDtoList;
