@@ -263,5 +263,8 @@ function clearData(){
 $("#datepicker1").val('');
 $("#datepicker2").val('');
 $("#empNum").val('');
+$("#claimType").val('');
+$("#claimStatusType").val('');
+$("#parentZone").val('');
 }
 </script>

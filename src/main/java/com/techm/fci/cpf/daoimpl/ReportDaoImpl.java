@@ -317,7 +317,7 @@ public static final Logger logger = LoggerFactory.getLogger(ReportDaoImpl.class)
 		    if (!StringUtils.isEmpty(toDate)){ 
 		    	ntoDate = sdf2.format(sdf.parse(toDate));
 			    } 
-			String query=new String(" select distinct a.CLAIM_SUBMITTED_BY AS \"empNum\" ,pem.emp_first_name||' '||pem.emp_middle_name||' '||pem.emp_last_name as \"empName\","
+			String query=new String("select distinct a.CLAIM_SUBMITTED_BY AS \"empNum\" ,pem.emp_first_name||' '||pem.emp_middle_name||' '||pem.emp_last_name as \"empName\","
 					+ "a.request_id AS  \"claimId\",a.CLAIM_APPLIED_FOR AS \"claimType\",a.CLAIM_SUBMITTED_DATE AS \"claimDate\", "
 					+ "CASE st.status  "
 					+ "WHEN 0  THEN 'Request Rejected' "
@@ -326,7 +326,7 @@ public static final Logger logger = LoggerFactory.getLogger(ReportDaoImpl.class)
 					+ "WHEN 3 THEN 'pending for sanction' "
 					+ "WHEN 4  THEN 'request completed' END AS \"claimStatus\" ,"
 					+ "c1.loc_desc AS \"presLocation\",c2.loc_desc as \"PARENT_ZONE\" "
-					+ "from cpf_claim_form_details a "
+					+ "FROM cpf_claim_form_details a "
 					+ "LEFT JOIN pay_emp_mast pem ON a.CLAIM_SUBMITTED_BY=pem.emp_num "
 					+ "LEFT JOIN com_loc_mst c1 ON  c1.loc_id=a.present_location  "
 					+ "LEFT JOIN com_loc_mst c2 ON  c2.loc_id=a.PARENT_ZONE "
@@ -365,7 +365,7 @@ public static final Logger logger = LoggerFactory.getLogger(ReportDaoImpl.class)
 				}
 				query = query + " a.PARENT_ZONE= '" + parentZone + "'";
 			}
-			query= query + " and st.status <> -1 order by a.CLAIM_SUBMITTED_DATE asc";
+			query= query + " AND st.status <> -1 ORDER BY a.CLAIM_SUBMITTED_DATE ASC";
 
 			System.out.print(query);
 			Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
