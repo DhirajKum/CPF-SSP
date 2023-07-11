@@ -870,29 +870,25 @@ public class ClaimController {
 
 				String folderPath = null;
 				if (!uModel.getEmpNum().equals("")) {
-					// folderPath = "/prodshare/cpf_out/"+uModel.getEmpNum().trim()+"_OTHERS";//For
-					// Production server
+					// folderPath = "/prodshare/cpf_out/"+uModel.getEmpNum().trim()+"_OTHERS";//For Production server
 					folderPath = "/fapshare/cpf_out/" + uModel.getEmpNum().trim() + "_OTHERS";// For Dev server
 				}
 				Path pathLoc = Paths.get(folderPath);
 				if (!Files.exists(pathLoc))
 					Files.createDirectories(pathLoc);
-
+				
+				//pathLoc.toFile().delete();
 				Boolean deleteStatus = userService.deleteEmpOtherDoc(uModel, claimSubmittedEmpID, reqId);
 				if (deleteStatus) {
 					for (CommonsMultipartFile file : files) {
 						String filename = file.getOriginalFilename();
-						// int lastIndex= filename.lastIndexOf(".");
-						// String custumFileName =
-						// uModel.getEmpNum().trim()+"_KYC_DOC"+filename.substring(lastIndex);
+
 						logger.info("File Upload location ::: " + pathLoc + "/" + filename);
 						logger.info("claimAppliedFor :::: " + claimAppliedFor);
-						Boolean saveStatus = userService.saveEmpOtherDoc(uModel, claimSubmittedEmpID, reqId,
-								claimAppliedFor, pathLoc + "/" + filename);
+						Boolean saveStatus = userService.saveEmpOtherDoc(uModel, claimSubmittedEmpID, reqId, claimAppliedFor, pathLoc + "/" + filename);
 						if (saveStatus) {
 							byte barr[] = file.getBytes();
-							BufferedOutputStream bout = new BufferedOutputStream(
-									new FileOutputStream(pathLoc + "/" + filename));
+							BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(pathLoc + "/" + filename));
 							bout.write(barr);
 							bout.flush();
 							bout.close();
