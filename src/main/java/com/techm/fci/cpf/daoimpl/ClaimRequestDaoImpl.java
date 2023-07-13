@@ -39,8 +39,8 @@ import com.techm.fci.cpf.dto.ActClaimDto;
 import com.techm.fci.cpf.dto.AssignToClaimDto;
 import com.techm.fci.cpf.dto.ClaimHistoryTrailDto;
 import com.techm.fci.cpf.dto.ClaimRequestStatusDto;
-import com.techm.fci.cpf.dto.SavedClaimConditionCheckDto;
 import com.techm.fci.cpf.dto.DropdownDto;
+import com.techm.fci.cpf.dto.SavedClaimConditionCheckDto;
 import com.techm.fci.cpf.model.AuditCpfClaimRequestStatus;
 import com.techm.fci.cpf.model.CpfClaimHistoryTrail;
 import com.techm.fci.cpf.model.CpfClaimRequest;
@@ -59,7 +59,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 	
 	private Session session;
 	
-	//Not supported by hibernate core version using is 3.6.3.final. JPA 2.1 support this but JPA 2.1 support by hibernate 4.3.x or up
+	//Not supported by Hibernate core version using is 3.6.3.final. JPA 2.1 support this but JPA 2.1 support by hibernate 4.3.x or up
 	//@PersistenceContext
 	//private EntityManager entitymanager;
 	
@@ -1075,11 +1075,14 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 			}
 			
 			String query4 = "select du.file_path as \"filePath\", du.doc_id as \"docId\" "
-					+ "from cpf_doc_uploads du where du.emp_num=:empNum and du.request_id=:reqId and du.file_type=3";
+					+ "from cpf_doc_uploads du "
+					+ "where du.emp_num=:empNum "
+					//+ "and du.request_id=:reqId "
+					+ "and du.file_type=3";
 			Query hQuery4 = session.createSQLQuery(query4).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 			if(reqId!=null){
 				hQuery4.setParameter("empNum", map.get("CLAIM_SUBMITTED_BY").toString().trim());
-				hQuery4.setParameter("reqId", reqId);
+				//hQuery4.setParameter("reqId", reqId);
 			}
 			List<Map<String, Object>> list4 = hQuery4.list();
 			if(list4!=null && list4.size()>0){
@@ -2195,30 +2198,33 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		try{
-/*			entitymanager.getTransaction().begin();
-	        StoredProcedureQuery sPQuery = entitymanager.createStoredProcedureQuery("PKG_CPF_FCI.proc_getcpfmaxlimit");
-
-	        sPQuery.registerStoredProcedureParameter("pempno", String.class, ParameterMode.IN);
-	        sPQuery.registerStoredProcedureParameter("SANCTYPE", String.class, ParameterMode.IN);
-	        sPQuery.registerStoredProcedureParameter("MaxEligibleAmt", Double.class, ParameterMode.OUT);
-	        sPQuery.registerStoredProcedureParameter("perrorcode", Integer.class, ParameterMode.OUT);
-	        sPQuery.registerStoredProcedureParameter("perrmsg", String.class, ParameterMode.OUT);
-	        sPQuery.setParameter("pempno", empId);
-	        sPQuery.setParameter("SANCTYPE", sancType);
-	        sPQuery.execute();
-	       
-	        Double maxEligibleAmt = (Double)sPQuery.getOutputParameterValue("MaxEligibleAmt");
-	        System.out.println("MaxEligibleAmt is: " + maxEligibleAmt);
-	        entitymanager.getTransaction().commit();
-	        entitymanager.close();*/
+			/*
+			 * entitymanager.getTransaction().begin(); StoredProcedureQuery sPQuery =
+			 * entitymanager.createStoredProcedureQuery("PKG_CPF_FCI.proc_getcpfmaxlimit");
+			 * 
+			 * sPQuery.registerStoredProcedureParameter("pempno", String.class,
+			 * ParameterMode.IN); sPQuery.registerStoredProcedureParameter("SANCTYPE",
+			 * String.class, ParameterMode.IN);
+			 * sPQuery.registerStoredProcedureParameter("MaxEligibleAmt", Double.class,
+			 * ParameterMode.OUT); sPQuery.registerStoredProcedureParameter("perrorcode",
+			 * Integer.class, ParameterMode.OUT);
+			 * sPQuery.registerStoredProcedureParameter("perrmsg", String.class,
+			 * ParameterMode.OUT); sPQuery.setParameter("pempno", empId);
+			 * sPQuery.setParameter("SANCTYPE", sancType); sPQuery.execute();
+			 * 
+			 * Double maxEligibleAmt =
+			 * (Double)sPQuery.getOutputParameterValue("MaxEligibleAmt");
+			 * System.out.println("MaxEligibleAmt is: " + maxEligibleAmt);
+			 * entitymanager.getTransaction().commit(); entitymanager.close();
+			 */
 	        
-			/*Query query = session.createSQLQuery("CALL PKG_TEST1.proc_getcpfmaxlimit(:empId,:sancType,:maxAmount)")
+			Query query = session.createSQLQuery("CALL PKG_TEST1.proc_getcpfmaxlimit(:empId,:sancType,:maxAmount)")
 					.setParameter("empId", empId)
 					.setParameter("sancType", sancType);
 			List result = query.list();
 			for(int i=0; i<result.size(); i++){
 				String maxAmount = result.get(i).toString();
-			}*/
+			}
 	}catch (RuntimeException re) {
 		logger.info("Find by example failed :::", re);
 		throw re;
