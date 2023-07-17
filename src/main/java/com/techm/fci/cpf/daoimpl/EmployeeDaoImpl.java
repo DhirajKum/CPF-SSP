@@ -361,12 +361,13 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 		session.beginTransaction();
 		String empNum=uModel.getEmpNum();
 		if(empNum!=null && claimSubEmpID!=null && !claimSubEmpID.equals("")){
-			String query = "select doc_id as \"docID\" from cpf_doc_uploads where emp_num=:empNum and request_id=:reqId and file_type=2";
+			String query = "select doc_id as \"docID\" from cpf_doc_uploads where emp_num=:empNum and request_id=:reqId and file_type=2 and created_by=:createdBy";
 			
 			Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 			if (empNum != null) {
 				hQuery.setParameter("empNum", claimSubEmpID);
 				hQuery.setParameter("reqId", reqId);
+				hQuery.setParameter("createdBy", empNum);
 			}
 			List<Map<String, Object>> list = hQuery.list();
 			if(list!=null && list.size()>0){
@@ -416,6 +417,7 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 			docUpload.setEmp_email(map.get("empEmail").toString().trim());
 			docUpload.setEmp_phone(map.get("empPhone").toString().trim());
 			docUpload.setFile_type("2");
+			docUpload.setCLAIM_APPLIED_FOR(claimAppliedFor.toString().trim());
 			docUpload.setFile_path(path);
 			docUpload.setRole_name(map.get("roleName").toString().trim());
 			docUpload.setRequest_id(reqId);
@@ -428,20 +430,24 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 		}
 		if (uModel.getRoleName().equals("USER") || uModel.getRoleName().equals("ADMIN") || uModel.getRoleName().equals("CPF_ADMIN")){
 			String query1 = null;
-			if(reqId!=null && !reqId.equals("")){
-				query1 = "select cru.emp_num as \"empNum\", cru.emp_phone as \"empPhone\",cru.emp_email as \"empEmail\",cru.role_name as \"roleName\" "
-						+ "from cpf_registered_users cru, cpf_claim_form_details ccfd "
-						+ "where cru.emp_num=ccfd.claim_submitted_by and ccfd.request_id=:reqId";
-			}else{
+			/*
+			 * if(reqId!=null && !reqId.equals("")){ query1 =
+			 * "select cru.emp_num as \"empNum\", cru.emp_phone as \"empPhone\",cru.emp_email as \"empEmail\",cru.role_name as \"roleName\" "
+			 * + "from cpf_registered_users cru, cpf_claim_form_details ccfd " +
+			 * "where cru.emp_num=ccfd.claim_submitted_by and ccfd.request_id=:reqId"; }else
+			 */
+			if(reqId==null || reqId.equals("")){
 				query1 = "select cru.emp_num as \"empNum\", cru.emp_phone as \"empPhone\",cru.emp_email as \"empEmail\",cru.role_name as \"roleName\" "
 						+ "from cpf_registered_users cru "
 						+ "where cru.emp_num=:claimSubEmpID";
-			}
+			
 			
 			Query hQuery1 = session.createSQLQuery(query1).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-			if (reqId != null && !reqId.equals("")) {
-				hQuery1.setParameter("reqId", reqId);
-			}else{
+			/*
+			 * if (reqId != null || !reqId.equals("")) { hQuery1.setParameter("reqId",
+			 * reqId); }else
+			 */
+			if (reqId == null || reqId.equals("")){
 				hQuery1.setParameter("claimSubEmpID", uModel.getEmpNum());
 			}
 			
@@ -467,6 +473,7 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 				docUpload.setModified_date(new Date());
 				session.persist(docUpload);			
 			}
+		}
 		}
 		/*else{
 			String query1 = "update cpf_doc_uploads set file_path = :newPath, modified_date=:modifiedDate where emp_num=:empNum";

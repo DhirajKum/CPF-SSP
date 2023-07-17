@@ -347,7 +347,7 @@
 							<label cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Uploaded Other Documents(By Admin/CPF_Admin)</b></label>
 							<div class="col-sm-7">
 							<c:forEach var="otherFile" items="${actClaimDto.otherFiles}">
-								<a class="col-sm-12" href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${otherFile.value}&fileType=2" target="_blank">${otherFile.key}</a></br>
+								<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${otherFile.value}&fileType=2" target="_blank">${otherFile.key}</a></br>
 							</c:forEach>
 							</div>
 						</div>

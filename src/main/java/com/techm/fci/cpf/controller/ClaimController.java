@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -29,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -871,13 +873,16 @@ public class ClaimController {
 				String folderPath = null;
 				if (!uModel.getEmpNum().equals("")) {
 					// folderPath = "/prodshare/cpf_out/"+uModel.getEmpNum().trim()+"_OTHERS";//For Production server
-					folderPath = "/fapshare/cpf_out/" + uModel.getEmpNum().trim() + "_OTHERS";// For Dev server
+					folderPath = "/fapshare/cpf_out/" + uModel.getEmpNum().trim() +"_"+ reqId + "_OTHERS";// For Dev server
 				}
 				Path pathLoc = Paths.get(folderPath);
-				if (!Files.exists(pathLoc))
-					Files.createDirectories(pathLoc);
 				
-				//pathLoc.toFile().delete();
+				if (!Files.exists(pathLoc)) {
+					Files.createDirectories(pathLoc);
+				}else {
+					Arrays.stream(new File(folderPath).listFiles()).forEach(File::delete);	
+				}
+				
 				Boolean deleteStatus = userService.deleteEmpOtherDoc(uModel, claimSubmittedEmpID, reqId);
 				if (deleteStatus) {
 					for (CommonsMultipartFile file : files) {
