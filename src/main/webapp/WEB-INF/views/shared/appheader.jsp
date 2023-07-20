@@ -43,14 +43,14 @@
 		
 		<div class="row row-fluid">
 		<div class="col-md-12">
-			<div class="col-md-2" style="">
+			<div class="col-md-4" style="text-align: left;">
 				<img style="padding-top: 5px !important" class="header-logo" id="header-icon-img" src="${pageContext.request.contextPath}/resources/static/images/fci.jpg">
 			</div>
-			<div class="col-md-3" style="padding-top: 5px !important">
+			<div class="col-md-4" style="text-align: center; padding-top: 5px !important">
 				<span class="header-text">CPF Self Service Portal </span><br> 
 				<span class="hidden-xs header-sub-text" style=""> Food Corporation Of India</span>
 			</div>
-			<div class="col col-md-7" style="padding-top: 5px !important; text-align: right; font-size: 11px;">
+			<div class="col col-md-4" style="padding-top: 5px !important; text-align: right; font-size: 11px;">
 				<span class="btn btn-success"> Emp No. : <span class="uan-face">${userModel.empNum}</span> /${userModel.empName} (Role-${userModel.roleName})</span><br> 
 				<span style="color: #FFF; padding: 3px 3px; margin-top: 5px;"><a href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out fa-2"></i>Logout</a></span><br>
 				<!-- <small class="form-text text-muted smallText">Language <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
