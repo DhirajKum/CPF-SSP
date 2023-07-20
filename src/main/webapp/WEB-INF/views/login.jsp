@@ -16,6 +16,17 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/COMMON/vendor/select2/select2.min.css">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/COMMON/CSS/main.css">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/COMMON/CSS/util.css">
+
+<style>
+
+@font-face {
+    font-family: hindi;
+    src: url(${pageContext.request.contextPath}/resources/COMMON/fonts/Kruti_Dev_010.ttf);
+}
+.head2{
+	font-family: hindi;
+}
+</style>
 </head>
 <body onload='document.loginForm.username.focus();'>
 
@@ -75,14 +86,20 @@
 						aria-hidden="true"></i>
 					</a>
 				</div>
-				<input type="hidden" name="${_csrf.parameterName}"
-					value="${_csrf.token}" />
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 			</form>
 			<div class="col-sm-12"
 				style="text-align: center; margin-top: 30px; margin-bottom: -30px;">
 				<small class="form-text text-muted smallText">For any
 					discrepancy email to fci.cssp@gmail.com or contact to help desk
 					no. 011-43527367</small>
+			</div>
+			
+			<div class="col-sm-12" style="text-align: center; margin-top: 30px; margin-bottom: -30px;">
+				<small class="form-text text-muted smallText">Language <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+				<a class="txt2"	href="http://fcilekha.in:7778/CpfSelfService">English <i aria-hidden="true"></i></a>
+				<a class="txt2 head2" href="http://hi.fcilekha.in:7778/CpfSelfService/login"><b> fgUnh</b><i aria-hidden="true"></i></a>
+				</small>
 			</div>
 		</div>
 	</div>
