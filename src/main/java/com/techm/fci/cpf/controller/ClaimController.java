@@ -310,8 +310,7 @@ public class ClaimController {
 					claimHistoryTrailDto.setAction("Create");
 					claimHistoryTrailDto.setRemarks("Claim has been created.");
 					claimHistoryTrailDto.setStatus("1");
-					userService.saveCpfClaimHistoryTrail(claimHistoryTrailDto, uModel.getEmpNum(),
-							uModel.getRoleName());
+					userService.saveCpfClaimHistoryTrail(claimHistoryTrailDto, uModel.getEmpNum(), uModel.getRoleName());
 					userService.updateEmpOtherDoc(uModel, claimRequest);
 
 					return "redirect:/home?operation=claimSuccess";

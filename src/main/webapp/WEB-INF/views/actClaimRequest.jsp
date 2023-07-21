@@ -331,7 +331,7 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label cssclass="col-sm-5 col-form-label" class="labelwidth"><b>User Uploaded Other Documents</b></label>
+							<label cssclass="col-sm-5 col-form-label" class="labelwidth"><b>User Uploaded Other Documents(Salary/CPF slips etc.)</b></label>
 							<div class="col-sm-7">
 							<c:forEach var="userOtherFile" items="${actClaimDto.userOtherFiles}">
 								<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${userOtherFile.value}&fileType=3" target="_blank">${userOtherFile.key}</a></br>

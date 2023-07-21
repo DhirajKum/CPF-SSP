@@ -220,7 +220,7 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label cssclass="col-sm-5 col-form-label" class="labelwidth"><b>User Uploaded Other Documents</b></label>
+							<label cssclass="col-sm-5 col-form-label" class="labelwidth"><b>User Uploaded Other Documents(Salary/CPF slips etc.)</b></label>
 							<div class="col-sm-7">
 							<c:forEach var="userOtherFile" items="${claimData.userOtherFiles}">
 								<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${userOtherFile.value}&fileType=3" target="_blank">${userOtherFile.key}</a></br>
@@ -233,10 +233,13 @@
 				<div class="row" id="docUpload">
 				<div class="col-md-6">
 					<div class="form-group row">
-						<label cssClass="col-sm-5 col-form-label" class="labelwidth"><b>User Upload Other Documents</b></label>
+						<label cssClass="col-sm-5 col-form-label" class="labelwidth"><b>User Upload Other Documents(Salary/CPF slips etc.)</b></label>
 						<input type="file" class="col-sm-7" id="files" name="files" multiple data-validation="ckeckFileFormat ckeckFileSize required"/>
 					</div>
-					<small id="docUploadHelp" class="form-text text-muted" style="text-align: center;">Note: You can upload multiple file with +Ctrl key</br>File should be in pdf, png, jpg and jpeg format only.</br>File maximum size should be 5 Mb.</small>
+					<div class="form-group row">
+					    <label cssClass="col-sm-5 col-form-label" class="labelwidth"></label>
+						<small cssClass="col-sm-7 col-form-label" id="docUploadHelp" class="form-text text-muted" style="text-align: left;"><b>Note</b>: You can upload multiple file with +Ctrl key</br>File should be in pdf, png, jpg and jpeg format only.</br>File maximum size should be 5 Mb.</small>
+					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group row">

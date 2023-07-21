@@ -7,14 +7,21 @@ package com.techm.fci.cpf.daoimpl;
  */
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -547,21 +554,52 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 	public Boolean updateOtherDoc(UserModel uModel, CpfClaimRequest cpfClaimReq) {
 		session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
-		
-		String query1 = "update cpf_doc_uploads set REQUEST_ID = :reqId, modified_date=:modifiedDate "
-				+ "where emp_num=:empNum "
-				+ "and CLAIM_APPLIED_FOR=:claimAppliedFor "
-				+ "and FILE_TYPE=:fileType";
-		
-		Query hQuery1 = session.createSQLQuery(query1);
-		if (uModel.getEmpNum() != null) {
-			hQuery1.setParameter("reqId", cpfClaimReq.getREQUEST_ID());
-			hQuery1.setParameter("modifiedDate", new Date());
-			hQuery1.setParameter("empNum",uModel.getEmpNum());
-			hQuery1.setParameter("claimAppliedFor",cpfClaimReq.getCLAIM_APPLIED_FOR());
-			hQuery1.setParameter("fileType",3);
+		String folderPath = null;
+		try {
+			
+			if (!uModel.getEmpNum().equals("")) {
+			 // folderPath = "/prodshare/cpf_out/" + uModel.getEmpNum().trim() + "_" + cpfClaimReq.getREQUEST_ID() + "_OTHERS"; //For Production server
+				folderPath = "/fapshare/cpf_out/" + uModel.getEmpNum().trim() + "_" + cpfClaimReq.getREQUEST_ID() + "_OTHERS"; //For Dev server
+			}
+			
+			File dir = new File("/fapshare/cpf_out/" + uModel.getEmpNum().trim() + "__OTHERS");
+			File renameDir = new File(folderPath);
+			dir.renameTo(renameDir);
+
+			/*
+			 * Path sourcePath = Paths.get("/fapshare/cpf_out/" + uModel.getEmpNum().trim()
+			 * + "__OTHERS"); Path targetPath = Paths.get(folderPath);
+			 * Files.move(sourcePath, targetPath);
+			 */
+			File[] files = new File("/fapshare/cpf_out/" + uModel.getEmpNum().trim() + "__OTHERS").listFiles();
+			for(File fileList : files) {
+
+				String query1 = "update cpf_doc_uploads set REQUEST_ID = :reqId, FILE_PATH= :filePath, MODIFIED_DATE= :modifiedDate "
+						+ "where EMP_NUM= :empNum "
+						+ "and CLAIM_APPLIED_FOR= :claimAppliedFor "
+						+ "and FILE_TYPE= :fileType";
+				
+				Query hQuery1 = session.createSQLQuery(query1);
+				if (uModel.getEmpNum() != null) {
+					hQuery1.setParameter("reqId", cpfClaimReq.getREQUEST_ID());
+					hQuery1.setParameter("filePath",folderPath+"/"+fileList.getName());
+					hQuery1.setParameter("modifiedDate", new Date());
+					
+					hQuery1.setParameter("empNum",uModel.getEmpNum());
+					//hQuery1.setParameter("claimAppliedFor",cpfClaimReq.getCLAIM_APPLIED_FOR());
+					hQuery1.setParameter("fileType",3);
+				}
+				hQuery1.executeUpdate();
+				
+			}
+			
+			/*
+			 * if (!Files.exists(targetPath)) { Files.createDirectories(targetPath); }
+			 */
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		hQuery1.executeUpdate();
 		session.getTransaction().commit();
 		return true;
 	}
