@@ -27,13 +27,13 @@
 			<div class="col-md-12">
 			  <sf:form action='${pageContext.request.contextPath}/claim/saveClaimRequest' method='POST' modelAttribute="claimData">
 			  	<div class="row" style="margin-left:-16px">	
-				<div class="col-md-3" style="max-width: 19%;">
+				<div class="col-md-2" style="max-width: 19%;">
 				<div class="form-group row">
 					<label class="col-form-label"><b>Claim applied for  <span class="red">*</span></b></label>
 				</div>
 				</div>
 					
-				<div class="col-sm-9" id="claimAppliedFor">
+				<div class="col-sm-10" id="claimAppliedFor">
 				<div class="form-check-inline">
 				  <label cssclass="form-check-label">
 					<sf:radiobutton cssclass="form-check-input" path="CLAIM_APPLIED_FOR" value="CpfFinalSettlement" id="cpffinal" /> CPF Final Settlement

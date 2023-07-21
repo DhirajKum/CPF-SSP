@@ -34,8 +34,8 @@
 					<div id="noJS" class="alert alert-danger" style="padding-left: 20px; padding-right: 0px; margin-left: 0px;">Please enable JavaScript in your browser</div>
 				</noscript>
 			 	<div class="form-group row" style="margin-left:-30px">
-					<label class="col-sm-3 col-form-label" style="max-width: 20%;"><b>Claim applied for  <span class="red">*</span></b></label>
-					<div class="col-sm-9" id="claimAppliedFor">
+					<label class="col-sm-2 col-form-label" style="max-width: 20%;"><b>Claim applied for  <span class="red">*</span></b></label>
+					<div class="col-sm-10" id="claimAppliedFor">
 					<div class="form-check-inline">
 					  <label cssclass="form-check-label">
 						<sf:radiobutton cssclass="form-check-input" path="CLAIM_APPLIED_FOR" value="CpfFinalSettlement" id="rd1" onclick="installEnbDsb();" /> CPF Final Settlement
