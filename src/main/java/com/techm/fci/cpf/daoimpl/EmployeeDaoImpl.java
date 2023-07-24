@@ -7,21 +7,15 @@ package com.techm.fci.cpf.daoimpl;
  */
 
 import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -341,9 +335,9 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 			docUpload.setFile_path(path);
 			docUpload.setRole_name(uModel.getRoleName());
 			docUpload.setRequest_id("0");
-			docUpload.setCreated_by(uModel.getEmpName());
+			docUpload.setCreated_by(uModel.getEmpNum());
 			docUpload.setCreated_date(new Date());
-			docUpload.setModified_by(uModel.getEmpName());
+			docUpload.setModified_by(uModel.getEmpNum());
 			docUpload.setModified_date(new Date());
 			session.persist(docUpload);
 		}else{
@@ -361,12 +355,75 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 		session.getTransaction().commit();
 		return true;
 	}
+		
+	private List<DocumentsUpload> getUploadDocDetails(UserModel uModel, String fileType, String claimSubEmpID, String reqId) {
+		session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		List<DocumentsUpload> docUploadList = new ArrayList<>();
+		String empNum=uModel.getEmpNum();
+		if(empNum!=null){
+			String query = "SELECT doc_id as \"docID\", emp_num as \"empNum\", request_id as \"reqId\", file_type as \"fileType\", emp_phone as \"empPhone\", "
+					+ "emp_email as \"empEmail\", file_path as \"filePath\", claim_applied_for as \"claimAppliedFor\" FROM cpf_doc_uploads "
+					+ "WHERE emp_num=:empNum "
+					+ "AND request_id=:reqId "
+					+ "AND file_type=:fileType "
+					+ "AND created_by=:createdBy";
+			
+			Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+			if(claimSubEmpID!=null && !claimSubEmpID.equals(""))
+				hQuery.setParameter("empNum", claimSubEmpID);
+			else
+				hQuery.setParameter("empNum", empNum);
+			
+			if(!reqId.equals(""))
+				hQuery.setParameter("reqId", reqId);
+			else
+				hQuery.setParameter("reqId", "0");
+			
+			hQuery.setParameter("fileType", fileType);
+			hQuery.setParameter("createdBy", empNum);
+
+			List<Map<String, Object>> list = hQuery.list();
+			if(list!=null && list.size()>0){
+				for (Map<String, Object> map : list) {
+					DocumentsUpload docUpload = new DocumentsUpload();
+					docUpload.setDoc_id(((BigDecimal)map.get("docID")).intValue());
+					docUpload.setEmp_num(map.get("empNum").toString().trim());
+					docUpload.setRequest_id(map.get("reqId").toString().trim());
+					docUpload.setFile_type(map.get("fileType").toString().trim());
+					docUpload.setEmp_phone(map.get("empPhone").toString().trim());
+					docUpload.setEmp_email(map.get("empEmail").toString().trim());
+					docUpload.setFile_path(map.get("filePath").toString().trim());
+					docUpload.setCLAIM_APPLIED_FOR(map.get("claimAppliedFor").toString().trim());
+					docUploadList.add(docUpload);
+				}
+			}
+		}
+		return docUploadList;
+	}
+	
 	
 	@Override
 	public Boolean deleteOtherDoc(UserModel uModel, String claimSubEmpID, String reqId) {
 		session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
-		String empNum=uModel.getEmpNum();
+		
+		String empNum = uModel.getEmpNum();
+		if (empNum != null && claimSubEmpID != null && !claimSubEmpID.equals("")) {
+			List<DocumentsUpload> uploadedDocList = getUploadDocDetails(uModel, "2", claimSubEmpID, reqId);
+			for (DocumentsUpload docList : uploadedDocList) {
+				Object object = session.load(DocumentsUpload.class, docList.getDoc_id());
+				session.delete(object);
+			}
+		} else {
+			List<DocumentsUpload> uploadedDocList = getUploadDocDetails(uModel, "3", claimSubEmpID, reqId);
+			for (DocumentsUpload docList : uploadedDocList) {
+				Object object = session.load(DocumentsUpload.class, docList.getDoc_id());
+				session.delete(object);
+			}
+		}
+		
+		/*String empNum=uModel.getEmpNum();
 		if(empNum!=null && claimSubEmpID!=null && !claimSubEmpID.equals("")){
 			String query = "select doc_id as \"docID\" from cpf_doc_uploads where emp_num=:empNum and request_id=:reqId and file_type=2 and created_by=:createdBy";
 			
@@ -383,7 +440,8 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 					session.delete(object);
 				}
 			}
-		}else{
+		}*/
+		/*else{
 			String query = "select doc_id as \"docID\" from cpf_doc_uploads where emp_num=:empNum and file_type=3";
 			
 			Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
@@ -397,7 +455,7 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 					session.delete(object);
 				}
 			}
-		}
+		}*/
 		session.getTransaction().commit();
 		return true;
 	}
@@ -562,21 +620,18 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 				folderPath = "/fapshare/cpf_out/" + uModel.getEmpNum().trim() + "_" + cpfClaimReq.getREQUEST_ID() + "_OTHERS"; //For Dev server
 			}
 			
-			File dir = new File("/fapshare/cpf_out/" + uModel.getEmpNum().trim() + "__OTHERS");
-			File renameDir = new File(folderPath);
-			dir.renameTo(renameDir);
-
-			/*
-			 * Path sourcePath = Paths.get("/fapshare/cpf_out/" + uModel.getEmpNum().trim()
-			 * + "__OTHERS"); Path targetPath = Paths.get(folderPath);
-			 * Files.move(sourcePath, targetPath);
-			 */
+			List<DocumentsUpload> uploadedDocList = getUploadDocDetails(uModel, "3", uModel.getEmpNum(), cpfClaimReq.getREQUEST_ID());
+			for (DocumentsUpload docList : uploadedDocList) {
+				Object object = session.load(DocumentsUpload.class, docList.getDoc_id());
+				session.delete(object);
+			}
+			
 			File[] files = new File("/fapshare/cpf_out/" + uModel.getEmpNum().trim() + "__OTHERS").listFiles();
 			for(File fileList : files) {
 
 				String query1 = "update cpf_doc_uploads set REQUEST_ID = :reqId, FILE_PATH= :filePath, MODIFIED_DATE= :modifiedDate "
 						+ "where EMP_NUM= :empNum "
-						+ "and CLAIM_APPLIED_FOR= :claimAppliedFor "
+						//+ "and CLAIM_APPLIED_FOR= :claimAppliedFor "
 						+ "and FILE_TYPE= :fileType";
 				
 				Query hQuery1 = session.createSQLQuery(query1);
@@ -590,18 +645,17 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 					hQuery1.setParameter("fileType",3);
 				}
 				hQuery1.executeUpdate();
-				
 			}
 			
-			/*
-			 * if (!Files.exists(targetPath)) { Files.createDirectories(targetPath); }
-			 */
+			File dir = new File("/fapshare/cpf_out/" + uModel.getEmpNum().trim() + "__OTHERS");
+			File renameDir = new File(folderPath);
+			dir.renameTo(renameDir);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		session.getTransaction().commit();
 		return true;
 	}
-
 }	

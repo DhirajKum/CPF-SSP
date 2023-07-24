@@ -790,8 +790,7 @@ public class ClaimController {
 						|| filename.toUpperCase().endsWith(".JPEG")) {
 					String folderPath = null;
 					if (!uModel.getEmpNum().equals("")) {
-						// folderPath = "/prodshare/cpf_out/"+uModel.getEmpNum().trim()+"_KYC";//For
-						// Production server
+						// folderPath = "/prodshare/cpf_out/"+uModel.getEmpNum().trim()+"_KYC";//For Production server
 						folderPath = "/fapshare/cpf_out/" + uModel.getEmpNum().trim() + "_KYC";// For Dev server
 					}
 					Path pathLoc = Paths.get(folderPath);
@@ -803,8 +802,7 @@ public class ClaimController {
 					Boolean saveStatus = userService.saveEmpKycDoc(uModel, pathLoc + "/" + filename);
 					if (saveStatus) {
 						byte barr[] = file.getBytes();
-						BufferedOutputStream bout = new BufferedOutputStream(
-								new FileOutputStream(pathLoc + "/" + filename));
+						BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(pathLoc + "/" + filename));
 						bout.write(barr);
 						bout.flush();
 						bout.close();
