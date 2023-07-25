@@ -620,16 +620,44 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 				folderPath = "/fapshare/cpf_out/" + uModel.getEmpNum().trim() + "_" + cpfClaimReq.getREQUEST_ID() + "_OTHERS"; //For Dev server
 			}
 			
+			String query = "update cpf_doc_uploads set REQUEST_ID = :reqId where EMP_NUM= :empNum and FILE_TYPE= :fileType and REQUEST_ID = 0 ";
+			
+			Query hQuery = session.createSQLQuery(query);
+			if (uModel.getEmpNum() != null) {
+				hQuery.setParameter("reqId", cpfClaimReq.getREQUEST_ID());
+				
+				hQuery.setParameter("empNum",uModel.getEmpNum());
+				hQuery.setParameter("fileType",3);
+			}
+			hQuery.executeUpdate();
+			
+			
 			List<DocumentsUpload> uploadedDocList = getUploadDocDetails(uModel, "3", uModel.getEmpNum(), cpfClaimReq.getREQUEST_ID());
 			for (DocumentsUpload docList : uploadedDocList) {
-				Object object = session.load(DocumentsUpload.class, docList.getDoc_id());
-				session.delete(object);
+				 Object object = session.load(DocumentsUpload.class, docList.getDoc_id());
+				 session.delete(object);
 			}
 			
 			File[] files = new File("/fapshare/cpf_out/" + uModel.getEmpNum().trim() + "__OTHERS").listFiles();
 			for(File fileList : files) {
 
-				String query1 = "update cpf_doc_uploads set REQUEST_ID = :reqId, FILE_PATH= :filePath, MODIFIED_DATE= :modifiedDate "
+				DocumentsUpload docUpload = new DocumentsUpload();
+				docUpload.setEmp_num(uploadedDocList.get(0).getEmp_num().trim());
+				docUpload.setEmp_email(uploadedDocList.get(0).getEmp_email().trim());
+				docUpload.setEmp_phone(uploadedDocList.get(0).getEmp_phone().trim());
+				docUpload.setFile_type(uploadedDocList.get(0).getFile_type());
+				docUpload.setCLAIM_APPLIED_FOR(uploadedDocList.get(0).getCLAIM_APPLIED_FOR().trim());
+				docUpload.setFile_path(folderPath+"/"+fileList.getName().trim());
+				docUpload.setRole_name(uploadedDocList.get(0).getRole_name().trim());
+				docUpload.setRequest_id(uploadedDocList.get(0).getRequest_id());
+				
+				docUpload.setCreated_by(uModel.getEmpNum());
+				docUpload.setCreated_date(new Date());
+				docUpload.setModified_by(uModel.getEmpNum());
+				docUpload.setModified_date(new Date());
+				session.persist(docUpload);	
+				
+				/*String query1 = "update cpf_doc_uploads set REQUEST_ID = :reqId, FILE_PATH= :filePath, MODIFIED_DATE= :modifiedDate "
 						+ "where EMP_NUM= :empNum "
 						//+ "and CLAIM_APPLIED_FOR= :claimAppliedFor "
 						+ "and FILE_TYPE= :fileType";
@@ -644,7 +672,7 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 					//hQuery1.setParameter("claimAppliedFor",cpfClaimReq.getCLAIM_APPLIED_FOR());
 					hQuery1.setParameter("fileType",3);
 				}
-				hQuery1.executeUpdate();
+				hQuery1.executeUpdate();*/
 			}
 			
 			File dir = new File("/fapshare/cpf_out/" + uModel.getEmpNum().trim() + "__OTHERS");

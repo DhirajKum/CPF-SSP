@@ -298,8 +298,7 @@ public class ClaimController {
 
 			if (!recordFound) {
 				String locCode = session.getAttribute("locCode").toString();
-				CpfClaimRequest claimRequest = userService.saveClaimData(cpfClaim, uModel.getEmpNum(), locCode,
-						uModel.getRoleName());
+				CpfClaimRequest claimRequest = userService.saveClaimData(cpfClaim, uModel.getEmpNum(), locCode,	uModel.getRoleName());
 				if (claimRequest != null) {
 					session.setAttribute("claimId", claimRequest.getREQUEST_ID());
 
