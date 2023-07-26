@@ -341,7 +341,10 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 			docUpload.setModified_date(new Date());
 			session.persist(docUpload);
 		}else{
-			String query1 = "update cpf_doc_uploads set file_path = :newPath, modified_date=:modifiedDate where emp_num=:empNum";
+			String query1 = "update cpf_doc_uploads set file_path = :newPath, modified_date=:modifiedDate "
+					+ "where emp_num=:empNum "
+					+ "and file_type=1 "
+					+ "and request_id=0";
 			
 			Query hQuery1 = session.createSQLQuery(query1);
 			if (empNum != null) {
@@ -363,7 +366,8 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 		String empNum=uModel.getEmpNum();
 		if(empNum!=null){
 			String query = "SELECT doc_id as \"docID\", emp_num as \"empNum\", request_id as \"reqId\", file_type as \"fileType\", emp_phone as \"empPhone\", "
-					+ "emp_email as \"empEmail\", file_path as \"filePath\", claim_applied_for as \"claimAppliedFor\" FROM cpf_doc_uploads "
+					+ "emp_email as \"empEmail\", file_path as \"filePath\", claim_applied_for as \"claimAppliedFor\", role_name as \"roleName\" "
+					+ "FROM cpf_doc_uploads "
 					+ "WHERE emp_num=:empNum "
 					+ "AND request_id=:reqId "
 					+ "AND file_type=:fileType "
@@ -393,6 +397,7 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 					docUpload.setFile_type(map.get("fileType").toString().trim());
 					docUpload.setEmp_phone(map.get("empPhone").toString().trim());
 					docUpload.setEmp_email(map.get("empEmail").toString().trim());
+					docUpload.setRole_name(map.get("roleName").toString().trim());
 					docUpload.setFile_path(map.get("filePath").toString().trim());
 					docUpload.setCLAIM_APPLIED_FOR(map.get("claimAppliedFor").toString().trim());
 					docUploadList.add(docUpload);

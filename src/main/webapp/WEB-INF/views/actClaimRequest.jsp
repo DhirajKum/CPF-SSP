@@ -363,7 +363,7 @@
 				<div class="row" id="docUpload">
 				<div class="col-md-6">
 					<div class="form-group row">
-						<label cssClass="col-sm-5 col-form-label" class="labelwidth"><b>Upload Other Documents</b></label>
+						<label cssClass="col-sm-5 col-form-label" class="labelwidth"><b>Upload Other Documents(By Admin/CPF_Admin)</b></label>
 						<input type="file" class="col-sm-7" id="files" name="files" multiple data-validation="ckeckFileFormat ckeckFileSize required"/>
 					</div>
 					<small id="docUploadHelp" class="form-text text-muted" style="text-align: center;">Note: You can upload multiple file with +Ctrl key</br>File should be in pdf, png, jpg and jpeg format only.</br>File maximum size should be 5 Mb.</small>

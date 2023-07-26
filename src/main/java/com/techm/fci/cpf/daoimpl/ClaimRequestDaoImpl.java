@@ -287,7 +287,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 			
 			String query3 = "select du.file_path as \"filePath\", du.CLAIM_APPLIED_FOR as \"claimAppliedFor\", du.doc_id as \"docId\" "
 					+ "from cpf_doc_uploads du "
-					+ "where du.emp_num=:empNum and du.file_type=3";
+					+ "where du.emp_num=:empNum and du.file_type=3 and request_id=0";
 			Query hQuery3 = session.createSQLQuery(query3).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 			if(empNum!=null){
 				hQuery3.setParameter("empNum", empNum.trim());
@@ -1077,12 +1077,12 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 			String query4 = "select du.file_path as \"filePath\", du.doc_id as \"docId\" "
 					+ "from cpf_doc_uploads du "
 					+ "where du.emp_num=:empNum "
-					//+ "and du.request_id=:reqId "
+					+ "and du.request_id=:reqId "
 					+ "and du.file_type=3";
 			Query hQuery4 = session.createSQLQuery(query4).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 			if(reqId!=null){
 				hQuery4.setParameter("empNum", map.get("CLAIM_SUBMITTED_BY").toString().trim());
-				//hQuery4.setParameter("reqId", reqId);
+				hQuery4.setParameter("reqId", reqId);
 			}
 			List<Map<String, Object>> list4 = hQuery4.list();
 			if(list4!=null && list4.size()>0){
