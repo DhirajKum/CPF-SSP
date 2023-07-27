@@ -484,8 +484,8 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 		for (Map<String, Object> map : list1) {
 			DocumentsUpload docUpload = new DocumentsUpload();
 			docUpload.setEmp_num(map.get("empNum").toString().trim());
-			docUpload.setEmp_email(map.get("empEmail").toString().trim());
-			docUpload.setEmp_phone(map.get("empPhone").toString().trim());
+			docUpload.setEmp_email(map.get("empEmail")!=null?map.get("empEmail").toString().trim():"");
+			docUpload.setEmp_phone(map.get("empPhone")!=null?map.get("empPhone").toString().trim():"");
 			docUpload.setFile_type("2");
 			docUpload.setCLAIM_APPLIED_FOR(claimAppliedFor.toString().trim());
 			docUpload.setFile_path(path);
@@ -526,8 +526,8 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 			for (Map<String, Object> map : list1) {
 				DocumentsUpload docUpload = new DocumentsUpload();
 				docUpload.setEmp_num(map.get("empNum").toString().trim());
-				docUpload.setEmp_email(map.get("empEmail").toString().trim());
-				docUpload.setEmp_phone(map.get("empPhone").toString().trim());
+				docUpload.setEmp_email(map.get("empEmail")!=null?map.get("empEmail").toString().trim():"");
+				docUpload.setEmp_phone(map.get("empPhone")!=null?map.get("empPhone").toString().trim():"");
 				docUpload.setFile_type("3");
 				docUpload.setCLAIM_APPLIED_FOR(claimAppliedFor.toString().trim());
 				docUpload.setFile_path(path.toString().trim());

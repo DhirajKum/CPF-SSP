@@ -26,12 +26,8 @@
 		<div class="row marginT20" style="margin-left:-5px">
 			<div class="col-md-12">
 			  <sf:form action='${pageContext.request.contextPath}/claim/saveClaimRequest' method='POST' modelAttribute="claimData">
-			  	<div class="row" style="margin-left:-16px">	
-				<div class="col-md-2" style="max-width: 19%;">
-				<div class="form-group row">
-					<label class="col-form-label"><b>Claim applied for  <span class="red">*</span></b></label>
-				</div>
-				</div>
+			  	<div class="row" style="margin-left:-30px">	
+			  	<label class="col-sm-2 col-form-label" style="max-width: 20%;"><b>Claim applied for  <span class="red">*</span></b></label>
 					
 				<div class="col-sm-10" id="claimAppliedFor">
 				<div class="form-check-inline">
