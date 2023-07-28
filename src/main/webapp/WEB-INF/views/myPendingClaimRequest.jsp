@@ -25,9 +25,9 @@
     <tr>
       <th class="th-sm">Request Id</th>
       <th class="th-sm">Date of Submission (yyyy/mm/dd)</th>
-      <th class="th-sm">Submitted By</th>
+      <th class="th-sm">Submitted By (Name(CPF Code))</th>
       <th class="th-sm">Claim Received (yyyy/mm/dd)</th>
-      <th class="th-sm">Action Taken By</th>
+      <th class="th-sm">Action Taken By (Name - CPF Code)</th>
       <th class="th-sm">Remarks</th>
       <th class="th-sm">Invoice No</th>
       <th class="th-sm">Sanction Amount</th>
