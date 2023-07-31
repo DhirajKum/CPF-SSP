@@ -36,6 +36,7 @@
       <th class="th-sm">Date Of Action (yyyy/mm/dd)</th>
       <th class="th-sm">Action Taken By (Name - CPF Code)</th>
       <th class="th-sm">Remarks</th>
+      <th class="th-sm">Claim Type</th>
       <th class="th-sm">Invoice No</th>
       <th class="th-sm">Sanction Amount</th>
       <th class="th-sm">Status</th>
@@ -91,6 +92,9 @@
 					},
 					{
 						data:'remarks'
+					},
+					{
+						data:'claimType'
 					},
 					{
 						data:'invoiceNo'

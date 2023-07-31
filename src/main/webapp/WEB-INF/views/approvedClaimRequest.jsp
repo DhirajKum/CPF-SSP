@@ -33,6 +33,7 @@
       	</security:authorize>
       </security:authorize>
       <th class="th-sm">Remarks</th>
+      <th class="th-sm">Claim Type</th>
       <th class="th-sm">Invoice No</th>
       <th class="th-sm">Sanction Amount</th>
       <th class="th-sm">Status</th>
@@ -78,6 +79,9 @@
 					},
 					{
 						data:'remarks'
+					},
+					{
+						data:'claimType'
 					},
 					{
 						data:'invoiceNo'
