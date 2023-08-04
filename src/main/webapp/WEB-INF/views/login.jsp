@@ -95,12 +95,12 @@
 					no. 011-43527367</small>
 			</div>
 			
-			<div class="col-sm-12" style="text-align: center; margin-top: 30px; margin-bottom: -30px;">
+			<!-- <div class="col-sm-12" style="text-align: center; margin-top: 30px; margin-bottom: -30px;">
 				<small class="form-text text-muted smallText">Language <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
 				<a class="txt2"	href="http://fcilekha.in:7778/CpfSelfService">English <i aria-hidden="true"></i></a>
 				<a class="txt2 head2" href="http://hi.fcilekha.in:7778/CpfSelfService/login"><b> fgUnh</b><i aria-hidden="true"></i></a>
 				</small>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </div>

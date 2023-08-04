@@ -1737,8 +1737,8 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 						+ "st.cpfsec_action_taken_by as \"cpfSecActionTakenBy\", st.cpfsec_action_date as \"cpfsecActionDate\", st.cpfsec_remarks as \"cpfsecRemarks\", "
 						+ "cfd.claim_applied_for, cfd.purpose, cfd.cpf_account_number "
 						+ "FROM cpf_claim_form_status st, cpf_registered_users reg, cpf_claim_form_details cfd "
-						+ "where st.claim_submitted_by=reg.emp_num "
-						+ "and cfd.claim_submitted_by=reg.emp_num "
+						+ "where cfd.claim_submitted_by=reg.emp_num "
+						+ "and cfd.request_id=st.request_id "
 						+ "and status in(0,4) "
 						+ "and admin_action_taken_by=:empNum";
 				
@@ -1804,11 +1804,11 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 				}	
 			}else if(roleName!=null && roleName.equals("CPF_ADMIN")){
 				String query = "select st.request_id, reg.emp_name as \"claim_submitted_by\", st.claim_submitted_date,"
-						//+ "(select rg.emp_name from cpf_registered_users rg where rg.emp_num=st.cpfsec_action_taken_by) cpfsec_action_taken_by, "
-						+ " st.cpfsec_action_taken_by as \"cpfSecActionTakenBy\", st.cpfsec_action_date, st.status, st.cpfsec_remarks as \"cpfRemarks\", cfd.cpf_account_number "
+						+ " st.cpfsec_action_taken_by as \"cpfSecActionTakenBy\", st.cpfsec_action_date, st.status, st.cpfsec_remarks as \"cpfRemarks\", "
+						+ "cfd.claim_applied_for, cfd.purpose, cfd.cpf_account_number "
 						+ "from cpf_claim_form_status st,cpf_registered_users reg, cpf_claim_form_details cfd "
-						+ "where st.claim_submitted_by=reg.emp_num "
-						+ "and cfd.claim_submitted_by=reg.emp_num "
+						+ "where cfd.claim_submitted_by=reg.emp_num "
+						+ "and cfd.request_id=st.request_id "
 						+ "and status in(0,4) "
 						+ "and cpfsec_action_taken_by=:empNum";
 				
@@ -1843,6 +1843,25 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					cpfClaimRequestStatusDto.setAdminActionTakenBy(getEmployeeWithCPFCode(map.get("cpfSecActionTakenBy").toString()));
 					cpfClaimRequestStatusDto.setRemarks(map.get("cpfRemarks")!=null?map.get("cpfRemarks").toString().trim():"");
 					cpfClaimRequestStatusDto.setStatus("Request Completed");
+					
+					String claimAppFor=null;
+					switch(map.get("CLAIM_APPLIED_FOR").toString().trim()){
+					case "CpfFinalSettlement":
+						claimAppFor="Final Settlement";
+						break;
+					case "CpfPartFinalWithdrawal":
+						claimAppFor="Part Final Settlement";
+						break;
+					case "90%Withdrawal":
+						claimAppFor="90% Withdrawal";
+						break;
+					case "TempAdv":
+						claimAppFor="Temp. Advance";
+						break;
+					default:
+					}
+					String claimPur=map.get("PURPOSE")!=null?map.get("PURPOSE").toString().trim():"";
+					cpfClaimRequestStatusDto.setClaimType(claimAppFor+" ("+claimPur+")");
 					
 					listCpfClaimStatusDto.add(cpfClaimRequestStatusDto);
 				}
