@@ -329,6 +329,32 @@
 
 <script>		
 $(document).ready(function() {
+	
+	
+	var radioValue=$("#claimAppliedFor input:radio:checked").val();
+	if(radioValue != undefined && radioValue != null){
+	var purpose = $
+	var urlVar = '${pageContext.request.contextPath}/claim/getPurposeOfCPF?radioValue='+radioValue.trim();
+	$.ajax({
+		type : 'GET',
+		url : urlVar,
+		//data : input,
+		async : false,
+		contentType : "application/json",
+		success : function(res) {
+			if (res) {
+				//$("#purpose").find('option').remove();
+				var purpose=$('#purpose'), option="";
+				option = option + "<option value=''>---Select---</option>";
+	            for(var i=0; i<res.length; i++){
+	                option = option + "<option value='"+res[i].cpfPurposeKey + "'" +(res[i].cpfPurposeKey === '${actClaimDto.PURPOSE}' ? " selected='selected'" : "") + "'>"+res[i].cpfPurposeValue + "</option>";
+	            }
+	            purpose.append(option);					
+			}
+		}
+	});
+	}
+	
  	$("#noJS").hide();
 	$("#empName").prop("readonly", true);   
 	$("#designation").prop("readonly", true); 
@@ -343,7 +369,7 @@ $(document).ready(function() {
 	$("#retirementDate").prop("readonly", true); 
 	$("#pan").prop("readonly", true); 
 	$("#placepost").prop("readonly", true);
-	document.getElementById("rd1").checked = true;
+	//document.getElementById("rd1").checked = true;
 	$('#advanceAmount').prop("readonly", true);
 	//$("#advanceAmount").val('');
 	$('#outstandingBal').prop("readonly", true);
@@ -358,9 +384,9 @@ $(document).ready(function() {
 		if('${kycUpdate}' === '0'){
 			$("#saveClaim").prop("disabled",true);
 		}
-	$("#perAmount").prop("disabled", true);
 	jQuery('#empAccept').prop("disabled", true);
 	}
+	$("#perAmount").prop("disabled", true);
 });
 
 document.oncontextmenu = rightClick;
@@ -439,7 +465,7 @@ $("#perAmount").click(function (){
 	if($(this).is(":checked")){
 		$("#amount").prop("disabled", true);
 		$("#amount").val('');
-		/* var sancType = $("#purpose").val();
+		/*var sancType = $("#purpose").val();
 		if(sancType!=''){
 		var urlVar = '${pageContext.request.contextPath}/claim/getMaxPermAmount?empId=${userModel.empNum}&sancType='+sancType;
 		$.ajax({
@@ -498,7 +524,7 @@ $("#claimAppliedFor input:radio").change(function (){
 				//locId.empty();
 				option = option + "<option value=''>---Select---</option>";
 	            for(var i=0; i<res.length; i++){
-	                option = option + "<option value='"+res[i].cpfPurposeKey + "'>"+res[i].cpfPurposeValue + "</option>";
+	                option = option + "<option value='"+res[i].cpfPurposeKey+"'>"+res[i].cpfPurposeValue +"</option>";
 	            }
 	            purpose.append(option);					
 			}
@@ -595,6 +621,9 @@ $("#uploadOtherDoc").on('click', function(event){
  var fd = new FormData();
  var totalfiles = document.getElementById('files').files.length;
  var radioValue=$("#claimAppliedFor input:radio:checked").val();
+ var claimPurpose=$("#purpose").val();
+ var claimAmount=$("#amount").val();
+ var claimInstallmentNo=$("#installmentNo").val();
  
    if(totalfiles>0){
    for (var index = 0; index < totalfiles; index++) {
@@ -623,7 +652,7 @@ if(filetype){
             success: function (data, textStatus, xhr) {
             	if (xhr.status=='200') {
 	                console.log('Upload Completed ...');
-	                window.location.href='${pageContext.request.contextPath}/claim/raiseClaimReq?reqId=${reqId}&uploadfiles='+data+' Files uploaded successfully !!!';
+	                window.location.href='${pageContext.request.contextPath}/claim/raiseClaimReq?claimAppliedFor='+radioValue+'&claimPurpose='+claimPurpose+'&claimAmount='+claimAmount+'&claimInstallmentNo='+claimInstallmentNo+'&reqId=${reqId}&uploadfiles='+data+' Files uploaded successfully !!!';
                 }
             }
         });

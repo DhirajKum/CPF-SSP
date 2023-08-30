@@ -85,6 +85,10 @@ public class ClaimController {
 
 	@RequestMapping(value = { "/raiseClaimReq" })
 	public ModelAndView raiseClaimReq(@RequestParam(name = "reqId", required = false) String reqId,
+			@RequestParam(name = "claimAppliedFor", required = false) String claimApplyFor,
+			@RequestParam(name = "claimPurpose", required = false) String claimPurpose,
+			@RequestParam(name = "claimAmount", required = false) String claimAmount,
+			@RequestParam(name = "claimInstallmentNo", required = false) String claimInstallmentNo,
 			@RequestParam(name = "operation", required = false) String operation,
 			@RequestParam(name = "uploadfiles", required = false) String uploadfiles) {
 		DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
@@ -105,17 +109,21 @@ public class ClaimController {
 					String dob = myFormat.format(cpfClaimReq.getDATE_OF_BIRTH());
 					String dojFci = myFormat.format(cpfClaimReq.getDOJ_FCI());
 					String retirementDate = myFormat.format(cpfClaimReq.getRETIREMENT_DATE());
-					String empStatus = cpfClaimReq.getEmpStatus() != null ? cpfClaimReq.getEmpStatus().substring(10)
-							: "";
+					String empStatus = cpfClaimReq.getEmpStatus() != null ? cpfClaimReq.getEmpStatus().substring(10) : "";
 					mv.addObject("dob", dob);
 					mv.addObject("dojFci", dojFci);
 					mv.addObject("retirementDate", retirementDate);
 					mv.addObject("empStatus", empStatus);
 					mv.addObject("kycUpdate", "1");
+					
+					cpfClaimReq.setAMOUNT(claimAmount);
+					cpfClaimReq.setPURPOSE(claimPurpose);
+					cpfClaimReq.setCLAIM_APPLIED_FOR(claimApplyFor);
+					cpfClaimReq.setINSTALLMENT_NUMBER(claimInstallmentNo);
+					
 				} else {
 					mv.addObject("kycUpdate", "0");
-					mv.addObject("message",
-							"First You have to upload your KYC document, befor raise your claim request...!!!");
+					mv.addObject("message", "First You have to upload your KYC document, befor raise your claim request...!!!");
 				}
 			} else {
 				mv.addObject("title", "Update Claim Request");

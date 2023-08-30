@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.persistence.ParameterMode;
 import javax.servlet.http.HttpSession;
 
 import org.hibernate.Criteria;
@@ -27,6 +28,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.procedure.ProcedureCall;
+import org.hibernate.procedure.ProcedureOutputs;
+import org.hibernate.result.Output;
+import org.hibernate.result.ResultSetOutput;
 import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -2331,14 +2336,16 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 			 * System.out.println("MaxEligibleAmt is: " + maxEligibleAmt);
 			 * entitymanager.getTransaction().commit(); entitymanager.close();
 			 */
-	        
-			Query query = session.createSQLQuery("CALL PKG_TEST1.proc_getcpfmaxlimit(:empId,:sancType,:maxAmount)")
-					.setParameter("empId", empId)
-					.setParameter("sancType", sancType);
-			List result = query.list();
-			for(int i=0; i<result.size(); i++){
-				String maxAmount = result.get(i).toString();
-			}
+			//PKG_CPF_FCI.proc_getmxapplamt(pempnum,ppurpose,pcpfemp,pcpfempr,pvpfcont,psanctyp,psancdt);
+			
+			/*ProcedureCall call = session.createStoredProcedureCall("CALL PKG_CPF_FCI.proc_getmxapplamt(:empId,:sancType,:maxAmount)");
+			call.registerParameter("emp_id", String.class, ParameterMode.IN).bindValue(empId);
+			call.registerParameter("sanc_type", String.class, ParameterMode.IN).bindValue(sancType);
+			ProcedureOutputs maxAmountValue = call.getOutputs();
+			Output outPutValue = maxAmountValue.getCurrent();
+			if (outPutValue.isResultSet()) {
+                List<Object[]> postComments = ((ResultSetOutput) outPutValue).getResultList();
+            }*/
 	}catch (RuntimeException re) {
 		logger.info("Find by example failed :::", re);
 		throw re;
