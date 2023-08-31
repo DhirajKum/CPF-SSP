@@ -347,8 +347,7 @@ public class ClaimController {
 					return "redirect:/claim/raiseClaimReq?operation=duplicate";
 			}
 		} else if (js_enabled.equals("0")) {
-			session.setAttribute("regInfo",
-					"Your javascript is disabled. Kindly enable it before going to raise your claim.");
+			session.setAttribute("regInfo", "Your javascript is disabled. Kindly enable it before going to raise your claim.");
 			return "redirect:/claim/raiseClaimReq?operation=failed";
 		} else {
 			return "redirect:/login";

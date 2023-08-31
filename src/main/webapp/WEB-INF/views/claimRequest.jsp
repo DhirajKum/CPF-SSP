@@ -36,31 +36,31 @@
 			 	<div class="form-group row" style="margin-left:-30px">
 					<label class="col-sm-2 col-form-label" style="max-width: 20%;"><b>Claim applied for  <span class="red">*</span></b></label>
 					<div class="col-sm-10" id="claimAppliedFor">
-					<div class="form-check-inline">
-					  <label cssclass="form-check-label">
-						<sf:radiobutton cssclass="form-check-input" path="CLAIM_APPLIED_FOR" value="CpfFinalSettlement" id="rd1" onclick="installEnbDsb();" /> CPF Final Settlement
-					  </label>
-					</div>
-					<div class="form-check-inline">
-					  <label cssclass="form-check-label">
-						<sf:radiobutton cssclass="form-check-input" path="CLAIM_APPLIED_FOR" value="CpfPartFinalWithdrawal"  id="rd2" onclick="installEnbDsb();"/>CPF Part final Withdrawal 
-					  </label>
-					</div>
-					<div class="form-check-inline">
-					  <label cssclass="form-check-label">
-						<sf:radiobutton cssclass="form-check-input" path="CLAIM_APPLIED_FOR"  value="90%Withdrawal"  id="rd3"  onclick="installEnbDsb();"/> 90% Withdrawal
-					  </label>
-					</div>
-					<div class="form-check-inline">
-					  <label cssclass="form-check-label">
-						<sf:radiobutton cssclass="form-check-input" path="CLAIM_APPLIED_FOR"  value="TempAdv"  id="rd4"  onclick="installEnbDsb();"/> Temp. Adv.
-					  </label>
-					</div>	
-					<div class="row col-sm-12">
-					<small class="form-text text-muted paddingL40">
-						Tick the applicable
-					</small>
-					</div>	
+						<div class="form-check-inline">
+						  <label cssclass="form-check-label">
+							<sf:radiobutton cssclass="form-check-input" path="CLAIM_APPLIED_FOR" value="CpfFinalSettlement" id="rd1" onclick="installEnbDsb();" /> CPF Final Settlement
+						  </label>
+						</div>
+						<div class="form-check-inline">
+						  <label cssclass="form-check-label">
+							<sf:radiobutton cssclass="form-check-input" path="CLAIM_APPLIED_FOR" value="CpfPartFinalWithdrawal"  id="rd2" onclick="installEnbDsb();"/>CPF Part final Withdrawal 
+						  </label>
+						</div>
+						<div class="form-check-inline">
+						  <label cssclass="form-check-label">
+							<sf:radiobutton cssclass="form-check-input" path="CLAIM_APPLIED_FOR"  value="90%Withdrawal"  id="rd3"  onclick="installEnbDsb();"/> 90% Withdrawal
+						  </label>
+						</div>
+						<div class="form-check-inline">
+						  <label cssclass="form-check-label">
+							<sf:radiobutton cssclass="form-check-input" path="CLAIM_APPLIED_FOR"  value="TempAdv"  id="rd4"  onclick="installEnbDsb();"/> Temp. Adv.
+						  </label>
+						</div>	
+						<div class="row col-sm-12">
+						<small class="form-text text-muted paddingL40">
+							Tick the applicable
+						</small>
+						</div>	
 					</div>	
 				</div>
 				<div class="row">	
@@ -209,7 +209,6 @@
 							</div>
 						</div>
 					</div>
-						
 				</div>
 				<div class="row marginT10">	
 					<div class="col-md-6">
@@ -329,30 +328,29 @@
 
 <script>		
 $(document).ready(function() {
-	
-	
+		
 	var radioValue=$("#claimAppliedFor input:radio:checked").val();
 	if(radioValue != undefined && radioValue != null){
 	var purpose = $
 	var urlVar = '${pageContext.request.contextPath}/claim/getPurposeOfCPF?radioValue='+radioValue.trim();
-	$.ajax({
-		type : 'GET',
-		url : urlVar,
-		//data : input,
-		async : false,
-		contentType : "application/json",
-		success : function(res) {
-			if (res) {
-				//$("#purpose").find('option').remove();
-				var purpose=$('#purpose'), option="";
-				option = option + "<option value=''>---Select---</option>";
-	            for(var i=0; i<res.length; i++){
-	                option = option + "<option value='"+res[i].cpfPurposeKey + "'" +(res[i].cpfPurposeKey === '${actClaimDto.PURPOSE}' ? " selected='selected'" : "") + "'>"+res[i].cpfPurposeValue + "</option>";
-	            }
-	            purpose.append(option);					
+		$.ajax({
+			type : 'GET',
+			url : urlVar,
+			//data : input,
+			async : false,
+			contentType : "application/json",
+			success : function(res) {
+				if (res) {
+					//$("#purpose").find('option').remove();
+					var purpose=$('#purpose'), option="";
+					option = option + "<option value=''>---Select---</option>";
+		            for(var i=0; i<res.length; i++){
+		                option = option + "<option value='"+res[i].cpfPurposeKey + "'" +(res[i].cpfPurposeKey === '${actClaimDto.PURPOSE}' ? " selected='selected'" : "") + "'>"+res[i].cpfPurposeValue + "</option>";
+		            }
+		            purpose.append(option);					
+				}
 			}
-		}
-	});
+		});
 	}
 	
  	$("#noJS").hide();
@@ -394,23 +392,25 @@ function rightClick(clickEvent) {
     clickEvent.preventDefault();
     return false;
 }
+
 document.onkeydown = function(e) {
 	if(event.keyCode == 123) {
-	return false;
+		return false;
 	}
 	if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)){
-	return false;
+		return false;
 	}
 	if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)){
-	return false;
+		return false;
 	}
 	if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)){
-	return false;
+		return false;
 	}
 }
 
 $('#claimForm').submit(function (){
 	var radioValue=$("#claimAppliedFor input:radio:checked").val();
+	if(radioValue != undefined && radioValue != null){
 	if(radioValue==='CpfFinalSettlement'){
 	if('${empStatus}'==='RESG'){
 		if($('#decNotEmpTwoMonth').is(":checked")){
@@ -452,6 +452,10 @@ $('#claimForm').submit(function (){
 			alert("Kindly tick, employee declaration checkbox ...!");
 			return false;
 		}
+	}
+	}else{
+		alert("Kindly check, 'Claim Applied For' option radio button ...!");
+		return false;
 	}
 
 	/* if(!($('#perAmount').is(":checked"))){
