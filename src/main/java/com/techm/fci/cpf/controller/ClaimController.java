@@ -288,10 +288,12 @@ public class ClaimController {
 				List<SavedClaimConditionCheckDto> savedClaimStatusList = userService.checkSavedClaimStatus(uModel.getEmpNum(), cpfClaim.getCLAIM_APPLIED_FOR());
 
 				for (SavedClaimConditionCheckDto savedClaimCondition : savedClaimStatusList) {
-					if (userService.checkTempAdvApplyAbility(uModel.getEmpNum()) && savedClaimCondition.getClaimStatus() < 4) {
+					boolean tempAdvApplyAbility = userService.checkTempAdvApplyAbility(uModel.getEmpNum());
+					
+					if (tempAdvApplyAbility && savedClaimCondition.getClaimStatus() < 4) {
 						recordFound = true;
 						tempAdvFlage = true;
-					} else if (!userService.checkTempAdvApplyAbility(uModel.getEmpNum())) {
+					} else if (!tempAdvApplyAbility) {
 						recordFound = true;
 						tempAdvFlage = true;
 					}

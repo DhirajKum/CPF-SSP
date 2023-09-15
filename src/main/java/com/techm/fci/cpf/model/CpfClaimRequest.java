@@ -44,7 +44,7 @@ public class CpfClaimRequest implements Serializable {
 	public String AMOUNT;
 	public String INSTALLMENT_NUMBER;
 	@org.hibernate.annotations.Type(type = "true_false")
-	public boolean LAST_DRAWN_ADVANCE;
+	public Boolean LAST_DRAWN_ADVANCE;
 	public String ADVANCE_AMOUNT;
 	public String AMOUNT_REPAID;
 	public String OUTSTANDING_BAL;
@@ -81,7 +81,7 @@ public class CpfClaimRequest implements Serializable {
 			String cLAIM_APPLIED_FOR, String eMP_NAME, String fATHER_HUSBAND_NAME, String bASIC, String uAN,
 			Date dOJ_FCI, String pAN, String dESIGNATION, String pRESENT_LOCATION, String pARENT_ZONE,
 			Date dATE_OF_BIRTH, String sTAFF_CODE, String cPF_ACCOUNT_NUMBER, String mOBILE_NUMBER,
-			Date rETIREMENT_DATE, String pURPOSE, String aMOUNT, String iNSTALLMENT_NUMBER, boolean lAST_DRAWN_ADVANCE,
+			Date rETIREMENT_DATE, String pURPOSE, String aMOUNT, String iNSTALLMENT_NUMBER, Boolean lAST_DRAWN_ADVANCE,
 			String aDVANCE_AMOUNT, String aMOUNT_REPAID, String oUTSTANDING_BAL, String aMOUNT_90PARTFINAL_BEF_RETR,
 			String iNFO1, String iNFO2, String iNFO3, String iNFO4, String cASTE_DISPUTE_CERT,
 			Boolean pERMISSIBLE_AMOUNT, Boolean dEC_NOT_EMP_TWOMONTH, Boolean eMP_DECLARATION, Boolean eMP_ACCEPTANCE,
@@ -299,11 +299,11 @@ public class CpfClaimRequest implements Serializable {
 		INSTALLMENT_NUMBER = iNSTALLMENT_NUMBER;
 	}
 
-	public boolean getLAST_DRAWN_ADVANCE() {
+	public Boolean getLAST_DRAWN_ADVANCE() {
 		return LAST_DRAWN_ADVANCE;
 	}
 
-	public void setLAST_DRAWN_ADVANCE(boolean lAST_DRAWN_ADVANCE) {
+	public void setLAST_DRAWN_ADVANCE(Boolean lAST_DRAWN_ADVANCE) {
 		LAST_DRAWN_ADVANCE = lAST_DRAWN_ADVANCE;
 	}
 
