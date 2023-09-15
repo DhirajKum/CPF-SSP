@@ -57,16 +57,16 @@ public class CpfClaimRequest implements Serializable {
 	public String CASTE_DISPUTE_CERT;
 	@org.hibernate.annotations.Type(type = "true_false")
 	// @NotNull
-	public boolean PERMISSIBLE_AMOUNT;
+	public Boolean PERMISSIBLE_AMOUNT;
 	@org.hibernate.annotations.Type(type = "true_false")
 	// @NotNull
-	public boolean DEC_NOT_EMP_TWOMONTH;
+	public Boolean DEC_NOT_EMP_TWOMONTH;
 	@org.hibernate.annotations.Type(type = "true_false")
 	// @NotNull
-	public boolean EMP_DECLARATION;
+	public Boolean EMP_DECLARATION;
 
 	@org.hibernate.annotations.Type(type = "true_false")
-	public boolean EMP_ACCEPTANCE;
+	public Boolean EMP_ACCEPTANCE;
 	
 	public String AMOUNT_SANCTION;
 	public Date RE_CLAIM_SUBMITTED_DATE;
@@ -84,7 +84,7 @@ public class CpfClaimRequest implements Serializable {
 			Date rETIREMENT_DATE, String pURPOSE, String aMOUNT, String iNSTALLMENT_NUMBER, boolean lAST_DRAWN_ADVANCE,
 			String aDVANCE_AMOUNT, String aMOUNT_REPAID, String oUTSTANDING_BAL, String aMOUNT_90PARTFINAL_BEF_RETR,
 			String iNFO1, String iNFO2, String iNFO3, String iNFO4, String cASTE_DISPUTE_CERT,
-			boolean pERMISSIBLE_AMOUNT, boolean dEC_NOT_EMP_TWOMONTH, boolean eMP_DECLARATION, boolean eMP_ACCEPTANCE,
+			Boolean pERMISSIBLE_AMOUNT, Boolean dEC_NOT_EMP_TWOMONTH, Boolean eMP_DECLARATION, Boolean eMP_ACCEPTANCE,
 			String aMOUNT_SANCTION, Date rE_CLAIM_SUBMITTED_DATE, int cLAIM_COUNT) {
 		super();
 		REQUEST_ID = rEQUEST_ID;
@@ -387,35 +387,35 @@ public class CpfClaimRequest implements Serializable {
 		CASTE_DISPUTE_CERT = cASTE_DISPUTE_CERT;
 	}
 
-	public boolean getPERMISSIBLE_AMOUNT() {
+	public Boolean getPERMISSIBLE_AMOUNT() {
 		return PERMISSIBLE_AMOUNT;
 	}
 
-	public void setPERMISSIBLE_AMOUNT(boolean pERMISSIBLE_AMOUNT) {
+	public void setPERMISSIBLE_AMOUNT(Boolean pERMISSIBLE_AMOUNT) {
 		PERMISSIBLE_AMOUNT = pERMISSIBLE_AMOUNT;
 	}
 
-	public boolean getDEC_NOT_EMP_TWOMONTH() {
+	public Boolean getDEC_NOT_EMP_TWOMONTH() {
 		return DEC_NOT_EMP_TWOMONTH;
 	}
 
-	public void setDEC_NOT_EMP_TWOMONTH(boolean dEC_NOT_EMP_TWOMONTH) {
+	public void setDEC_NOT_EMP_TWOMONTH(Boolean dEC_NOT_EMP_TWOMONTH) {
 		DEC_NOT_EMP_TWOMONTH = dEC_NOT_EMP_TWOMONTH;
 	}
 
-	public boolean getEMP_DECLARATION() {
+	public Boolean getEMP_DECLARATION() {
 		return EMP_DECLARATION;
 	}
 
-	public void setEMP_DECLARATION(boolean eMP_DECLARATION) {
+	public void setEMP_DECLARATION(Boolean eMP_DECLARATION) {
 		EMP_DECLARATION = eMP_DECLARATION;
 	}
 	
-	public boolean getEMP_ACCEPTANCE() {
+	public Boolean getEMP_ACCEPTANCE() {
 		return EMP_ACCEPTANCE;
 	}
 
-	public void setEMP_ACCEPTANCE(boolean eMP_ACCEPTANCE) {
+	public void setEMP_ACCEPTANCE(Boolean eMP_ACCEPTANCE) {
 		EMP_ACCEPTANCE = eMP_ACCEPTANCE;
 	}
 

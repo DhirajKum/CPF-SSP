@@ -296,7 +296,6 @@ public class ClaimController {
 						tempAdvFlage = true;
 					}
 				}
-			
 				break;
 			default:
 				recordFound = false;

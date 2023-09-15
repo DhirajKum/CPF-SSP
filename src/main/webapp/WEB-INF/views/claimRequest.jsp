@@ -382,8 +382,8 @@ $(document).ready(function() {
 		if('${kycUpdate}' === '0'){
 			$("#saveClaim").prop("disabled",true);
 		}
-	jQuery('#empAccept').prop("disabled", true);
 	}
+	jQuery('#empAccept').prop("disabled", true);
 	$("#perAmount").prop("disabled", true);
 });
 

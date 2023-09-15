@@ -73,6 +73,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 		return null;
 	}*/
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CpfClaimRequest> empClaimLookup(String empNum){
 		

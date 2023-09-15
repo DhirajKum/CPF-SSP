@@ -5,9 +5,9 @@
 <hibernate-configuration>
     <session-factory>
     
-    <property name="hibernate.c3p0.min_size">5</property>
+    <!-- <property name="hibernate.c3p0.min_size">5</property>
 	<property name="hibernate.c3p0.max_size">20</property>
-	<property name="hibernate.c3p0.timeout">300</property>
+	<property name="hibernate.c3p0.timeout">300</property> -->
     
         <mapping class="com.techm.fci.cpf.model.User"/>
         <mapping class="com.techm.fci.cpf.model.RegisteredUser"/>

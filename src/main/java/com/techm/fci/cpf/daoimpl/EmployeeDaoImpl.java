@@ -644,6 +644,7 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 			}
 			
 			File[] files = new File("/fapshare/cpf_out/" + uModel.getEmpNum().trim() + "__OTHERS").listFiles();
+			if(files!=null) {
 			for(File fileList : files) {
 
 				DocumentsUpload docUpload = new DocumentsUpload();
@@ -678,6 +679,7 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 					hQuery1.setParameter("fileType",3);
 				}
 				hQuery1.executeUpdate();*/
+			}
 			}
 			
 			File dir = new File("/fapshare/cpf_out/" + uModel.getEmpNum().trim() + "__OTHERS");
