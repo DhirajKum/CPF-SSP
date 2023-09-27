@@ -8,8 +8,10 @@ package com.techm.fci.cpf.controller;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,6 +32,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.tika.Tika;
+import org.apache.tika.detect.DefaultDetector;
+import org.apache.tika.detect.Detector;
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.mime.MediaType;
+import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.Parser;
+import org.apache.tika.sax.BodyContentHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +58,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 import com.techm.fci.cpf.dto.ActClaimDto;
 import com.techm.fci.cpf.dto.AssignToClaimDto;
@@ -58,6 +72,8 @@ import com.techm.fci.cpf.model.EmpMaster;
 import com.techm.fci.cpf.model.UserModel;
 import com.techm.fci.cpf.service.UserService;
 import com.techm.fci.cpf.util.DateUtils;
+
+//import net.sf.jmimemagic.Magic;
 
 @Controller
 @RequestMapping(value = "/claim")
@@ -792,8 +808,7 @@ public class ClaimController {
 		try {
 			UserModel uModel = getUserModel();
 			if (uModel != null) {
-				if (filename.toUpperCase().endsWith(".PDF") || filename.toUpperCase().endsWith(".JPG")
-						|| filename.toUpperCase().endsWith(".JPEG")) {
+				if (filename.toUpperCase().endsWith(".PDF") || filename.toUpperCase().endsWith(".JPG") || filename.toUpperCase().endsWith(".JPEG")) {
 					String folderPath = null;
 					if (!uModel.getEmpNum().equals("")) {
 						// folderPath = "/prodshare/cpf_out/"+uModel.getEmpNum().trim()+"_KYC";//For Production server
@@ -804,7 +819,16 @@ public class ClaimController {
 						Files.createDirectories(pathLoc);
 
 					logger.info(pathLoc + "/" + filename);
-
+					
+					InputStream inputStream = new FileInputStream("E:\\CPF_Self_Service\\D_Drive_projectSrc_files"+"/"+filename);
+					
+					String mediaType = detectingTheDocTypeByUsingDetector(inputStream);
+					System.out.println("Media Type  ::: "+ mediaType);
+					//String fileContents = extractContentUsingParser(inputStream);
+					//System.out.println("file Contents ::: "+ fileContents);
+					String contents = extractContentUsingFacade(inputStream);
+					System.out.println("Contents ::: "+contents);
+					
 					Boolean saveStatus = userService.saveEmpKycDoc(uModel, pathLoc + "/" + filename);
 					if (saveStatus) {
 						byte barr[] = file.getBytes();
@@ -816,6 +840,7 @@ public class ClaimController {
 				} else {
 					return "redirect:/home?uploadfiletype=Kindly upload proper file formate !!!";
 				}
+				
 			} else {
 				return "redirect:/login";
 			}
@@ -826,6 +851,36 @@ public class ClaimController {
 		}
 		return "redirect:/home?uploadfile=" + filename + " file successfully uploaded";
 	}
+	
+	 public static String detectingTheDocTypeByUsingDetector(InputStream inputStream) throws IOException {
+			/*
+			 * Detector detector = new DefaultDetector(); Metadata metadata = new
+			 * Metadata();
+			 * 
+			 * MediaType mediaType = detector.detect(inputStream, metadata); return
+			 * mediaType.toString();
+			 */
+		 
+		 	Tika tika = new Tika();
+	        String mediaType = tika.detect(inputStream);
+	        return mediaType;
+	    }
+	 
+	 public static String extractContentUsingParser(InputStream inputStream) throws IOException, TikaException, SAXException {
+	        Parser parser = new AutoDetectParser();
+	        ContentHandler contentHandler = new BodyContentHandler();
+	        Metadata metadata = new Metadata();
+	        ParseContext context = new ParseContext();
+	  
+	        parser.parse(inputStream, contentHandler, metadata, context);
+	        return contentHandler.toString();
+	    }
+	  
+	    public static String extractContentUsingFacade(InputStream inputStream) throws IOException, TikaException {
+	        Tika tika = new Tika();
+	        String content = tika.parseToString(inputStream);
+	        return content;
+	    }
 
 	@RequestMapping(value = { "/downloadCpfDoc" }, method = { RequestMethod.GET })
 	public void download(HttpServletRequest request, HttpServletResponse response,
