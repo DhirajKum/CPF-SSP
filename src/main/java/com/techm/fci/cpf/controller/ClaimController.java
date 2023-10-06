@@ -9,9 +9,11 @@ package com.techm.fci.cpf.controller;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.tika.Tika;
 import org.apache.tika.detect.DefaultDetector;
 import org.apache.tika.detect.Detector;
@@ -72,6 +75,9 @@ import com.techm.fci.cpf.model.EmpMaster;
 import com.techm.fci.cpf.model.UserModel;
 import com.techm.fci.cpf.service.UserService;
 import com.techm.fci.cpf.util.DateUtils;
+
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
 
 //import net.sf.jmimemagic.Magic;
 
@@ -821,7 +827,13 @@ public class ClaimController {
 					logger.info(pathLoc + "/" + filename);
 					
 					InputStream inputStream = new FileInputStream("E:\\CPF_Self_Service\\D_Drive_projectSrc_files"+"/"+filename);
-					
+					String writePathImage = "C:/tessdata-main/output.txt";
+					 Parser parser = new AutoDetectParser();
+					 extractFromFile(parser,"E:\\CPF_Self_Service\\D_Drive_projectSrc_files"+"/"+filename);
+					 extractImagePDF("E:\\CPF_Self_Service\\D_Drive_projectSrc_files"+"/"+filename, writePathImage);
+					 
+					 
+					 
 					String mediaType = detectingTheDocTypeByUsingDetector(inputStream);
 					System.out.println("Media Type  ::: "+ mediaType);
 					//String fileContents = extractContentUsingParser(inputStream);
@@ -852,7 +864,42 @@ public class ClaimController {
 		return "redirect:/home?uploadfile=" + filename + " file successfully uploaded";
 	}
 	
-	 public static String detectingTheDocTypeByUsingDetector(InputStream inputStream) throws IOException {
+	/*---------------------------------------------------------------------------------------------------------
+	-----------------------------------------------------------------------------------------------------------*/
+	private static void extractFromFile(final Parser parser, final String fileName) throws IOException, SAXException, TikaException {
+		BodyContentHandler handler = new BodyContentHandler(10000000);
+		Metadata metadata = new Metadata();
+		
+		FileInputStream content = new FileInputStream(fileName);
+		parser.parse(content, handler, metadata, new ParseContext());
+		for (String name : metadata.names()) {
+			System.out.println(name + ":::: "+ metadata.get(name));
+		}
+		
+		System.out.println(" File contents :::: "+ handler.toString());
+	}
+	
+	private static void extractImagePDF(final String fileName, final String writePath) throws IOException {
+
+		File image = new File(fileName);
+		
+		String result;
+		try {
+			Tesseract tessInst = new Tesseract();
+			tessInst.setDatapath("C:/tessdata-main");
+			tessInst.setOcrEngineMode(2);
+			tessInst.setLanguage("eng");
+			
+			result = tessInst.doOCR(image);
+			FileUtils.write(new File(writePath),result, StandardCharsets.UTF_16);
+			System.out.println("File content ::: "+ result);
+			
+		} catch (TesseractException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static String detectingTheDocTypeByUsingDetector(InputStream inputStream) throws IOException {
 			/*
 			 * Detector detector = new DefaultDetector(); Metadata metadata = new
 			 * Metadata();
@@ -882,6 +929,9 @@ public class ClaimController {
 	        return content;
 	    }
 
+    /*---------------------------------------------------------------------------------------------------------
+	-----------------------------------------------------------------------------------------------------------*/
+	    
 	@RequestMapping(value = { "/downloadCpfDoc" }, method = { RequestMethod.GET })
 	public void download(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(name = "pathId") String pathId, @RequestParam(name = "fileType") String fileType) {
