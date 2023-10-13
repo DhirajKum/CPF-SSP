@@ -238,7 +238,7 @@ $("#forgotPassSendOtp").on('click', function(event){
 			},
 			error: function(jqXHR, textStatus, errorThrown){
 				if(jqXHR.status=='404'){
-					alert("Employee ID not found !!!")
+					alert("Requested resource could not be found !!!")
 				}
 			}
 		}).done(function() {

@@ -203,6 +203,9 @@ public class ClaimController {
 			if (operation.equals("duplicate")) {
 				mv.addObject("message", "Claim already submitted ...!");
 			}
+			if (operation.equals("otherDocUpload")) {
+				mv.addObject("message",	"Kindly first upload the other documents like Salary/CPF slip ...!!!");
+			}
 			if (operation.equals("NOADMIN")) {
 				mv.addObject("message",	"Claim submission failed. As of now, admin/s not found for this location for approval your claim request ...!!!");
 			}
@@ -212,7 +215,7 @@ public class ClaimController {
 
 	@RequestMapping(value = { "/saveClaimRequest" }, method = { RequestMethod.POST })
 	public String saveClaimRequestData(@Valid @ModelAttribute("claimData") CpfClaimRequest cpfClaim,
-			@RequestParam String js_enabled) {
+			@RequestParam String js_enabled, HttpServletRequest request) {
 		logger.info("::::: In side save claim request method :::::");
 		boolean recordFound = false;
 		boolean covidFlag = false;
@@ -224,9 +227,11 @@ public class ClaimController {
 		boolean tempAdvFlage = false;
 		Long totalDays = 0L;
 		UserModel uModel = getUserModel();
-
+		String userOtherFiles= request.getParameter("userOtherFiles");
+		
 		if (uModel != null && js_enabled.equals("1")) {
-
+			if(userOtherFiles!=null && !userOtherFiles.equals("")) {
+			
 			List<CpfClaimRequest> cpfClaimReqList = new ArrayList<CpfClaimRequest>();
 			Map<String, Long> claimPurposeCount = null;
 			cpfClaimReqList = userService.empClaimLookup(uModel.getEmpNum());
@@ -369,6 +374,11 @@ public class ClaimController {
 				else
 					return "redirect:/claim/raiseClaimReq?operation=duplicate";
 			}
+			
+		}else {
+			return "redirect:/claim/raiseClaimReq?operation=otherDocUpload";
+		}
+			
 		} else if (js_enabled.equals("0")) {
 			session.setAttribute("regInfo", "Your javascript is disabled. Kindly enable it before going to raise your claim.");
 			return "redirect:/claim/raiseClaimReq?operation=failed";
@@ -826,7 +836,7 @@ public class ClaimController {
 
 					logger.info(pathLoc + "/" + filename);
 					
-					InputStream inputStream = new FileInputStream("E:\\CPF_Self_Service\\D_Drive_projectSrc_files"+"/"+filename);
+					/*InputStream inputStream = new FileInputStream("E:\\CPF_Self_Service\\D_Drive_projectSrc_files"+"/"+filename);
 					String writePathImage = "C:/tessdata-main/output.txt";
 					 Parser parser = new AutoDetectParser();
 					 extractFromFile(parser,"E:\\CPF_Self_Service\\D_Drive_projectSrc_files"+"/"+filename);
@@ -840,7 +850,7 @@ public class ClaimController {
 					//System.out.println("file Contents ::: "+ fileContents);
 					String contents = extractContentUsingFacade(inputStream);
 					System.out.println("Contents ::: "+contents);
-					
+					*/
 					Boolean saveStatus = userService.saveEmpKycDoc(uModel, pathLoc + "/" + filename);
 					if (saveStatus) {
 						byte barr[] = file.getBytes();

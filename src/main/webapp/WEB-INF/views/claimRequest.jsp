@@ -319,6 +319,7 @@
 				<button type="submit" id="saveClaim" class="btn btn-primary btn-sm" onclick="return finalSubmit()">Submit</button>&nbsp;<a href="" class="btn btn-primary btn-sm reset-form">Cancel</a>
 				</div>
 				<input type="hidden" name="js_enabled" value="0">
+				<input type="hidden" id="userOtherFiles" name="userOtherFiles" value="${claimData.userOtherFiles}">
 				</sf:form>
 			</div>
 		</div>
@@ -409,7 +410,9 @@ document.onkeydown = function(e) {
 }
 
 $('#claimForm').submit(function (){
+	var filePath = '${claimData.userOtherFiles}';
 	var radioValue=$("#claimAppliedFor input:radio:checked").val();
+	//if(filePath != undefined && filePath!=''){
 	if(radioValue != undefined && radioValue != null){
 	if(radioValue==='CpfFinalSettlement'){
 	if('${empStatus}'==='RESG'){
@@ -457,7 +460,10 @@ $('#claimForm').submit(function (){
 		alert("Kindly check, 'Claim Applied For' option radio button ...!");
 		return false;
 	}
-
+	/* }else{
+		alert("Kindly upload your other documents like Salary/CPF slip...!");
+		return false;
+	} */
 	/* if(!($('#perAmount').is(":checked"))){
 		alert("Kindly Enter Amount ...");
 		return false;

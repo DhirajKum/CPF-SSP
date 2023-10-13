@@ -54,6 +54,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 		
 		<!-- enable csrf protection -->
 		<csrf/>
+		<headers>
+		<xss-protection disabled="true"/>
+		</headers>
 	</http>
 
 	<beans:bean id="cpfUserDetailsService" class="com.techm.fci.cpf.service.CPFUserDetailsService"/>
