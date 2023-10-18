@@ -9,7 +9,8 @@ import java.io.Serializable;
 public class HomeDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	
+	private String empNum;
 	private String empName;
 	private String empFather;
 	private String empUan;
@@ -33,6 +34,14 @@ public class HomeDto implements Serializable {
 		
 	}
 	
+	
+	
+	public String getEmpNum() {
+		return empNum;
+	}
+	public void setEmpNum(String empNum) {
+		this.empNum = empNum;
+	}
 	public String getEmpName() {
 		return empName;
 	}
@@ -144,11 +153,12 @@ public class HomeDto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "HomeDto [empName=" + empName + ", empFather=" + empFather + ", empUan=" + empUan + ", empDob=" + empDob
-				+ ", empGender=" + empGender + ", empAadhar=" + empAadhar + ", empPan=" + empPan + ", empBankAccNo="
-				+ empBankAccNo + ", empMobile=" + empMobile + ", empEmail=" + empEmail + ", employeeContribute="
-				+ employeeContribute + ", employerContribute=" + employerContribute + ", vpfContribute=" + vpfContribute
-				+ ", cpfFreezeYear=" + cpfFreezeYear + ", filePath=" + filePath + ", fileName=" + fileName + "]";
+		return "HomeDto [empNum=" + empNum + ", empName=" + empName + ", empFather=" + empFather + ", empUan=" + empUan
+				+ ", empDob=" + empDob + ", empGender=" + empGender + ", empAadhar=" + empAadhar + ", empPan=" + empPan
+				+ ", empBankAccNo=" + empBankAccNo + ", empMobile=" + empMobile + ", empEmail=" + empEmail
+				+ ", employeeContribute=" + employeeContribute + ", employerContribute=" + employerContribute
+				+ ", vpfContribute=" + vpfContribute + ", cpfFreezeYear=" + cpfFreezeYear + ", filePath=" + filePath
+				+ ", fileName=" + fileName + "]";
 	}
 		
 }

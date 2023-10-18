@@ -445,12 +445,12 @@ $("#empdetails").on('click', function(event){
 
 function setEmployeeData(res) {
 	var data = JSON.parse(JSON.stringify(res));
-	$("#empNum").val(data.EMP_NUM);
-	var middleName = (data.EMP_MIDDLE_NAME)!=null?data.EMP_MIDDLE_NAME:'';
-	var lastName = (data.EMP_LAST_NAME)!=null?data.EMP_LAST_NAME:'';
-	$("#empName").val(data.EMP_FIRST_NAME+' '+middleName+' '+lastName);
-	$("#uan").val(data.UAN);
-	
+	$("#empNum").val(data.empNum);
+	//var middleName = (data.EMP_MIDDLE_NAME)!=null?data.EMP_MIDDLE_NAME:'';
+	//var lastName = (data.EMP_LAST_NAME)!=null?data.EMP_LAST_NAME:'';
+	$("#empName").val(data.empName);
+	$("#uan").val(data.empUan);
+
 	$('#empName').prop("readonly", true);
 	$('#uan').prop("readonly", true);
 	//$("#phone").val(v[""]);

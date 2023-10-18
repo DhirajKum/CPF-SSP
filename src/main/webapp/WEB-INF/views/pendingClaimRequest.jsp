@@ -1,5 +1,6 @@
 <%@taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <div class="epfo-container displayDiv">
 <div class="row displayDiv">
 		
@@ -76,8 +77,12 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 	
+	var reqTypeCheck = '${reqType}';
+	if(check(reqTypeCheck) == false){
+
 	var urlVar = '${pageContext.request.contextPath}/claim/allPendingClaim?reqType=${reqType}';
 	var $table = $('#pendingclaimdatatable');
+	
 	if($table.length){
 			$table.dataTable({
 				lengthMenu:[[5,10,15,-1],['5','10','15','ALL']],
@@ -144,7 +149,20 @@
 				]
 			});
 	}
+	}
 	});
+	
+	
+	var specialChars = "<>@!#$%^&*()_+[]{}?:;|'\"\\,./~`-="
+	var check = function(string){
+	    for(i = 0; i < specialChars.length;i++){
+	        if(string.indexOf(specialChars[i]) > -1){
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	
 
 	/* $(document).ready(function() {
 		$('#approvedclaimdatatable').dataTable();

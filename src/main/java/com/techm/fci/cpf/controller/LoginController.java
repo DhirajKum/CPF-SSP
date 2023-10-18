@@ -154,10 +154,10 @@ public class LoginController {
 	}
 
 	@RequestMapping(value = "/getEmpDetailsByEmpNum", method = RequestMethod.GET)
-	@ResponseBody
-	public ResponseEntity<EmpMaster> getEmpDetailsByEmpNum(@RequestParam String empNum, @RequestHeader(value="Authorization") String authCode, HttpSession session, ModelMap model) {
+	public ResponseEntity<HomeDto> getEmpDetailsByEmpNum(@RequestParam String empNum, @RequestHeader(value="Authorization") String authCode, HttpSession session, ModelMap model) {
 		EmpMaster empMas = new EmpMaster();
-		ResponseEntity<EmpMaster> returnEmpMas =null;
+		HomeDto homeDto = new HomeDto();
+		ResponseEntity<HomeDto> returnEmpMas =null;
 		String salt="8UmRUqrVzelvotk6jI2NpVke75B";
 		String finalAuthCode = authCode+salt;
 		if(passwordEncoder.matches(finalAuthCode, passwordEncoder.encode(finalAuthCode))){
@@ -165,9 +165,14 @@ public class LoginController {
 			if(empMas==null){
 				session.setAttribute("empIdStatus", "Employee ID not valid !!!");
 			}
-			returnEmpMas = new ResponseEntity<EmpMaster>(empMas, HttpStatus.OK); 
+			homeDto.setEmpNum(empMas.getEMP_NUM());
+			String empMiddleName = empMas.getEMP_MIDDLE_NAME()!=null?empMas.getEMP_MIDDLE_NAME():"";
+			String empLastName = empMas.getEMP_LAST_NAME()!=null?empMas.getEMP_LAST_NAME():"";
+			homeDto.setEmpName(empMas.getEMP_FIRST_NAME()+" "+empMiddleName+" "+empLastName);
+			homeDto.setEmpUan(empMas.UAN);
+			returnEmpMas = new ResponseEntity<HomeDto>(homeDto, HttpStatus.OK); 
 		}else{
-			returnEmpMas = new ResponseEntity<EmpMaster>(empMas, HttpStatus.BAD_REQUEST);
+			returnEmpMas = new ResponseEntity<HomeDto>(homeDto, HttpStatus.BAD_REQUEST);
 		}
 		return returnEmpMas;
 	}
