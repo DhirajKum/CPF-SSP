@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.techm.fci.cpf.dto.ActClaimDto;
@@ -91,10 +90,12 @@ public class LoginController {
 			}
 		}
 		if(uploadFile != null){
-			mv.addObject("message",uploadFile);
+			String filename = session.getAttribute("fileName").toString();
+			mv.addObject("message",filename+"  file successfully uploaded");
 		}
 		if(uploadFileType != null){
-			mv.addObject("errorMessage",uploadFileType);
+			String uploadFileTy = session.getAttribute("uploadFileType").toString();
+			mv.addObject("errorMessage",uploadFileTy);
 		}
 		}else{
 			return new ModelAndView("login");

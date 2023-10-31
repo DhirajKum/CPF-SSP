@@ -8,12 +8,8 @@ package com.techm.fci.cpf.controller;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,17 +30,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.tika.Tika;
-import org.apache.tika.detect.DefaultDetector;
-import org.apache.tika.detect.Detector;
-import org.apache.tika.exception.TikaException;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.mime.MediaType;
-import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.Parser;
-import org.apache.tika.sax.BodyContentHandler;
+import org.htmlcleaner.CleanerProperties;
+import org.htmlcleaner.HtmlCleaner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,9 +48,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.techm.fci.cpf.dto.ActClaimDto;
 import com.techm.fci.cpf.dto.AssignToClaimDto;
 import com.techm.fci.cpf.dto.ClaimHistoryTrailDto;
@@ -75,9 +62,6 @@ import com.techm.fci.cpf.model.EmpMaster;
 import com.techm.fci.cpf.model.UserModel;
 import com.techm.fci.cpf.service.UserService;
 import com.techm.fci.cpf.util.DateUtils;
-
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
 
 //import net.sf.jmimemagic.Magic;
 
@@ -416,8 +400,11 @@ public class ClaimController {
 		mv.addObject("showNavBar", true);
 		UserModel uModel = getUserModel();
 		mv.addObject("userModel", uModel);
-		mv.addObject("reqType", reqType);
-
+		
+		CleanerProperties props = new CleanerProperties();
+		String reqT = new HtmlCleaner(props).clean(reqType).getText().toString();
+		mv.addObject("reqType", reqT);
+		
 		if (operation != null) {
 			if (operation.equals("updateSuccessfully")) {
 				mv.addObject("message", "Claim update successfully ...!");
@@ -835,22 +822,26 @@ public class ClaimController {
 						Files.createDirectories(pathLoc);
 
 					logger.info(pathLoc + "/" + filename);
-					
-					/*InputStream inputStream = new FileInputStream("E:\\CPF_Self_Service\\D_Drive_projectSrc_files"+"/"+filename);
-					String writePathImage = "C:/tessdata-main/output.txt";
-					 Parser parser = new AutoDetectParser();
-					 extractFromFile(parser,"E:\\CPF_Self_Service\\D_Drive_projectSrc_files"+"/"+filename);
-					 extractImagePDF("E:\\CPF_Self_Service\\D_Drive_projectSrc_files"+"/"+filename, writePathImage);
-					 
-					 
-					 
-					String mediaType = detectingTheDocTypeByUsingDetector(inputStream);
-					System.out.println("Media Type  ::: "+ mediaType);
-					//String fileContents = extractContentUsingParser(inputStream);
-					//System.out.println("file Contents ::: "+ fileContents);
-					String contents = extractContentUsingFacade(inputStream);
-					System.out.println("Contents ::: "+contents);
-					*/
+				    
+				    //PdfReader reader = new PdfReader("E:\\CPF_Self_Service\\D_Drive_projectSrc_files"+"/"+filename);
+				    PdfReader reader = new PdfReader(file.getBytes());
+				    int pages = reader.getNumberOfPages();
+				    StringBuilder text = new StringBuilder();
+				    for (int i = 1; i <= pages; i++) {
+				        text.append(PdfTextExtractor.getTextFromPage(reader, i));
+				        
+						/*
+						 * CleanerProperties props = new CleanerProperties(); String reqT = new
+						 * HtmlCleaner(props).clean(text.toString()).getText().toString();
+						 */
+						
+				        if(text.toString().contains("<>")) {
+				        	System.out.println(":::: found malacius code :::: ");
+				        }
+				    }
+				    System.out.println("text print ::: "+ text);
+				    reader.close();
+				    
 					Boolean saveStatus = userService.saveEmpKycDoc(uModel, pathLoc + "/" + filename);
 					if (saveStatus) {
 						byte barr[] = file.getBytes();
@@ -860,6 +851,7 @@ public class ClaimController {
 						bout.close();
 					}
 				} else {
+					session.setAttribute("uploadFileType", "Kindly upload proper file formate !!!");
 					return "redirect:/home?uploadfiletype=Kindly upload proper file formate !!!";
 				}
 				
@@ -871,76 +863,9 @@ public class ClaimController {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		return "redirect:/home?uploadfile=" + filename + " file successfully uploaded";
+		session.setAttribute("fileName", filename);
+		return "redirect:/home?uploadfile=" + filename;
 	}
-	
-	/*---------------------------------------------------------------------------------------------------------
-	-----------------------------------------------------------------------------------------------------------*/
-	private static void extractFromFile(final Parser parser, final String fileName) throws IOException, SAXException, TikaException {
-		BodyContentHandler handler = new BodyContentHandler(10000000);
-		Metadata metadata = new Metadata();
-		
-		FileInputStream content = new FileInputStream(fileName);
-		parser.parse(content, handler, metadata, new ParseContext());
-		for (String name : metadata.names()) {
-			System.out.println(name + ":::: "+ metadata.get(name));
-		}
-		
-		System.out.println(" File contents :::: "+ handler.toString());
-	}
-	
-	private static void extractImagePDF(final String fileName, final String writePath) throws IOException {
-
-		File image = new File(fileName);
-		
-		String result;
-		try {
-			Tesseract tessInst = new Tesseract();
-			tessInst.setDatapath("C:/tessdata-main");
-			tessInst.setOcrEngineMode(2);
-			tessInst.setLanguage("eng");
-			
-			result = tessInst.doOCR(image);
-			FileUtils.write(new File(writePath),result, StandardCharsets.UTF_16);
-			System.out.println("File content ::: "+ result);
-			
-		} catch (TesseractException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static String detectingTheDocTypeByUsingDetector(InputStream inputStream) throws IOException {
-			/*
-			 * Detector detector = new DefaultDetector(); Metadata metadata = new
-			 * Metadata();
-			 * 
-			 * MediaType mediaType = detector.detect(inputStream, metadata); return
-			 * mediaType.toString();
-			 */
-		 
-		 	Tika tika = new Tika();
-	        String mediaType = tika.detect(inputStream);
-	        return mediaType;
-	    }
-	 
-	 public static String extractContentUsingParser(InputStream inputStream) throws IOException, TikaException, SAXException {
-	        Parser parser = new AutoDetectParser();
-	        ContentHandler contentHandler = new BodyContentHandler();
-	        Metadata metadata = new Metadata();
-	        ParseContext context = new ParseContext();
-	  
-	        parser.parse(inputStream, contentHandler, metadata, context);
-	        return contentHandler.toString();
-	    }
-	  
-	    public static String extractContentUsingFacade(InputStream inputStream) throws IOException, TikaException {
-	        Tika tika = new Tika();
-	        String content = tika.parseToString(inputStream);
-	        return content;
-	    }
-
-    /*---------------------------------------------------------------------------------------------------------
-	-----------------------------------------------------------------------------------------------------------*/
 	    
 	@RequestMapping(value = { "/downloadCpfDoc" }, method = { RequestMethod.GET })
 	public void download(HttpServletRequest request, HttpServletResponse response,

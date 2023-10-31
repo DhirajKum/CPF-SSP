@@ -2415,7 +2415,8 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 					"FROM cpf_claim_form_details d LEFT OUTER JOIN cpf_claim_form_status s \r\n" + 
 					"ON d.request_id=s.request_id \r\n" + 
 					"WHERE d.claim_applied_for=:claimType\r\n" + 
-					"AND d.claim_submitted_by=:empNum\r\n" + 
+					"AND d.claim_submitted_by=:empNum\r\n" +
+					"AND s.status<>-1 \r\n" +
 					"GROUP BY d.claim_submitted_by, d.request_id,d.claim_applied_for, d.purpose, s.status";
 			Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 			if (empNum != null) {
