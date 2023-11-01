@@ -32,6 +32,8 @@ import javax.validation.Valid;
 
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.HtmlCleaner;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +64,7 @@ import com.techm.fci.cpf.model.EmpMaster;
 import com.techm.fci.cpf.model.UserModel;
 import com.techm.fci.cpf.service.UserService;
 import com.techm.fci.cpf.util.DateUtils;
+import com.techm.fci.cpf.util.HtmlUtil;
 
 //import net.sf.jmimemagic.Magic;
 
@@ -805,13 +808,30 @@ public class ClaimController {
 	}
 
 	@RequestMapping(value = { "/uplodCpfDoc" }, method = { RequestMethod.POST })
-	public String upload(@RequestParam CommonsMultipartFile file, HttpSession session) {
-		// String path=session.getServletContext().getRealPath("/");
+	public String upload(@RequestParam CommonsMultipartFile file, HttpSession session) throws IOException {
+
 		String filename = file.getOriginalFilename();
+		PdfReader reader = null;
+		BufferedOutputStream bout = null;
 		try {
 			UserModel uModel = getUserModel();
 			if (uModel != null) {
 				if (filename.toUpperCase().endsWith(".PDF") || filename.toUpperCase().endsWith(".JPG") || filename.toUpperCase().endsWith(".JPEG")) {
+					
+					reader = new PdfReader(file.getBytes());
+				    int pages = reader.getNumberOfPages();
+				    StringBuilder text = new StringBuilder();
+				    for (int i = 1; i <= pages; i++) {
+				        text.append(PdfTextExtractor.getTextFromPage(reader, i));
+				        String safe = Jsoup.clean(text.toString(), Safelist.basic());
+						boolean checkScriptCode = HtmlUtil.isHtml(safe.replace("'", ""));
+				        if(checkScriptCode) {
+				        	session.setAttribute("uploadFileType", "Found malicious code in upload file !!!");
+				        	return "redirect:/home?uploadfiletype=Found malicious code in upload file !!!";
+				        }
+				    }
+				    reader.close();
+				    
 					String folderPath = null;
 					if (!uModel.getEmpNum().equals("")) {
 						// folderPath = "/prodshare/cpf_out/"+uModel.getEmpNum().trim()+"_KYC";//For Production server
@@ -823,29 +843,10 @@ public class ClaimController {
 
 					logger.info(pathLoc + "/" + filename);
 				    
-				    //PdfReader reader = new PdfReader("E:\\CPF_Self_Service\\D_Drive_projectSrc_files"+"/"+filename);
-				    PdfReader reader = new PdfReader(file.getBytes());
-				    int pages = reader.getNumberOfPages();
-				    StringBuilder text = new StringBuilder();
-				    for (int i = 1; i <= pages; i++) {
-				        text.append(PdfTextExtractor.getTextFromPage(reader, i));
-				        
-						/*
-						 * CleanerProperties props = new CleanerProperties(); String reqT = new
-						 * HtmlCleaner(props).clean(text.toString()).getText().toString();
-						 */
-						
-				        if(text.toString().contains("<>")) {
-				        	System.out.println(":::: found malacius code :::: ");
-				        }
-				    }
-				    System.out.println("text print ::: "+ text);
-				    reader.close();
-				    
 					Boolean saveStatus = userService.saveEmpKycDoc(uModel, pathLoc + "/" + filename);
 					if (saveStatus) {
 						byte barr[] = file.getBytes();
-						BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(pathLoc + "/" + filename));
+						bout = new BufferedOutputStream(new FileOutputStream(pathLoc + "/" + filename));
 						bout.write(barr);
 						bout.flush();
 						bout.close();
@@ -862,6 +863,8 @@ public class ClaimController {
 			e1.printStackTrace();
 		} catch (Exception e) {
 			System.out.println(e);
+		} finally {
+			
 		}
 		session.setAttribute("fileName", filename);
 		return "redirect:/home?uploadfile=" + filename;
