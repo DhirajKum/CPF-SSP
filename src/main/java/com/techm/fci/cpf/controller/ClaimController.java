@@ -66,8 +66,6 @@ import com.techm.fci.cpf.service.UserService;
 import com.techm.fci.cpf.util.DateUtils;
 import com.techm.fci.cpf.util.HtmlUtil;
 
-//import net.sf.jmimemagic.Magic;
-
 @Controller
 @RequestMapping(value = "/claim")
 public class ClaimController {
@@ -808,7 +806,7 @@ public class ClaimController {
 	}
 
 	@RequestMapping(value = { "/uplodCpfDoc" }, method = { RequestMethod.POST })
-	public String upload(@RequestParam CommonsMultipartFile file, HttpSession session) throws IOException {
+	public String upload(@RequestParam CommonsMultipartFile file, HttpSession session){
 
 		String filename = file.getOriginalFilename();
 		PdfReader reader = null;
@@ -826,8 +824,8 @@ public class ClaimController {
 				        String safe = Jsoup.clean(text.toString(), Safelist.basic());
 						boolean checkScriptCode = HtmlUtil.isHtml(safe.replace("'", ""));
 				        if(checkScriptCode) {
-				        	session.setAttribute("uploadFileType", "Found malicious code in upload file !!!");
-				        	return "redirect:/home?uploadfiletype=Found malicious code in upload file !!!";
+				        	session.setAttribute("uploadFileType", "Some things wrong with the uploaded file !!!");
+				        	return "redirect:/home?uploadfiletype=Some things wrong with the uploaded file !!!";
 				        }
 				    }
 				    reader.close();
