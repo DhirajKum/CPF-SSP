@@ -850,8 +850,8 @@ public class ClaimController {
 						bout.close();
 					}
 				} else {
-					session.setAttribute("uploadFileType", "Kindly upload proper file formate !!!");
-					return "redirect:/home?uploadfiletype=Kindly upload proper file formate !!!";
+					session.setAttribute("uploadFileType", "Kindly upload valid file formate !!!");
+					return "redirect:/home?uploadfiletype=Kindly upload valid file formate !!!";
 				}
 				
 			} else {
@@ -859,8 +859,12 @@ public class ClaimController {
 			}
 		} catch (IOException e1) {
 			e1.printStackTrace();
+			session.setAttribute("uploadFileType", "Kindly upload valid file formate !!!");
+			return "redirect:/home?uploadfiletype=Kindly upload valid file formate !!!";
 		} catch (Exception e) {
 			System.out.println(e);
+			session.setAttribute("uploadFileType", "Kindly upload valid file formate !!!");
+			return "redirect:/home?uploadfiletype=Kindly upload valid file formate !!!";
 		} finally {
 			
 		}
