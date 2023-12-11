@@ -78,7 +78,7 @@
 				</div>	
 				</div>	
 				</div>
-				</br>
+				<br>
 				<div class="row">	
 					<div class="col-md-6">
 						<div class="form-group row">
@@ -330,7 +330,7 @@
 							<label cssclass="col-sm-5 col-form-label" class="labelwidth"><b>User Uploaded Other Documents(Salary/CPF slips etc.)</b></label>
 							<div class="col-sm-7">
 							<c:forEach var="userOtherFile" items="${actClaimDto.userOtherFiles}">
-								<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${userOtherFile.value}&fileType=3" target="_blank">${userOtherFile.key}</a></br>
+								<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${userOtherFile.value}&fileType=3" target="_blank">${userOtherFile.key}</a><br>
 							</c:forEach>
 							</div>
 						</div>
@@ -343,7 +343,7 @@
 							<label cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Uploaded Other Documents(By Admin/CPF_Admin)</b></label>
 							<div class="col-sm-7">
 							<c:forEach var="otherFile" items="${actClaimDto.otherFiles}">
-								<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${otherFile.value}&fileType=2" target="_blank">${otherFile.key}</a></br>
+								<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${otherFile.value}&fileType=2" target="_blank">${otherFile.key}</a><br>
 							</c:forEach>
 							</div>
 						</div>
@@ -364,7 +364,7 @@
 					</div>
 					<div class="form-group row">
 					    <label cssClass="col-sm-5 col-form-label" class="labelwidth"></label>
-						<small cssClass="col-sm-7 col-form-label" id="docUploadHelp" class="form-text text-muted" style="text-align: left;"><b>Note</b>: You can upload multiple file with +Ctrl key</br>File should be in pdf, png, jpg and jpeg format only.</br>File maximum size should be 5 Mb.</small>
+						<small cssClass="col-sm-7 col-form-label" id="docUploadHelp" class="form-text text-muted" style="text-align: left;"><b>Note</b>: You can upload multiple file with +Ctrl key<br>File should be in pdf, png, jpg and jpeg format only.<br>File maximum size should be 5 Mb.</small>
 					</div>
 				</div>
 				<div class="col-md-6">

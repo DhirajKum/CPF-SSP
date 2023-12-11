@@ -119,7 +119,7 @@
 				<div class="col-sm-4">
 					<span id="uploadSupptDoc"></span>
 					<input type="file" name="file" id="kycDoc" data-validation="ckeckFileFormat ckeckFileSize required"/>
-					<small id="docUploadHelp" class="form-text text-muted" style="text-align: left;">File should be in pdf, jpg and jpeg format only.</br>File maximum size should be 5 Mb.</small>
+					<small id="docUploadHelp" class="form-text text-muted" style="text-align: left;">File should be in pdf, jpg and jpeg format only.<br>File maximum size should be 5 Mb.</small>
 				</div>
 				<!-- </div> -->
 			<!-- </div> -->

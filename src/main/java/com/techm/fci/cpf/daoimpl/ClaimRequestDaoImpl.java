@@ -300,7 +300,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 			}
 			List<Map<String, Object>> list3 = hQuery3.list();
 			if(list3!=null && list3.size()>0){
-				Map<String,String> fileMap = new HashMap();
+				Map<String,String> fileMap = new HashMap<String,String>();
 				for (Map<String, Object> map3 : list3) {
 					File file1 = new File(map3.get("filePath").toString().trim());
 					//fileMap.put(file1.getName(), map3.get("filePath")!=null?map3.get("filePath").toString().trim():"");
@@ -1095,7 +1095,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 			}
 			List<Map<String, Object>> list3 = hQuery3.list();
 			if(list3!=null && list3.size()>0){
-				Map<String,String> fileMap = new HashMap();
+				Map<String,String> fileMap = new HashMap<String,String>();
 				for (Map<String, Object> map3 : list3) {
 					File file = new File(map3.get("filePath").toString().trim());
 					//fileMap.put(file.getName(), map3.get("filePath")!=null?map3.get("filePath").toString().trim():"");
@@ -1116,7 +1116,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 			}
 			List<Map<String, Object>> list4 = hQuery4.list();
 			if(list4!=null && list4.size()>0){
-				Map<String,String> fileMap = new HashMap();
+				Map<String,String> fileMap = new HashMap<String, String>();
 				for (Map<String, Object> map4 : list4) {
 					File file = new File(map4.get("filePath").toString().trim());
 					//fileMap.put(file.getName(), map4.get("filePath")!=null?map4.get("filePath").toString().trim():"");

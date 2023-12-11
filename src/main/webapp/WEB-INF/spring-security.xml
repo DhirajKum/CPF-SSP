@@ -55,7 +55,8 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 		<!-- enable csrf protection -->
 		<csrf/>
 		<headers>
-		<xss-protection disabled="true"/>
+			<xss-protection disabled="false"/>
+			<!-- <content-security-policy policy-directives="script-src 'self' https://javascripts.example.com; report-uri /csp-report-endpoint/"/> -->
 		</headers>
 	</http>
 
