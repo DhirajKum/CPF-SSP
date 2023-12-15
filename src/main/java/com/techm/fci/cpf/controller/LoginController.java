@@ -344,7 +344,7 @@ public class LoginController {
 			UserModel uModel = getUserModel();	
 			if(uModel!=null){
 				return "redirect:/home";
-			}else {
+			} else {
 				return "redirect:/login";
 			}
 		}
