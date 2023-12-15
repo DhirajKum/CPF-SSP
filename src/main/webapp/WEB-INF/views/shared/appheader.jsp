@@ -12,12 +12,6 @@
 <link href="${pageContext.request.contextPath}/resources/static/css/epfo-style.css"	rel="stylesheet" />
 <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
 
-<script type="text/javascript">
-	var logoutUrl = "/memberinterface/restoreSession/logout?_HDIV_STATE_=16-1-D53059CC9920DF50F8FDE61B4195F584";
-	var validateSessionUrl = "/memberinterface/restoreSession/validateActivity?_HDIV_STATE_=16-2-D53059CC9920DF50F8FDE61B4195F584";
-	var logoutFuncUrl = "/memberinterface/logout?_HDIV_STATE_=16-0-D53059CC9920DF50F8FDE61B4195F584";
-</script>
-
 <style>
 @font-face {
     font-family: hindi;

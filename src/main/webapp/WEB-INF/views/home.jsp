@@ -11,9 +11,7 @@
 <link href="${pageContext.request.contextPath}/resources/COMMON/JS/bootstrap.min.js" rel="STYLESHEET" type="text/css">
 </head>
 <body>
-<div style="">
- <!-- <td class="w-25"><b>Employer Contribution</b></td> -->
-</div>
+
  <div class="col-md-12" style="padding-left: 5px">
 
 		<c:if test="${not empty message}">
@@ -138,10 +136,10 @@
 			 
 		</sf:form>
 		</div>
-
 	</div>
 
 <script type="text/javascript">
+
 $(document).ready(function(){
 	//$("#message").hide();
 	//$("#errormessage").hide();
@@ -192,7 +190,6 @@ $.formUtils.addValidator({
 	errorMessage : 'The File Size should be less than 5 MB',
 	errorMessageKey : 'uploadSupptDocSize'
 });
-
 </script>
 
 </body>

@@ -325,19 +325,28 @@ public class LoginController {
 	}
 
 	@RequestMapping(value = "/changePasswordSubmit", method = RequestMethod.POST)
-	public String changePasswordSubmit(ModelMap model, HttpSession session, @ModelAttribute("changePassword") ForgotPassword changePassword) {
-		
+	public String changePasswordSubmit(ModelMap model, HttpSession session, @ModelAttribute("changePassword") ForgotPassword changePassword, HttpServletRequest request, HttpServletResponse response) {
+
 		logger.info("Going to change old password :::: ");
-		UserModel uModel = getUserModel();
-		if(uModel!=null){
 		Boolean smsSentStatus = userService.changePassword(changePassword.getNewPassword(), getUserModel().getEmpNum());
 		if (!smsSentStatus) {
 			return "redirect:/changePassword";
 		}else{
-			return "redirect:/home";
-		}
-		}else {
-			return "redirect:/login";
+			session = request.getSession(false); 
+			SecurityContextHolder.clearContext(); 
+			
+			if(session != null)	{ 
+				session.invalidate(); 
+			} 
+			for (Cookie cookie : request.getCookies()) { 
+				cookie.setMaxAge(0); 
+			}
+			UserModel uModel = getUserModel();	
+			if(uModel!=null){
+				return "redirect:/home";
+			}else {
+				return "redirect:/login";
+			}
 		}
 	}
 

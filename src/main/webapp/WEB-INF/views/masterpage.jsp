@@ -37,8 +37,6 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/buttons.print.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/static/js/jquery.form-validator.min.js"></script>
 
-<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script> -->
-
 <script type="text/javascript">
 	window.menu = '${title}';
 </script>
@@ -52,6 +50,7 @@
 	padding: 0 0px 0 0; 
 	}
 </style>
+
 <body>
 	<!-- Header -->
 	<%@include file="./shared/appheader.jsp"%>
