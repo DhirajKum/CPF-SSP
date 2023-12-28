@@ -327,11 +327,12 @@ public class LoginController {
 	@RequestMapping(value = "/changePasswordSubmit", method = RequestMethod.POST)
 	public String changePasswordSubmit(ModelMap model, HttpSession session, @ModelAttribute("changePassword") ForgotPassword changePassword, HttpServletRequest request, HttpServletResponse response) {
 
-		logger.info("Going to change old password :::: ");
+		logger.info("::::: Going to change old password :::::");
 		Boolean smsSentStatus = userService.changePassword(changePassword.getNewPassword(), getUserModel().getEmpNum());
 		if (!smsSentStatus) {
 			return "redirect:/changePassword";
 		}else{
+			logger.info("::::: Get session cleared before going to login :::::");
 			session = request.getSession(false); 
 			SecurityContextHolder.clearContext(); 
 			
