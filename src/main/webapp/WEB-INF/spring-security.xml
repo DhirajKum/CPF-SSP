@@ -58,7 +58,46 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 			<!-- <content-security-policy policy-directives="script-src 'self' https://javascripts.example.com; report-uri /csp-report-endpoint/"></content-security-policy> -->
 			<xss-protection disabled="false"/>
 		</headers>
+<!-- 
+		<custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
+		<custom-filter position="FORM_LOGIN_FILTER" ref="myAuthFilter" />
+		<session-management session-authentication-strategy-ref="sas"/> -->
+		
 	</http>
+
+	<!-- <beans:bean id="concurrencyFilter"
+	class="org.springframework.security.web.session.ConcurrentSessionFilter">
+	<beans:property name="sessionRegistry" ref="sessionRegistry" />
+	<beans:property name="expiredUrl" value="/session-expired.htm" />
+	</beans:bean>
+	
+	<beans:bean id="myAuthFilter" class=
+	"org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+	<beans:property name="sessionAuthenticationStrategy" ref="sas" />
+	<beans:property name="authenticationManager" ref="authenticationManager" />
+	</beans:bean>
+	
+	<beans:bean id="sas" class="org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy">
+	<beans:constructor-arg>
+		<beans:list>
+		<beans:bean class="org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
+			<beans:constructor-arg ref="sessionRegistry"/>
+			<beans:property name="maximumSessions" value="1" />
+			<beans:property name="exceptionIfMaximumExceeded" value="true" />
+		</beans:bean>
+		<beans:bean class="org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy">
+		</beans:bean>
+		<beans:bean class="org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy">
+			<beans:constructor-arg ref="sessionRegistry"/>
+		</beans:bean>
+		</beans:list>
+	</beans:constructor-arg>
+	</beans:bean>
+	
+	<beans:bean id="sessionRegistry"
+		class="org.springframework.security.core.session.SessionRegistryImpl" /> -->
+
+
 
 	<beans:bean id="cpfUserDetailsService" class="com.techm.fci.cpf.service.CPFUserDetailsService"/>
 	<authentication-manager>
