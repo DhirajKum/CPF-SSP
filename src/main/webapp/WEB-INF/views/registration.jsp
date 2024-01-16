@@ -74,9 +74,9 @@ label {
 <body>
 <div class="container">
 <div class="row row-fluid">
-	<div class="col-md-5" style="">
-	<img style="padding-top: 5px !important" class="header-logo" id="header-icon-img" src="${pageContext.request.contextPath}/resources/static/images/fci.jpg">
-			<a class="navbar-brand navbar-right" href="#" style="margin-top: 5px;"> 
+	<div class="col-md-12" style="text-align: center;">
+	<img style="padding-top: 5px !important" class="header-logo" id="header-icon-img" src="${pageContext.request.contextPath}/resources/static/images/fci.jpg"><br>
+			<a style="text-align: center;"> 
 			<span class="header-text">CPF Self Service Portal </span><br> 
 			<span class="hidden-xs header-sub-text" style=""> Food Corporation Of India</span>
 			</a>

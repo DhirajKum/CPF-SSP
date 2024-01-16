@@ -43,12 +43,12 @@
 <body>
 <div class="container">
 <div class="row row-fluid">
-	<div class="col-md-5" style="">
-	<img style="padding-top: 5px !important" class="header-logo" id="header-icon-img" src="${pageContext.request.contextPath}/resources/static/images/fci.jpg">
-			<a class="navbar-brand navbar-right" href="#" style="margin-top: 5px;"> 
+	<div class="col-md-12" style="text-align: center;">
+	<img style="padding-top: 5px !important" class="header-logo" id="header-icon-img" src="${pageContext.request.contextPath}/resources/static/images/fci.jpg"><br>
+		<a style="text-align: center;"> 
 			<span class="header-text">CPF Self Service Portal </span><br> 
-			<span class="hidden-xs header-sub-text" style=""> Food Corporation Of India</span>
-			</a>
+			<span class="hidden-xs header-sub-text"> Food Corporation Of India</span>
+		</a>
 	</div>
 </div>
 </div>
@@ -69,7 +69,7 @@
 		</div>
 	</c:if>
 	
-	<div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins">
+	<div class="page-wrapper bg-gra-02 p-t-100 p-b-100 font-poppins">
 		<div class="wrapper wrapper--w680">
 			<div class="card card-4">
 				<div class="card-body">
@@ -105,14 +105,16 @@
 								</span>
 							</div>
 							<label class="labelwidth">Confirm New Password</label>
-							<input type="password" id="confNewPass" class="form-control"  >
+							<input type="password" id="confNewPass" class="form-control"/><br>
+							<h5><b><span id="message"></span></h5>
 						</div>
-						<h5><b><span id="message"></span></h5>
+						
 						<!-- form-group// -->
 
 						<!-- form-group// -->
 						<div class="form-group">
 							<button type="submit" class="btn btn-primary btn-block">Update</button>
+							<button type="button" class="btn btn-primary btn-block" onclick="history.back()">Back</button>
 						</div>
 					<input type="hidden" name="js_enabled" value="0">
 					</sf:form>
@@ -238,7 +240,10 @@ $("#forgotPassSendOtp").on('click', function(event){
 			},
 			error: function(jqXHR, textStatus, errorThrown){
 				if(jqXHR.status=='404'){
-					alert("Requested resource could not be found !!!")
+					var mobileNo = '0000009999';
+					var maskedMobileNo = mobileNo.toString().replace(/\d(?=\d{4})/g, "X");
+					window.location.href='${pageContext.request.contextPath}/sendOTP?mobileNo='+maskedMobileNo+'&empNum='+empNum;
+					//alert("Requested resource could not be found !!!")
 				}
 			}
 		}).done(function() {
