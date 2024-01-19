@@ -29,6 +29,14 @@ public class CPFCommonConstants {
 	public static final String OTP_MESSAGE = "Dear <name>, OTP for CPF Self Service Registration is <otp>. Team FCI FAP";
 	public static final String OTP_EXPIRY_TIME = "15";
 	
+	public static final String USERNAME = "fcilekha.sms";
+	public static final String PIN = "W3%24cV1%26tE5";
+	public static final String SIGNATURE = "FCIFAP";
+	public static final String DLT_ENTITY_ID="1101611580000043694";
+	public static final String DLT_TEMPLATE_ID="1107161233369894498";
+	public static final String DEL_BY_SMSPORTAL = "N";
+	
+	
 	/**
 	 * Gender Types
 	 */
