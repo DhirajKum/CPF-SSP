@@ -165,7 +165,7 @@ public class RoleMappingDaoImpl implements RoleMappingDao {
 				roleMappingReqForSave.setSTARTDATE(new Date());
 				roleMappingReqForSave.setENDDATE(null);
 				roleMappingReqForSave.setCREATED_DATE(new Date());
-				roleMappingReqForSave.setCREATED_BY(empNum);
+				roleMappingReqForSave.setCREATED_BY(Integer.parseInt(uModel.getEmpNum()));
 				session.persist(roleMappingReqForSave);
 
 				logger.info("rollMappingForSave :::: " + roleMappingReqForSave.toString());
