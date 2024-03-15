@@ -624,5 +624,5 @@ public class RoleMappingDaoImpl implements RoleMappingDao {
 			throw re;
 		}
 	}
-
+	
 }
