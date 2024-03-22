@@ -606,63 +606,50 @@ function getFileSize(file) {
 	}
 }
 
-$("#uploadOtherDoc")
-		.on(
-				'click',
-				function(event) {
+$("#uploadOtherDoc").on('click',
+	function(event) {
 
-					var filetype = true;
-					var fd = new FormData();
-					var totalfiles = document.getElementById('files').files.length;
-					var radioValue = $(
-							"#claimAppliedFor input:radio:checked").val();
+		var filetype = true;
+		var fd = new FormData();
+		var totalfiles = document.getElementById('files').files.length;
+		var radioValue = $("#claimAppliedFor input:radio:checked").val();
 
-					if (totalfiles > 0) {
-						for (var index = 0; index < totalfiles; index++) {
-							fd.append("files", document
-									.getElementById('files').files[index]);
-							if (getFileExtension(document
-									.getElementById('files').files[index].name)
-									&& getFileSize(document
-											.getElementById('files').files[index])) {
-								filetype = true;
-							} else {
-								filetype = false;
-								break;
+		if (totalfiles > 0) {
+			for (var index = 0; index < totalfiles; index++) {
+				fd.append("files", document.getElementById('files').files[index]);
+				if (getFileExtension(document.getElementById('files').files[index].name) && getFileSize(document.getElementById('files').files[index])) {
+					filetype = true;
+				} else {
+					filetype = false;
+					break;
+				}
+			}
+		}/*else{
+				alert("Kindly upload at list one document.");
+			} */
+
+		if (filetype) {
+			$.ajax({
+						type : 'POST',
+						url : 'multiUplodCpfDoc?${_csrf.parameterName}=${_csrf.token}&reqId=${reqId}&claimSubmittedBy=${actClaimDto.CLAIM_SUBMITTED_BY}&claimAppliedFor='
+								+ radioValue,
+						enctype : 'multipart/form-data',
+						data : fd,
+						processData : false,
+						contentType : false,
+						success : function(data, textStatus, xhr) {
+							if (xhr.status == '200') {
+								console.log('Upload Completed ...');
+								window.location.href = '${pageContext.request.contextPath}/claim/actClaimReq?reqType=otherReq&reqId=${reqId}&uploadfiles='
+										+ data
+										+ ' Files uploaded successfully !!!';
 							}
 						}
-					}/*else{
-							alert("Kindly upload at list one document.");
-						} */
+					});
+		} else {
+			$('#msg').html("Kindly upload your file/s according to the given instructions !!!").fadeIn('slow');
+			$('#msg').delay(10000).fadeOut('slow');
+		}
 
-					if (filetype) {
-						$
-								.ajax({
-									type : 'POST',
-									url : 'multiUplodCpfDoc?${_csrf.parameterName}=${_csrf.token}&reqId=${reqId}&claimSubmittedBy=${actClaimDto.CLAIM_SUBMITTED_BY}&claimAppliedFor='
-											+ radioValue,
-									enctype : 'multipart/form-data',
-									data : fd,
-									processData : false,
-									contentType : false,
-									success : function(data, textStatus,
-											xhr) {
-										if (xhr.status == '200') {
-											console
-													.log('Upload Completed ...');
-											window.location.href = '${pageContext.request.contextPath}/claim/actClaimReq?reqType=otherReq&reqId=${reqId}&uploadfiles='
-													+ data
-													+ ' Files uploaded successfully !!!';
-										}
-									}
-								});
-					} else {
-						$('#msg')
-								.html(
-										"Kindly upload your file/s according to the given instructions !!!")
-								.fadeIn('slow');
-						$('#msg').delay(10000).fadeOut('slow');
-					}
-
-				});
+	});
 </script>
