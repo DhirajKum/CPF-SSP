@@ -423,10 +423,13 @@ public class RoleMappingDaoImpl implements RoleMappingDao {
 		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		try {
-			String query = "select card.reg_id,card.empid as \"empnum\",pdm.dsgn_desc as \"designation\",card.empname as \"empname\", clm.loc_desc as \"place_of_posting\" ,"
+			String query = "select card.reg_id,card.empid as \"empnum\",pdm.dsgn_desc as \"designation\",card.empname as \"empname\", "
+					+ "clm.loc_desc as \"place_of_posting\", clm.loc_desc as \"role_assigned_place\", "
 					+ "card.roleassigned as \"assignedrole\" ,	to_date(card.startdate, 'dd-mm-yy') as \"startdate\" "
 					+ "from fcipayroll.cpf_assigned_roles_dtl card, fcipayroll.pay_emp_mast pem, fcipayroll.pay_dsgn_mst pdm, fcipayroll.com_loc_mst clm"
-					+ " where pdm.dsgn_id=pem.designation_id" + " and pem.pres_location_code=clm.loc_id"
+					+ " where pdm.dsgn_id=pem.designation_id" 
+					+ " and pem.pres_location_code=clm.loc_id"
+					+ " and card.preslocation = clm.loc_id"
 					+ " and card.empid=pem.emp_num  and card.ENDDATE is null order by card.empid";
 
 			System.out.print(query);
@@ -450,6 +453,7 @@ public class RoleMappingDaoImpl implements RoleMappingDao {
 				revokeRoleStatusDto.setDesignation(map.get("designation").toString());
 				revokeRoleStatusDto.setEmpName(map.get("empname").toString());
 				revokeRoleStatusDto.setPresLocation(map.get("place_of_posting").toString());
+				revokeRoleStatusDto.setRoleAssignedLocation(map.get("role_assigned_place").toString());
 				revokeRoleStatusDto.setAssignedRole(map.get("assignedrole").toString());
 				revokeRoleStatusDto.setAssignedDate(myFormat.format(format.parse(map.get("startdate").toString().trim())));
 

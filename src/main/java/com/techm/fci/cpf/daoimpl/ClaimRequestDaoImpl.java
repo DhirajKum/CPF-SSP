@@ -603,6 +603,7 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 							+ "where st.claim_submitted_by=reg.emp_num "
 							+ "and cfd.claim_submitted_by=reg.emp_num "
 							+ "and cfd.designation=dsm.dsgn_id "
+							+ "and st.request_id=cfd.request_id "
 							+ "and st.status>-1 "
 							+ "and st.claim_submitted_by=:empNum";
 					
