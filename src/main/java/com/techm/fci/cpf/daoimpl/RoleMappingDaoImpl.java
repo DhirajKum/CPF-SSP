@@ -452,7 +452,7 @@ public class RoleMappingDaoImpl implements RoleMappingDao {
 				revokeRoleStatusDto.setDesignation(map.get("designation").toString());
 				revokeRoleStatusDto.setEmpName(map.get("empname").toString());
 				revokeRoleStatusDto.setPresLocation(map.get("place_of_posting").toString());
-				revokeRoleStatusDto.setRoleAssignedLocation(map.get("role_assigned_place").toString());
+				//revokeRoleStatusDto.setRoleAssignedLocation(map.get("role_assigned_place").toString());
 				revokeRoleStatusDto.setAssignedRole(map.get("assignedrole").toString());
 				revokeRoleStatusDto.setAssignedDate(myFormat.format(format.parse(map.get("startdate").toString().trim())));
 

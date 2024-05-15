@@ -41,7 +41,7 @@
       <th class="th-sm">Employee Name</th>
       <th class="th-sm">Designation</th>
       <th class="th-sm">Present Place Of Posting</th>
-      <th class="th-sm">Role Assigned Place</th>
+      <!-- <th class="th-sm">Role Assigned Place</th> -->
       <th class="th-sm">Role Assigned</th>
       <th class="th-sm">Role Assigned Date (dd/mm/yyyy)</th>
       <th class="th-sm">Role Revoked</th>
@@ -93,9 +93,9 @@
 					{
 						data:'presLocation'
 					},
-					{
+					/* {
 						data:'roleAssignedLocation'
-					},
+					}, */
 					{
 						data:'assignedRole'
 					},

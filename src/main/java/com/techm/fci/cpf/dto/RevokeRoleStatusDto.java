@@ -15,7 +15,7 @@ public class RevokeRoleStatusDto implements Serializable {
 	private String designation;
 	private String empName;
 	private String presLocation;
-	private String roleAssignedLocation;
+	//private String roleAssignedLocation;
 	private String assignedRole;
 	private String assignedDate;
 	
@@ -23,19 +23,28 @@ public class RevokeRoleStatusDto implements Serializable {
 	public RevokeRoleStatusDto() {
 
 	}
-
+	
 	public RevokeRoleStatusDto(String regId, String empId, String designation, String empName, String presLocation,
-			String roleAssignedLocation, String assignedRole, String assignedDate) {
+			String assignedRole, String assignedDate) {
 		super();
 		this.regId = regId;
 		this.empId = empId;
 		this.designation = designation;
 		this.empName = empName;
 		this.presLocation = presLocation;
-		this.roleAssignedLocation = roleAssignedLocation;
 		this.assignedRole = assignedRole;
 		this.assignedDate = assignedDate;
 	}
+
+	/*
+	 * public RevokeRoleStatusDto(String regId, String empId, String designation,
+	 * String empName, String presLocation, String roleAssignedLocation, String
+	 * assignedRole, String assignedDate) { super(); this.regId = regId; this.empId
+	 * = empId; this.designation = designation; this.empName = empName;
+	 * this.presLocation = presLocation; this.roleAssignedLocation =
+	 * roleAssignedLocation; this.assignedRole = assignedRole; this.assignedDate =
+	 * assignedDate; }
+	 */
 	
 	public String getRegId() {
 		return regId;
@@ -79,20 +88,12 @@ public class RevokeRoleStatusDto implements Serializable {
 	public void setAssignedDate(String assignedDate) {
 		this.assignedDate = assignedDate;
 	}
-	
-	public String getRoleAssignedLocation() {
-		return roleAssignedLocation;
-	}
 
-	public void setRoleAssignedLocation(String roleAssignedLocation) {
-		this.roleAssignedLocation = roleAssignedLocation;
-	}
-	
 	@Override
 	public String toString() {
 		return "RevokeRoleStatusDto [regId=" + regId + ", empId=" + empId + ", designation=" + designation
-				+ ", empName=" + empName + ", presLocation=" + presLocation + ", roleAssignedLocation="
-				+ roleAssignedLocation + ", assignedRole=" + assignedRole + ", assignedDate=" + assignedDate + "]";
+				+ ", empName=" + empName + ", presLocation=" + presLocation + ", assignedRole=" + assignedRole
+				+ ", assignedDate=" + assignedDate + "]";
 	}
-
+	
 }
