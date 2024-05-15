@@ -423,22 +423,21 @@ public class RoleMappingDaoImpl implements RoleMappingDao {
 		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		try {
-			String query = "select card.reg_id,card.empid as \"empnum\",pdm.dsgn_desc as \"designation\",card.empname as \"empname\", "
-					+ "clm.loc_desc as \"place_of_posting\", clm.loc_desc as \"role_assigned_place\", "
-					+ "card.roleassigned as \"assignedrole\" ,	to_date(card.startdate, 'dd-mm-yy') as \"startdate\" "
-					+ "from fcipayroll.cpf_assigned_roles_dtl card, fcipayroll.pay_emp_mast pem, fcipayroll.pay_dsgn_mst pdm, fcipayroll.com_loc_mst clm"
-					+ " where pdm.dsgn_id=pem.designation_id" 
-					+ " and pem.pres_location_code=clm.loc_id"
-					+ " and card.preslocation = clm.loc_id"
-					+ " and card.empid=pem.emp_num  and card.ENDDATE is null order by card.empid";
-
-			System.out.print(query);
+			String query ="select card.reg_id, card.empid as \"empnum\", pdm.dsgn_desc as \"designation\", card.empname as \"empname\","
+					+ "(select loc_desc from fcipayroll.com_loc_mst clm1 where clm1.loc_id = pem.pres_location_code) as \"place_of_posting\","
+					+ "(select loc_desc from fcipayroll.com_loc_mst clm1 where clm1.loc_id = card.preslocation) as \"role_assigned_place\",card.roleassigned as \"assignedrole\" , "
+					+ "to_date(card.startdate, 'dd-mm-yy') as \"startdate\" "
+					+ "from fcipayroll.cpf_assigned_roles_dtl card, fcipayroll.pay_emp_mast pem, fcipayroll.pay_dsgn_mst pdm, fcipayroll.com_loc_mst clm "
+					+ "where pdm.dsgn_id=pem.designation_id "
+					+ "and card.preslocation=clm.loc_id "
+					+ "and card.empid=pem.emp_num "
+					+ "and card.ENDDATE is null "
+					+ "order by card.empid";
+			
 			Query hQuery = session.createSQLQuery(query).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH);
 			DateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-			// RevokeRoleStatusDto revokeRoleStatusDto = new
-			// RevokeRoleStatusDto();
 
 			List<Map<String, Object>> list = hQuery.list();
 			for (Map<String, Object> map : list) {
