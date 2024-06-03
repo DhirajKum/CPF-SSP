@@ -204,7 +204,7 @@ if($table.length){
 		//lengthMenu:[[5,10,15,-1],['5','10','15','ALL']],
 		pageLength:10,
 		dom: 'Bfrtip',
-		buttons: ['excel'/*, 'copy', {
+		buttons: [{ extend: 'excel', text: 'Export to excel' }/*, 'copy', {
 	      extend: 'pdf',
 	      text: '<i class="fa fa-file-pdf-o"></i> PDF',
 	      title: $('h1').text(),

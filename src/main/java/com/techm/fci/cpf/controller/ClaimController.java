@@ -189,7 +189,7 @@ public class ClaimController {
 				mv.addObject("message", "Claim already submitted ...!");
 			}
 			if (operation.equals("otherDocUpload")) {
-				mv.addObject("message",	"Kindly first upload the other documents like Salary/CPF slip ...!!!");
+				mv.addObject("message",	"Kindly upload the other documents like Salary/CPF slip ...!!!");
 			}
 			if (operation.equals("NOADMIN")) {
 				mv.addObject("message",	"Claim submission failed. As of now, admin/s not found for this location for approval your claim request ...!!!");
