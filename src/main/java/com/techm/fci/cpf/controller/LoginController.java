@@ -379,7 +379,7 @@ public class LoginController {
 			}
 		}else{
 			result = new ResponseEntity<String>("FALSE", HttpStatus.NOT_FOUND);
-			session.setAttribute("empIdStatus", "Employee ID not valid !!!");
+			session.setAttribute("empIdStatus", "Pease enter correct detail !!!");
 		}
 		return result;
 	}
