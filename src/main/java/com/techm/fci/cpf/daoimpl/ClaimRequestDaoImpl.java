@@ -62,6 +62,10 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 	@Autowired
 	private HttpSession httpSession;
 	
+	//@Autowired
+    //private JdbcTemplate jdbcTemplate;
+
+	
 	private Session session;
 	
 	//Not supported by Hibernate core version using is 3.6.3.final. JPA 2.1 support this but JPA 2.1 support by hibernate 4.3.x or up
@@ -2313,46 +2317,64 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 		return claimHistoryTrailList;
 	}
 
+	
+	public Date StringToDate(String s){
+
+	    Date result = null;
+	    try{
+	        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+	        result  = dateFormat.parse(s);
+	    }
+
+	    catch(ParseException e){
+	        e.printStackTrace();
+
+	    }
+	    return result ;
+	}
 
 	@Override
 	public String getMaxPermAmount(String empId, String sancType) {
 		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
-		try{
-			/*
-			 * entitymanager.getTransaction().begin(); StoredProcedureQuery sPQuery =
-			 * entitymanager.createStoredProcedureQuery("PKG_CPF_FCI.proc_getcpfmaxlimit");
-			 * 
-			 * sPQuery.registerStoredProcedureParameter("pempno", String.class,
-			 * ParameterMode.IN); sPQuery.registerStoredProcedureParameter("SANCTYPE",
-			 * String.class, ParameterMode.IN);
-			 * sPQuery.registerStoredProcedureParameter("MaxEligibleAmt", Double.class,
-			 * ParameterMode.OUT); sPQuery.registerStoredProcedureParameter("perrorcode",
-			 * Integer.class, ParameterMode.OUT);
-			 * sPQuery.registerStoredProcedureParameter("perrmsg", String.class,
-			 * ParameterMode.OUT); sPQuery.setParameter("pempno", empId);
-			 * sPQuery.setParameter("SANCTYPE", sancType); sPQuery.execute();
-			 * 
-			 * Double maxEligibleAmt =
-			 * (Double)sPQuery.getOutputParameterValue("MaxEligibleAmt");
-			 * System.out.println("MaxEligibleAmt is: " + maxEligibleAmt);
-			 * entitymanager.getTransaction().commit(); entitymanager.close();
-			 */
-			//PKG_CPF_FCI.proc_getmxapplamt(pempnum,ppurpose,pcpfemp,pcpfempr,pvpfcont,psanctyp,psancdt);
-			
-			/*ProcedureCall call = session.createStoredProcedureCall("CALL PKG_CPF_FCI.proc_getmxapplamt(:empId,:sancType,:maxAmount)");
-			call.registerParameter("emp_id", String.class, ParameterMode.IN).bindValue(empId);
-			call.registerParameter("sanc_type", String.class, ParameterMode.IN).bindValue(sancType);
-			ProcedureOutputs maxAmountValue = call.getOutputs();
-			Output outPutValue = maxAmountValue.getCurrent();
-			if (outPutValue.isResultSet()) {
-                List<Object[]> postComments = ((ResultSetOutput) outPutValue).getResultList();
-            }*/
-	}catch (RuntimeException re) {
-		logger.info("Find by example failed :::", re);
-		throw re;
-	}
-		return "";
+		String maxPerAmountString=null;
+		try {
+			int empNum = 104781;
+			String pourpose = "HigherEd";
+			int cpfEmp = 1095731;
+			int cpfEmpr = 1961311;
+			int vpfCount = 24034;
+			String sanctionType = "A";
+			// Date sancDate= StringToDate("10-07-2024 12:00:00");
+
+			ProcedureCall call = session.createStoredProcedureCall("PKG_CPF_FCI.proc_GetMxApplAmtTest");
+			call.registerParameter("empNum", Integer.class, ParameterMode.IN).bindValue(empNum);
+			call.registerParameter("purpose", String.class, ParameterMode.IN).bindValue(pourpose);
+			call.registerParameter("cpfEmp", Integer.class, ParameterMode.IN).bindValue(cpfEmp);
+			call.registerParameter("cpfEmpr", Integer.class, ParameterMode.IN).bindValue(cpfEmpr);
+			call.registerParameter("vpfCont", Integer.class, ParameterMode.IN).bindValue(vpfCount);
+			call.registerParameter("sancTyp", String.class, ParameterMode.IN).bindValue(sanctionType);
+			// call.registerParameter("sanc_date", Date.class,
+			// ParameterMode.IN).bindValue(sancDate);
+
+			call.registerParameter("maxAmt", Integer.class, ParameterMode.OUT);
+			call.registerParameter("errMsg", String.class, ParameterMode.OUT);
+			call.registerParameter("errCode", Integer.class, ParameterMode.OUT);
+
+			ProcedureOutputs outPutValue = call.getOutputs();
+			Integer maxPerAmount = (Integer) outPutValue.getOutputParameterValue("maxAmt");
+
+			maxPerAmountString= maxPerAmount.toString();
+			System.out.println("Maximum permissible amount : " + outPutValue);
+			System.out.println("Maximum permissible amount in String: " + maxPerAmountString);
+
+			session.getTransaction().commit();
+
+		} catch (RuntimeException re) {
+			logger.info("Find by example failed :::", re);
+			re.printStackTrace();
+		}
+		return maxPerAmountString;
 	}
 
 

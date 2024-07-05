@@ -385,7 +385,7 @@ $(document).ready(function() {
 		}
 	}
 	jQuery('#empAccept').prop("disabled", true);
-	$("#perAmount").prop("disabled", true);
+	//$("#perAmount").prop("disabled", true);
 });
 
 document.oncontextmenu = rightClick;
@@ -475,7 +475,7 @@ $("#perAmount").click(function (){
 	if($(this).is(":checked")){
 		$("#amount").prop("disabled", true);
 		$("#amount").val('');
-		/*var sancType = $("#purpose").val();
+		var sancType = $("#purpose").val();
 		if(sancType!=''){
 		var urlVar = '${pageContext.request.contextPath}/claim/getMaxPermAmount?empId=${userModel.empNum}&sancType='+sancType;
 		$.ajax({
@@ -492,7 +492,7 @@ $("#perAmount").click(function (){
 		}); 
 		}else{
 			alert("To know Maximum Permissible Amount, kindly select 'Purpose of CPF' first !!!");
-		}*/
+		}
 	}else{
 		$('#amount').prop("disabled", false);
 	}
