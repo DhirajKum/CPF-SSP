@@ -470,7 +470,7 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 		session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		
-		if((uModel.getRoleName().equals("ADMIN") || uModel.getRoleName().equals("CPF_ADMIN")) && reqId!=null){		
+		if((uModel.getRoleName().equals("ADMIN") || uModel.getRoleName().equals("CPF_ADMIN")) && reqId!=null && !reqId.equals("")){		
 		String query1 = "select cru.emp_num as \"empNum\", cru.emp_phone as \"empPhone\",cru.emp_email as \"empEmail\",cru.role_name as \"roleName\" "
 				+ "from cpf_registered_users cru, cpf_claim_form_details ccfd "
 				+ "where cru.emp_num=ccfd.claim_submitted_by and ccfd.request_id=:reqId";
@@ -543,19 +543,32 @@ public class EmployeeDaoImpl extends BaseDao<Integer, EmpMaster> implements Empl
 				docUpload.setModified_date(new Date());
 				session.persist(docUpload);			
 			}
-		}
-		}
-		/*else{
-			String query1 = "update cpf_doc_uploads set file_path = :newPath, modified_date=:modifiedDate where emp_num=:empNum";
-			
-			Query hQuery1 = session.createSQLQuery(query1);
-			if (empNum != null) {
-				hQuery1.setParameter("newPath", path);
-				hQuery1.setParameter("modifiedDate", new Date());
-				hQuery1.setParameter("empNum",empNum);
+		} else {
+
+			if (uModel.getRoleName().equals("USER") && (reqId!=null || !reqId.equals(""))) {
+			String query2 = "update cpf_doc_uploads set file_path = :newPath, modified_date=:modifiedDate where request_id=:reqId and file_type=3";
+
+			Query hQuery2 = session.createSQLQuery(query2);
+			if (reqId != null) {
+				hQuery2.setParameter("newPath", path);
+				hQuery2.setParameter("modifiedDate", new Date());
+				hQuery2.setParameter("reqId", reqId);
 			}
-			hQuery1.executeUpdate();
-		}*/
+			hQuery2.executeUpdate();
+		}
+		}
+	}
+	/*else{
+		String query1 = "update cpf_doc_uploads set file_path = :newPath, modified_date=:modifiedDate where emp_num=:empNum";
+		
+		Query hQuery1 = session.createSQLQuery(query1);
+		if (empNum != null) {
+			hQuery1.setParameter("newPath", path);
+			hQuery1.setParameter("modifiedDate", new Date());
+			hQuery1.setParameter("empNum",empNum);
+		}
+		hQuery1.executeUpdate();
+	}*/
 		
 		session.getTransaction().commit();
 		return true;

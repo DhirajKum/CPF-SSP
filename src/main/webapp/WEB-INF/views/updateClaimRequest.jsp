@@ -223,7 +223,7 @@
 							<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${claimData.kycFilePath}&fileType=1" class="col-sm-7" target="_blank">${claimData.kycFileName}</a>
 						</div>
 					</div>
-					<%-- <div class="col-md-6">
+					<div class="col-md-6">
 						<div class="form-group row">
 							<label cssclass="col-sm-5 col-form-label" class="labelwidth"><b>User Uploaded Other Documents</b></label>
 							<div class="col-sm-7">
@@ -232,10 +232,10 @@
 							</c:forEach>
 							</div>
 						</div>
-					</div> --%>
+					</div>
 				</div>
 				
-		<!-- 	<div class="row" id="docUpload">
+			 	<div class="row" id="docUpload">
 				<div class="col-md-6">
 					<div class="form-group row">
 						<label cssClass="col-sm-5 col-form-label" class="labelwidth"><b>User Upload Other Documents</b></label>
@@ -249,7 +249,7 @@
 						<div class="col-sm-7"></div>
 					</div>
 				</div>
-				</div> -->
+				</div> 
 				
 				<hr class="solid">
 				<div class="row">

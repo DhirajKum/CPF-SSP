@@ -21,6 +21,8 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 		<intercept-url pattern="/role/viewRevokeRole" access="hasRole('SUPER_USER')" />
 		<intercept-url pattern="/claim/myPendingReq" access="hasRole('CPF_ADMIN')" />
 		
+		<intercept-url pattern="/claim/getMaxPermAmount" access="hasAnyRole('USER','ADMIN','CPF_ADMIN')" />
+		
 		<intercept-url pattern="/claim/actClaimReq" access="hasAnyRole('ADMIN','CPF_ADMIN')" />
 		<intercept-url pattern="/claim/approvedReq" access="hasAnyRole('ADMIN','CPF_ADMIN')" />
 		<intercept-url pattern="/claim/completedReq" access="hasAnyRole('ADMIN','CPF_ADMIN')" />

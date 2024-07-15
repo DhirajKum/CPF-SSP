@@ -484,9 +484,9 @@ $("#perAmount").click(function (){
 			//data : input,
 			async : false,
 			contentType : "application/json",
-			success : function(res) {
-				if (res) {
-										
+			success : function(response) {
+				if (response) {
+					$("#amount").val(response);
 				}
 			}
 		}); 

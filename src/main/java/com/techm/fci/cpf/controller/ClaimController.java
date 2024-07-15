@@ -964,16 +964,17 @@ public class ClaimController {
 	}
 
 	// Not in used due to version incompatible
-	@RequestMapping(value = { "/getMaxPermAmount" })
+	@RequestMapping(value = { "/getMaxPermAmount" }, method = { RequestMethod.GET })
+	@ResponseBody
 	public String getMaxPermAmount(@RequestParam(name = "sancType") String sancType, @RequestParam(name = "empId") String empId) {
 		UserModel uModel = getUserModel();
-		String maxPermAmount = "";
+		String maxPermAmount = " ";
 		if (uModel != null) {
 			maxPermAmount = userService.getMaxPermAmount(empId, sancType);
-		} 
-		/*
-		 * else { return "redirect:/login"; }
-		 */
+		} else { 
+			return "redirect:/login"; 
+		}
+		
 		return maxPermAmount;
 	}
 
