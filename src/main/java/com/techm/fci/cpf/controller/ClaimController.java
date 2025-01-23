@@ -130,7 +130,7 @@ public class ClaimController {
 					
 				} else {
 					mv.addObject("kycUpdate", "0");
-					mv.addObject("message", "First, You must upload your KYC document before raising your claim request...!!!");
+					mv.addObject("message", "First You have to upload your KYC document, befor raise your claim request...!!!");
 				}
 			} else {
 				mv.addObject("title", "Update Claim Request");

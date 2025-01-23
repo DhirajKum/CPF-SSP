@@ -62,10 +62,6 @@ public class ClaimRequestDaoImpl extends BaseDao<Integer, CpfClaimRequest> imple
 	@Autowired
 	private HttpSession httpSession;
 	
-	//@Autowired
-    //private JdbcTemplate jdbcTemplate;
-
-	
 	private Session session;
 	
 	//Not supported by Hibernate core version using is 3.6.3.final. JPA 2.1 support this but JPA 2.1 support by hibernate 4.3.x or up

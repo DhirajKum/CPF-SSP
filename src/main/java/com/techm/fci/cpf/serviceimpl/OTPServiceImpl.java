@@ -78,8 +78,7 @@ public class OTPServiceImpl implements OTPService {
 		System.out.println("::::: CPF Self Service Module ::::: Going for call CPFSendSMSUtility.sh file ::::");
 		boolean sendSMSStatus = false;
 		try {
-			// runScript("/prod/apps/fs2/EBSapps/appl/fci/12.0.0/bin/smsSender.sh",
-			// empNum);//For Production server
+			// runScript("/prod/apps/fs2/EBSapps/appl/fci/12.0.0/bin/CPFSendSMSUtility.sh", empNum);//For Production server
 			runScript("/fuat/apps/fs1/EBSapps/appl/fci/12.0.0/bin/smsSender.sh", empNum);// For Dev server
 			sendSMSStatus = true;
 		} catch (Exception e) {
