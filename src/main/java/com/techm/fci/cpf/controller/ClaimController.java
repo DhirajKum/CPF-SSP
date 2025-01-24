@@ -192,7 +192,7 @@ public class ClaimController {
 				mv.addObject("message",	"Kindly upload the other documents like Salary/CPF slip ...!!!");
 			}
 			if (operation.equals("NOADMIN")) {
-				mv.addObject("message",	"Claim submission failed. As of now, admin/s not found for this location for approval your claim request ...!!!");
+				mv.addObject("message",	"Claim submission failed. As of now, Admin/s not found for this location or unit ...!!!");
 			}
 		}
 		return mv;
