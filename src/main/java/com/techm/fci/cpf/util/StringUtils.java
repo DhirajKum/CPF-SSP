@@ -130,9 +130,34 @@ public class StringUtils {
         }
     }
     
+    public static String removeSpacialChar(String str) {
+    	
+		Pattern p = Pattern.compile("[\\\\,=':;\"><?/~`_!@#^&*-]|\\\\[|\\\\]", Pattern.CASE_INSENSITIVE);
+		Matcher matcher = p.matcher(str);
+		StringBuffer sb = new StringBuffer();
+		while (matcher.find()) {
+            matcher.appendReplacement(sb, " ");
+        }
+        matcher.appendTail(sb);
+    	return sb.toString();
+    }
+    
+    public static String removeSpacialCharExceptHtmlSymbole(String str) {
+    	
+		Pattern p = Pattern.compile("[\\\\,=':;\"?~`_!@#^*-]|\\\\[|\\\\]", Pattern.CASE_INSENSITIVE);
+		Matcher matcher = p.matcher(str);
+		StringBuffer sb = new StringBuffer();
+		while (matcher.find()) {
+            matcher.appendReplacement(sb, " ");
+        }
+        matcher.appendTail(sb);
+    	return sb.toString();
+    }
+    
     public static void main(String[] args) {
-		String input = "abc123rrr456+";
-		System.out.println(getOnlyNumbers(input));
+		//String input = "abc123rrr456+";
+		//String input = "Caste \"Dispute\"certificate.pdf";
+		//System.out.println(removeSpacialChar(input));
 	}
 
 }

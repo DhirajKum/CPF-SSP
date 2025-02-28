@@ -192,13 +192,13 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	@Override
-	public Boolean deleteEmpOtherDoc(UserModel uModel, String claimSubEmpID, String reqId) {
-		return empDao.deleteOtherDoc(uModel, claimSubEmpID, reqId);
+	public Boolean deleteEmpOtherDoc(UserModel uModel, String claimSubEmpID, String fileType, String reqId) {
+		return empDao.deleteOtherDoc(uModel, claimSubEmpID, fileType, reqId);
 	}
 	
 	@Override
-	public Boolean saveEmpOtherDoc(UserModel uModel, String claimSubEmpID, String reqId, String claimAppliedFor, String path) {
-		return empDao.saveOtherDoc(uModel, claimSubEmpID, reqId, claimAppliedFor, path);
+	public Boolean saveEmpOtherDoc(UserModel uModel, String claimSubEmpID, String fileType, String reqId, String claimAppliedFor, String path) {
+		return empDao.saveOtherDoc(uModel, claimSubEmpID, fileType, reqId, claimAppliedFor, path);
 	}
 	
 	@Override

@@ -1,6 +1,6 @@
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 
-
+<!DOCTYPE html>
 <style type="text/css">
 .labelwidth {
     display: block;
@@ -14,11 +14,21 @@
 	<c:if test="${not empty message}">
 		<div class="col-md-12" style= "float:none">
 			<div class="alert alert-danger alert-dismissible" style="text-align: center;">
-				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<!-- <button type="button" class="close" data-dismiss="alert">&times;</button> -->
 				${message}
 			</div>
 		</div>
 	</c:if>
+	
+	<c:if test="${not empty uploadMessage}">
+		<div class="col-md-12" style= "float:none">
+			<div id="uploadMsg" class="alert alert-success alert-dismissible" style="text-align: center;">
+				${uploadMessage}
+			</div>
+		</div>
+	</c:if>
+
+									   
 		<div class="col-md-12">
 		<div class="row" style="margin-left:-5px">
 		<h5 class="main-heading" style="margin-left:-5px">
@@ -225,7 +235,7 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-group row">
-							<label cssclass="col-sm-5 col-form-label" class="labelwidth"><b>User Uploaded Other Documents</b></label>
+							<label cssclass="col-sm-5 col-form-label" class="labelwidth"><b>User Uploaded Other Documents(Salary/CPF slips etc.)</b></label>
 							<div class="col-sm-7">
 							<c:forEach var="userOtherFile" items="${claimData.userOtherFiles}">
 								<a href="${pageContext.request.contextPath}/claim/downloadCpfDoc?pathId=${userOtherFile.value}&fileType=3" target="_blank">${userOtherFile.key}</a></br>
@@ -235,13 +245,22 @@
 					</div>
 				</div>
 				
+				<div class="row">
+				<div class="col-md-12">
+					<h5><b><div id='msg' style="text-align: center; font-weight: bold; color:red"></div></h5>
+				</div>
+				</div>
+				
 			 	<div class="row" id="docUpload">
 				<div class="col-md-6">
 					<div class="form-group row">
-						<label cssClass="col-sm-5 col-form-label" class="labelwidth"><b>User Upload Other Documents</b></label>
+						<label cssClass="col-sm-5 col-form-label" class="labelwidth"><b>User Upload Other Documents(Salary/CPF slips etc.)</b></label>
 						<input type="file" class="col-sm-7" id="files" name="files" multiple data-validation="ckeckFileFormat ckeckFileSize required"/>
 					</div>
-					<small id="docUploadHelp" class="form-text text-muted" style="text-align: center;">Note: You can upload multiple file with +Ctrl key</br>File should be in pdf, png, jpg and jpeg format only.</br>File maximum size should be 5 Mb.</small>
+								 
+																			  
+					<small id="docUploadHelp" class="form-text text-muted" style="text-align: center;">Note: You can upload multiple file with +Ctrl key</br>File should be in pdf, png, jpg and jpeg format only.</br>The total size must not go over 5 MB.</small>
+		   
 				</div>
 				<div class="col-md-6">
 					<div class="form-group row">
@@ -249,6 +268,7 @@
 						<div class="col-sm-7"></div>
 					</div>
 				</div>
+		  
 				</div> 
 				
 				<hr class="solid">
@@ -299,7 +319,7 @@
 				<div class="form-group row">
 					<div class="col-sm-10">
 						<div class="checkbox">
-							<label><sf:checkbox path="DEC_NOT_EMP_TWOMONTH" id="decNotEmpTwoMonth"/> The member here by declares that he has not been employed for two months <b>(In Case of Final Payment only).</label>
+							<label><sf:checkbox path="DEC_NOT_EMP_TWOMONTH" id="decNotEmpTwoMonth"/> The member here by declares that he has not been employed for two months <b>(In Case of Final Payment only).</b></label>
 						</div>
 					</div>
 				</div>
@@ -324,8 +344,10 @@
 				<sf:hidden path="locId"/>
 				<sf:hidden path="parentZone"/>		
 				<sf:hidden path="CLAIM_SUBMITTED_BY"/>
+				<sf:hidden path="CLAIM_APPLIED_FOR"/>
 				<sf:hidden path="claimSubmittedDate"/>
 				<input type="hidden" name="js_enabled" value="0">
+																																													  
 				</sf:form>
 			</div>
 		</div>
@@ -337,6 +359,7 @@
 $(document).ready(function() {
 
 	var radioValue=$("#claimAppliedFor input:radio:checked").val();
+	if(radioValue != undefined && radioValue != null){											   
 	var purpose = $
 	var urlVar = '${pageContext.request.contextPath}/claim/getPurposeOfCPF?radioValue='+radioValue.trim();
 	$.ajax({
@@ -357,8 +380,13 @@ $(document).ready(function() {
 			}
 		}
 	});
-
+	}
 	 $("#noJS").hide();
+	 jQuery('#rd1').prop("disabled", true);
+	 jQuery('#rd2').prop("disabled", true);
+	 jQuery('#rd3').prop("disabled", true);
+	 jQuery('#rd4').prop("disabled", true);
+	 
 	 $("#empName").prop("readonly", true);   
 	 $("#designation").prop("readonly", true); 
 	 $("#fatherName").prop("readonly", true); 
@@ -387,9 +415,14 @@ $(document).ready(function() {
 		if('${kycUpdate}' === '0'){
 			$("#saveClaim").prop("disabled",true);
 		}
+											 
 	$("#perAmount").prop("disabled", true);
 	jQuery('#empAccept').prop("disabled", true);
 	}
+
+	$('#uploadMsg').fadeIn('slow');
+	$('#uploadMsg').delay(5000).fadeOut('slow');
+ 
 });
 
 document.oncontextmenu = rightClick;
@@ -397,6 +430,7 @@ function rightClick(clickEvent) {
     clickEvent.preventDefault();
     return false;
 }
+
 document.onkeydown = function(e) {
 	if(event.keyCode == 123) {
 	return false;
@@ -413,7 +447,10 @@ document.onkeydown = function(e) {
 }
 
 $('#reClaimForm').submit(function (){
+											  
 	var radioValue=$("#claimAppliedFor input:radio:checked").val();
+											 
+	if(radioValue != undefined && radioValue != null){											   
 	if(radioValue==='CpfFinalSettlement'){
 	if('${empStatus}'==='RESG'){
 		if($('#decNotEmpTwoMonth').is(":checked")){
@@ -456,7 +493,11 @@ $('#reClaimForm').submit(function (){
 			return false;
 		}
 	}
-
+	}else{
+		alert("Kindly check, 'Claim Applied For' option radio button ...!");
+		return false;
+	}
+	 
 	/* if(!($('#perAmount').is(":checked"))){
 		alert("Kindly Enter Amount ...");
 		return false;
@@ -600,7 +641,7 @@ function getFileExtension(name) {
 	var returnFlag = false;
 	var index = splitData.length;
 	var extension = splitData[index - 1];
-	var exteArr = [ "pdf","png","jpg","jpeg" ];
+	var exteArr = [ "pdf","png","jpg","jpeg","PDF","PNG","JPG","JPEG" ];
 	$.each(exteArr, function(i, j) {
 		if (j == extension) {
 			returnFlag = true;
@@ -620,31 +661,40 @@ function getFileSize(file){
 
 $("#uploadOtherDoc").on('click', function(event){
 
- var filetype=true;
+ var fileCheck=true;
  var fd = new FormData();
  var totalfiles = document.getElementById('files').files.length;
- var radioValue=$("#claimAppliedFor input:radio:checked").val();
+ var totalfilesize = 0;
+ var totalfilesizeCheck = true;
+ var radioVal=$("#claimAppliedFor input:radio:checked").val();
+ var radioValue = (typeof radioVal==='undefined')?'':radioVal;															  
  
-   if(totalfiles>0){
+   if(totalfiles>0 && totalfiles<6){
    for (var index = 0; index < totalfiles; index++) {
+   
       fd.append("files", document.getElementById('files').files[index]);
       if(getFileExtension(document.getElementById('files').files[index].name) && getFileSize(document.getElementById('files').files[index])){
-      	filetype=true;
+    	  fileCheck=true;
       	}
       	else
       	{
-      	filetype=false;
+      		fileCheck=false;
+						   
       	break;
       }
+	totalfilesize = totalfilesize+document.getElementById('files').files[index].size;																																					  
 	}
-	}/*else{
-		alert("Kindly upload at list one document.");
-	} */
+	if (totalfilesize > 5242880) {
+  		totalfilesizeCheck=false;
+	}else{
+		totalfilesizeCheck=true;
+	} 
 
-if(filetype){
+
+if(fileCheck && totalfilesizeCheck){
   $.ajax({
             type: 'POST',
-            url: 'multiUplodCpfDoc?${_csrf.parameterName}=${_csrf.token}&reqId=${reqId}&claimSubmittedBy=${actClaimDto.CLAIM_SUBMITTED_BY}&claimAppliedFor='+radioValue,
+            url: 'multiUplodCpfDoc?${_csrf.parameterName}=${_csrf.token}&reqId=${reqId}&claimSubmittedBy=${actClaimDto.CLAIM_SUBMITTED_BY}&fileType=3&claimAppliedFor='+radioValue,
             enctype: 'multipart/form-data',
             data: fd,
             processData: false,
@@ -652,15 +702,22 @@ if(filetype){
             success: function (data, textStatus, xhr) {
             	if (xhr.status=='200') {
 	                console.log('Upload Completed ...');
-	                window.location.href='${pageContext.request.contextPath}/claim/raiseClaimReq?reqId=${reqId}&uploadfiles='+data+' Files uploaded successfully !!!';
+	                window.location.href='${pageContext.request.contextPath}/claim/raiseClaimReq?reqId=${reqId}&uploadfiles='+data;
                 }
+            },
+            error: function(xhr) {
+                $("#status").text(xhr.status);
+                $('#msg').html(xhr.responseText).fadeIn('slow');
+        		$('#msg').delay(10000).fadeOut('slow');
             }
         });
 }else{
 		$('#msg').html("Kindly upload your file/s according to the given instructions !!!").fadeIn('slow');
 		$('#msg').delay(10000).fadeOut('slow');
 }
-
+}else{
+	alert("Please select up to 5 files with a total size not exceeding 5 MB.");
+}
 });
 
 </script>

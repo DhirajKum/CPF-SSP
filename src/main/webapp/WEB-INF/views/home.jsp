@@ -170,7 +170,7 @@ function getFileExtension(name) {
 	var index = splitData.length;
 	var extension = splitData[index - 1];
 	//var exteArr = [ "pdf", "doc", "docx", "xls", "xlsx" ];
-	var exteArr = [ "pdf","jpg","jpeg" ];
+	var exteArr = [ "pdf","jpg","jpeg","PDF","JPG","JPEG" ];
 	$.each(exteArr, function(i, j) {
 		if (j == extension) {
 			returnFlag = true;

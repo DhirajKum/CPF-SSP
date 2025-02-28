@@ -33,9 +33,9 @@ public interface EmployeeDao {
 	
 	Boolean saveKycDoc(UserModel uModel, String path);
 	
-	Boolean deleteOtherDoc(UserModel uModel, String claimSubEmpID, String reqId);
+	Boolean deleteOtherDoc(UserModel uModel, String claimSubEmpID, String fileType, String reqId);
 	
-	Boolean saveOtherDoc(UserModel uModel, String claimSubEmpID, String reqId, String claimAppliedFor, String path);
+	Boolean saveOtherDoc(UserModel uModel, String claimSubEmpID, String fileType, String reqId, String claimAppliedFor, String path);
 	
 	Boolean updateOtherDoc(UserModel uModel, CpfClaimRequest cpfClaimReq);
 	

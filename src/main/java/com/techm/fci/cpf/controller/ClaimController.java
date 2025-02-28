@@ -1,5 +1,7 @@
 package com.techm.fci.cpf.controller;
 
+import java.awt.image.BufferedImage;
+
 /**
  * @author DHIRAJ
  * @version 1.0
@@ -7,9 +9,11 @@ package com.techm.fci.cpf.controller;
  */
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,13 +27,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.io.FilenameUtils;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.HtmlCleaner;
 import org.jsoup.Jsoup;
@@ -65,6 +74,8 @@ import com.techm.fci.cpf.model.UserModel;
 import com.techm.fci.cpf.service.UserService;
 import com.techm.fci.cpf.util.DateUtils;
 import com.techm.fci.cpf.util.HtmlUtil;
+import com.techm.fci.cpf.util.StringUtils;
+
 
 @Controller
 @RequestMapping(value = "/claim")
@@ -123,6 +134,7 @@ public class ClaimController {
 					mv.addObject("empStatus", empStatus);
 					mv.addObject("kycUpdate", "1");
 					
+					cpfClaimReq.setCLAIM_SUBMITTED_BY(uModel.getEmpNum());
 					cpfClaimReq.setAMOUNT(claimAmount);
 					cpfClaimReq.setPURPOSE(claimPurpose);
 					cpfClaimReq.setCLAIM_APPLIED_FOR(claimApplyFor);
@@ -194,6 +206,10 @@ public class ClaimController {
 			if (operation.equals("NOADMIN")) {
 				mv.addObject("message",	"Claim submission failed. As of now, Admin/s not found for this location or unit ...!!!");
 			}
+		}
+		
+		if(uploadfiles != null){
+			mv.addObject("uploadMessage",uploadfiles+"  file successfully uploaded");
 		}
 		return mv;
 	}
@@ -514,7 +530,7 @@ public class ClaimController {
 		mv.addObject("message", uploadfiles);
 		if (validationMessage != null) {
 			if (validationMessage.equals("htmltagvalidation")) {
-				mv.addObject("validationMessage", "Kindly pass valid comment in remarks field (not used html tags)");
+				mv.addObject("validationMessage", "Kindly pass valid comment in remarks field (Don't use the HTML tags or special characters)");
 			}
 		}
 		return mv;
@@ -808,28 +824,35 @@ public class ClaimController {
 	@RequestMapping(value = { "/uplodCpfDoc" }, method = { RequestMethod.POST })
 	public String upload(@RequestParam CommonsMultipartFile file, HttpSession session){
 
-		String filename = file.getOriginalFilename();
+		String fName = file.getOriginalFilename();
 		PdfReader reader = null;
 		BufferedOutputStream bout = null;
 		try {
 			UserModel uModel = getUserModel();
 			if (uModel != null) {
-				if (filename.toUpperCase().endsWith(".PDF") || filename.toUpperCase().endsWith(".JPG") || filename.toUpperCase().endsWith(".JPEG")) {
+				String fileExt = FilenameUtils.getExtension(fName);
+				if (fileExt.toUpperCase().equals("PDF") || fileExt.toUpperCase().equals("JPG") || fileExt.toUpperCase().equals("JPEG")) {
 					
+					if (fileExt.toUpperCase().equals("PDF")) {
 					reader = new PdfReader(file.getBytes());
 				    int pages = reader.getNumberOfPages();
 				    StringBuilder text = new StringBuilder();
 				    for (int i = 1; i <= pages; i++) {
 				        text.append(PdfTextExtractor.getTextFromPage(reader, i));
 				        String safe = Jsoup.clean(text.toString(), Safelist.basic());
-						boolean checkScriptCode = HtmlUtil.isHtml(safe.replace("'", ""));
+				        boolean checkScriptCode = HtmlUtil.isHtml(StringUtils.removeSpacialCharExceptHtmlSymbole(safe));
 				        if(checkScriptCode) {
 				        	session.setAttribute("uploadFileType", "Some things wrong with the uploaded file !!!");
 				        	return "redirect:/home?uploadfiletype=Some things wrong with the uploaded file !!!";
 				        }
 				    }
 				    reader.close();
-				    
+					}else if(fileExt.toUpperCase().equals("JPG") || fileExt.toUpperCase().equals("JPEG")) {
+						try (InputStream is = new ByteArrayInputStream(file.getBytes()))
+					    {
+						 BufferedImage bufferImage = ImageIO.read(is);
+					    }
+					}
 					String folderPath = null;
 					if (!uModel.getEmpNum().equals("")) {
 						// folderPath = "/prodshare/cpf_out/"+uModel.getEmpNum().trim()+"_KYC";//For Production server
@@ -839,8 +862,9 @@ public class ClaimController {
 					if (!Files.exists(pathLoc))
 						Files.createDirectories(pathLoc);
 
-					logger.info(pathLoc + "/" + filename);
-				    
+					logger.info(pathLoc + "/" + fName);
+					String filename = StringUtils.removeSpacialChar(fName);
+					
 					Boolean saveStatus = userService.saveEmpKycDoc(uModel, pathLoc + "/" + filename);
 					if (saveStatus) {
 						byte barr[] = file.getBytes();
@@ -868,8 +892,8 @@ public class ClaimController {
 		} finally {
 			
 		}
-		session.setAttribute("fileName", filename);
-		return "redirect:/home?uploadfile=" + filename;
+		session.setAttribute("fileName", fName);
+		return "redirect:/home?uploadfile=" + fName;
 	}
 	    
 	@RequestMapping(value = { "/downloadCpfDoc" }, method = { RequestMethod.GET })
@@ -911,37 +935,55 @@ public class ClaimController {
 	public ResponseEntity<String> multiUpload(@RequestParam CommonsMultipartFile[] files,
 			@RequestParam(name = "reqId") String reqId,
 			@RequestParam(name = "claimSubmittedBy") String claimSubmittedEmpID,
+			@RequestParam(name = "fileType") String fileType,
 			@RequestParam(name = "claimAppliedFor", required = false) String claimAppliedFor, HttpSession session) {
 		String fileList = "";
 		ResponseEntity<String> result = null;
+
+		boolean fileFormatCheck = true;
+		for (CommonsMultipartFile file : files) {
+			String fileExt = FilenameUtils.getExtension(file.getOriginalFilename());
+			if (fileExt.toUpperCase().equals("PDF") || fileExt.toUpperCase().equals("PNG")
+					|| fileExt.toUpperCase().equals("JPG") || fileExt.toUpperCase().equals("JPEG")) {
+
+				fileFormatCheck = true;
+			} else {
+				fileFormatCheck = false;
+				break;
+			}
+		}
+
 		try {
 			UserModel uModel = getUserModel();
-			if (uModel != null) {
+			if (uModel != null && fileFormatCheck) {
 
 				String folderPath = null;
 				if (!uModel.getEmpNum().equals("")) {
-					// folderPath = "/prodshare/cpf_out/"+uModel.getEmpNum().trim()+"_OTHERS";//For Production server
-					folderPath = "/fapshare/cpf_out/" + uModel.getEmpNum().trim() +"_"+ reqId + "_OTHERS";// For Dev server
+					// folderPath = "/prodshare/cpf_out/"+uModel.getEmpNum().trim()+"_OTHERS";//For
+					// Production server
+					folderPath = "/fapshare/cpf_out/" + uModel.getEmpNum().trim() + "_" + reqId + "_OTHERS";// For Dev
+																											// server
 				}
 				Path pathLoc = Paths.get(folderPath);
-				
+
 				if (!Files.exists(pathLoc)) {
 					Files.createDirectories(pathLoc);
-				}else {
-					Arrays.stream(new File(folderPath).listFiles()).forEach(File::delete);	
+				} else {
+					Arrays.stream(new File(folderPath).listFiles()).forEach(File::delete);
 				}
-				
-				Boolean deleteStatus = userService.deleteEmpOtherDoc(uModel, claimSubmittedEmpID, reqId);
+
+				Boolean deleteStatus = userService.deleteEmpOtherDoc(uModel, claimSubmittedEmpID, fileType, reqId);
 				if (deleteStatus) {
 					for (CommonsMultipartFile file : files) {
-						String filename = file.getOriginalFilename();
+						String fName = file.getOriginalFilename();
+						String filename = StringUtils.removeSpacialChar(fName);
 
-						logger.info("File Upload location ::: " + pathLoc + "/" + filename);
-						logger.info("claimAppliedFor :::: " + claimAppliedFor);
-						Boolean saveStatus = userService.saveEmpOtherDoc(uModel, claimSubmittedEmpID, reqId, claimAppliedFor, pathLoc + "/" + filename);
+						Boolean saveStatus = userService.saveEmpOtherDoc(uModel, claimSubmittedEmpID, fileType, reqId,
+								claimAppliedFor, pathLoc + "/" + filename);
 						if (saveStatus) {
 							byte barr[] = file.getBytes();
-							BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(pathLoc + "/" + filename));
+							BufferedOutputStream bout = new BufferedOutputStream(
+									new FileOutputStream(pathLoc + "/" + filename));
 							bout.write(barr);
 							bout.flush();
 							bout.close();
@@ -949,17 +991,18 @@ public class ClaimController {
 						fileList = fileList + filename + ", ";
 					}
 				}
-			} /*
-				 * else{ return "redirect:/login"; }
-				 */
+				result = new ResponseEntity<String>(fileList, HttpStatus.OK);
+			} else {
+				fileList = "Kindly upload valid file formate !!!";
+				result = new ResponseEntity<String>(fileList, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		// return "redirect:/claim/actClaimReq?reqId="+reqId+"&uploadfiles="+fileList+"
-		// files successfully uploaded";
-		result = new ResponseEntity<String>(fileList, HttpStatus.OK);
+
 		return result;
 	}
 

@@ -19,7 +19,9 @@
 					${message}
 				</div>
 			</div>
+		
 		</c:if>
+
 		<c:if test="${not empty validationMessage}">
 			<div class="col-md-12" style= "float:none" id="validationMessage">
 				<div class="alert alert-success alert-dismissible" style="text-align: center;">
@@ -27,8 +29,18 @@
 					${validationMessage}
 				</div>
 			</div>
+		
 		</c:if>
-	
+		
+		<c:if test="${not empty uploadMessage}">
+		<div class="col-md-12" style= "float:none">
+			<div id="uploadMsg" class="alert alert-success alert-dismissible" style="text-align: center;">
+				${uploadMessage}
+			</div>
+		</div>
+	    </c:if>
+			
+									   
 		<div class="col-md-12">
 		<div class="row" style="margin-left:-5px">
 		<h5 class="main-heading">
@@ -73,7 +85,7 @@
 				</div>	
 				<div class="row col-sm-12">
 				<small class="form-text text-muted paddingL40">
-					Tick whichever is applicable
+					Tick the applicable
 				</small>
 				</div>	
 				</div>	
@@ -288,6 +300,7 @@
 							</div>
 						</div>
 					</div>
+					 
 					<div class="col-md-6">
 						<div class="form-group row">
 							<label for="casteDispute" cssclass="col-sm-5 col-form-label" class="labelwidth"><b>Caste Dispute <span class="red">*</span></b></label>
@@ -314,6 +327,7 @@
 						<div class="form-group row">
 							<label cssclass="col-sm-5 col-form-label" class="labelwidth"></label>
 							<div class="col-sm-7">
+																													   
 							</div>
 						</div>
 					</div>
@@ -364,7 +378,7 @@
 					</div>
 					<div class="form-group row">
 					    <label cssClass="col-sm-5 col-form-label" class="labelwidth"></label>
-						<small cssClass="col-sm-7 col-form-label" id="docUploadHelp" class="form-text text-muted" style="text-align: left;"><b>Note</b>: You can upload multiple file with +Ctrl key<br>File should be in pdf, png, jpg and jpeg format only.<br>File maximum size should be 5 Mb.</small>
+						<small cssClass="col-sm-7 col-form-label" id="docUploadHelp" class="form-text text-muted" style="text-align: left;"><b>Note</b>: You can upload multiple file with +Ctrl key<br>File should be in pdf, png, jpg and jpeg format only.<br>The total size must not go over 5 MB.</small>
 					</div>
 				</div>
 				<div class="col-md-6">
@@ -429,6 +443,7 @@
 				<input type="hidden" name="js_enabled" value="0">
 				
 			</sf:form>
+		 
 		</div>
 	</div>
 </div>
@@ -436,11 +451,14 @@
 </div>
 <script type="text/javascript">
 
+		  
 $(document).ready(function() {
 
 	var radioValue=$("#claimAppliedFor input:radio:checked").val();
+												   
 	var purpose = $
 	var urlVar = '${pageContext.request.contextPath}/claim/getPurposeOfCPF?radioValue='+radioValue.trim();
+																									   
 	$.ajax({
 		type : 'GET',
 		url : urlVar,
@@ -451,6 +469,7 @@ $(document).ready(function() {
 			if (res) {
 				//$("#purpose").find('option').remove();
 				var purpose=$('#purpose'), option="";
+					
 				option = option + "<option value=''>---Select---</option>";
 	            for(var i=0; i<res.length; i++){
 	                option = option + "<option value='"+res[i].cpfPurposeKey + "'" +(res[i].cpfPurposeKey === '${actClaimDto.PURPOSE}' ? " selected='selected'" : "") + "'>"+res[i].cpfPurposeValue + "</option>";
@@ -588,7 +607,7 @@ function getFileExtension(name) {
 	var returnFlag = false;
 	var index = splitData.length;
 	var extension = splitData[index - 1];
-	var exteArr = [ "pdf", "png", "jpg", "jpeg" ];
+	var exteArr = [ "pdf","png","jpg","jpeg","PDF","PNG","JPG","JPEG" ];
 	$.each(exteArr, function(i, j) {
 		if (j == extension) {
 			returnFlag = true;
@@ -606,32 +625,37 @@ function getFileSize(file) {
 	}
 }
 
-$("#uploadOtherDoc").on('click',
-	function(event) {
 
-		var filetype = true;
-		var fd = new FormData();
-		var totalfiles = document.getElementById('files').files.length;
-		var radioValue = $("#claimAppliedFor input:radio:checked").val();
+$("#uploadOtherDoc").on('click', function(event) {
 
-		if (totalfiles > 0) {
-			for (var index = 0; index < totalfiles; index++) {
-				fd.append("files", document.getElementById('files').files[index]);
-				if (getFileExtension(document.getElementById('files').files[index].name) && getFileSize(document.getElementById('files').files[index])) {
-					filetype = true;
-				} else {
-					filetype = false;
-					break;
-				}
+	var fileCheck = true;
+	var fd = new FormData();
+	var totalfiles = document.getElementById('files').files.length;
+	var totalfilesize = 0;
+	var totalfilesizeCheck = true;
+	var radioValue = $("#claimAppliedFor input:radio:checked").val();
+
+	if (totalfiles > 0 && totalfiles < 6) {
+		for (var index = 0; index < totalfiles; index++) {
+			fd.append("files", document.getElementById('files').files[index]);
+			if (getFileExtension(document.getElementById('files').files[index].name) && getFileSize(document.getElementById('files').files[index])) {
+				fileCheck = true;
+			} else {
+				fileCheck = false;
+				break;
 			}
-		}/*else{
-				alert("Kindly upload at list one document.");
-			} */
+			totalfilesize = totalfilesize + document.getElementById('files').files[index].size;
+		}
+		if (totalfilesize > 5242880) {
+			totalfilesizeCheck = false;
+		} else {
+			totalfilesizeCheck = true;
+		}
 
-		if (filetype) {
+		if (fileCheck && totalfilesizeCheck) {
 			$.ajax({
 						type : 'POST',
-						url : 'multiUplodCpfDoc?${_csrf.parameterName}=${_csrf.token}&reqId=${reqId}&claimSubmittedBy=${actClaimDto.CLAIM_SUBMITTED_BY}&claimAppliedFor='
+						url : 'multiUplodCpfDoc?${_csrf.parameterName}=${_csrf.token}&reqId=${reqId}&claimSubmittedBy=${actClaimDto.CLAIM_SUBMITTED_BY}&fileType=2&claimAppliedFor='
 								+ radioValue,
 						enctype : 'multipart/form-data',
 						data : fd,
@@ -644,12 +668,19 @@ $("#uploadOtherDoc").on('click',
 										+ data
 										+ ' Files uploaded successfully !!!';
 							}
+						},
+						error : function(xhr) {
+							$("#status").text(xhr.status);
+							$('#msg').html(xhr.responseText).fadeIn('slow');
+							$('#msg').delay(10000).fadeOut('slow');
 						}
 					});
 		} else {
 			$('#msg').html("Kindly upload your file/s according to the given instructions !!!").fadeIn('slow');
 			$('#msg').delay(10000).fadeOut('slow');
 		}
-
-	});
+	} else {
+		alert("Please select up to 5 files with a total size not exceeding 5 MB.");
+	}
+});
 </script>
